@@ -1,66 +1,48 @@
 #include "grafo.h"
 
-Grafo::Grafo() {
+Digrafo::Digrafo() {
   return;
 }
 
-Grafo::Grafo(int vertices) {
-  std::list<int> l; 
-  std::set<int> s;
-  for (int i = 0 ; i < vertices ; ++i) {
-    Vertice v(s, i);
-    vecinos_.push_back(l);
-    vertices_.push_back(v);
-  }
+Digrafo::Digrafo(Grafo g) {
+
+
 }
 
-void Grafo::agregar_arista(int vertice1, int vertice2) {
-  assert (existe_vertice(vertice1) && existe_vertice(vertice2));
-
-  vecinos_[vertice1].push_back(vertice2);
-  vecinos_[vertice2].push_back(vertice1);
-}
-
-void Grafo::agregar_arista_digrafo(int vertice1, int vertice2) {
+void Digrafo::agregar_arista(int vertice1, int vertice2) {
   assert (existe_vertice(vertice1) && existe_vertice(vertice2));
 
   vecinos_[vertice1].push_back(vertice2);
 }
 
-void Grafo::agregar_vertice(std::set<int> colores) {
-  Vertice v(colores, vertices_.size());
+void Digrafo::agregar_vertice(int num, bool valor_de_verdad) {
+  Vertice v(num, vertices_.size(), valor_de_verdad);
   std::list<int> l; 
   vertices_.push_back(v);
   vecinos_.push_back(l);
 }
 
-void Grafo::imprimir() {
+void Digrafo::imprimir() {
   for (Vertice& v : vertices_) {
     std::cout << "{ " << std::endl; 
-    std::cout << "  vertice: " << v.num << std::endl;
-    std::cout << "  Posibles colores: {";
-    int j = 0;
-    for (int i : v.colores_disponibles) {
-      if (j == 0) {
-        std::cout << i;
-        ++j;
+    std::cout << "  vertice:         " << v.num << std::endl;
+    std::cout << "  id     :         " << v.id << std::endl;
+    std::cout << "  color  :         " << v.valor_de_verdad << std::endl;
+    std::cout << "  valor de verdad: " << v.valor_de_verdad << std::endl;
+
+    std::cout << "  Vecinos y su color";
+    for (int i : vecinos_[v.id]) {
+      std::cout << " --> (" << vertices_[i].num;
+      if (vertices_[i].valor_de_verdad) {
+        std::cout << ", True)";
       } else {
-      std::cout << ", " << i;
+        std::cout << ", False)"; 
       }
     }
-    std::cout << "}" << std::endl;
-    std::cout << "  Vecinos y su color";
-    for (int i : vecinos_[v.num]) {
-      std::cout << " --> " << i;
-    }
     std::cout << std::endl;
-    //for (std::list<int>::iterator it = vecinos_[i].begin() ; it != vecinos_[i].end() ; ++it) {
-    //  std::cout << " --> (" << *it << ", " << vertices_[*it]).color << ")";
-    //}
-    //std::cout << "]"<< std::endl;
 
     std::cout << "                   ";
-    for (int i : vecinos_[v.num]) {
+    for (int i : vecinos_[v.id]) {
       std::cout << "     " << vertices_[i].color;
     }
     std::cout << std::endl;
@@ -69,11 +51,11 @@ void Grafo::imprimir() {
   }
 }
 
-bool Grafo::existe_vertice(int vertice) {
+bool Digrafo::existe_vertice(int vertice) {
   return (vertice >= 0) && (vertice < vecinos_.size());
 }
 
-bool Grafo::existe_arista(int vertice1, int vertice2) {
+bool Digrafo::existe_arista(int vertice1, int vertice2) {
   assert (existe_vertice(vertice1) && existe_vertice(vertice2));
 
   bool res = false; 
@@ -84,7 +66,7 @@ bool Grafo::existe_arista(int vertice1, int vertice2) {
   return res; 
 }
 
-std::set<int> Grafo::dame_vecinos(int vertice) {
+std::set<int> Digrafo::dame_vecinos(int vertice) {
   assert (existe_vertice(vertice)); 
 
   std::set<int> vecinos;
@@ -94,25 +76,21 @@ std::set<int> Grafo::dame_vecinos(int vertice) {
   return vecinos;
 }
 
-Grafo Grafo::invertir_aristas() {
-  Grafo invertido;
+Digrafo Digrafo::invertir_aristas() {
+  Digrafo invertido;
+
+  for (Vertice& v : vertices_)
+    invertido.agregar_vertice(v.num, v.valor_de_verdad);
+
   for (Vertice& v : vertices_) {
-
-    if (!invertido.existe_vertice(v.num))
-      invertido.agregar_vertice(v.colores_disponibles);
-
-    for (int i : vecinos_[v.num]) {
-
-      if (!invertido.existe_vertice(i))
-        invertido.agregar_vertice(vertices_[i].colores_disponibles);
-
-      invertido.agregar_arista_digrafo(i, v.num);
+    for (int i : vecinos_[v.id]) {
+      invertido.agregar_arista_digrafo(i, v.id);
     }
   }
   return invertido;
 }
 
-void Grafo::dfs(int inicial, std::stack<int>& vertices_vistos) {
+void Digrafo::dfs(int inicial, std::stack<int>& vertices_vistos) {
   assert(existe_vertice(inicial));
 
   std::stack<int> vertices;
@@ -139,7 +117,7 @@ void Grafo::dfs(int inicial, std::stack<int>& vertices_vistos) {
 }
 
 //int main() {
-//  Grafo grafo;
+//  Digrafo grafo;
 //  std::set<int> color{1,2};
 //  grafo.agregar_vertice(color);
 //  grafo.agregar_vertice(color);
@@ -175,7 +153,7 @@ void Grafo::dfs(int inicial, std::stack<int>& vertices_vistos) {
 //
 //
 //
-//  Grafo invertido = grafo.invertir_aristas();
+//  Digrafo invertido = grafo.invertir_aristas();
 //  //invertido.imprimir();
 //  //std::cout << "vecinos 0" << std::endl;
 //  //invertido.dame_vecinos(0);
@@ -186,16 +164,3 @@ void Grafo::dfs(int inicial, std::stack<int>& vertices_vistos) {
 //
 //  return 0;
 //}
-
-
-//  while (vertices_vistos.size() < cant_vertices) {
-//
-//    int vertice;
-//    bool encontre = false;
-//    for (int i = 0 ; i < vertices_.size() && !encontre ; ++i) {
-//      if (!vertices_[i].visto) {
-//        vertice = v.num;
-//        encontre = true;
-//      }
-//    }
-//

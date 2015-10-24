@@ -5,18 +5,20 @@
 #include <stack>
 #include <assert.h>
 #include <iostream>
+#include "Grafo.h"
 
-class Grafo {
+class Digrafo {
   
   public:
 
-    Grafo();
-    Grafo(int vertices);
+    Digrafo();
+    Digrafo(Grafo g);
 
     void agregar_arista(int vertice1, int vertice2);
     void agregar_vertice(std::set<int> colores);
 
     int cant_vertices() {return vecinos_.size();};
+    Digrafo invertir_aristas();
 
     std::set<int> dame_vecinos(int vertice);
 
@@ -30,11 +32,12 @@ class Grafo {
   private:
 
     struct Vertice {
-      std::set<int> colores_disponibles;
       int color;
       int num;
+      int id;
+      bool valor_de_verdad; 
       bool visto;
-      Vertice(std::set<int > colores, int n) : colores_disponibles(colores) , color(-1) , visto(false) , num(n) {};
+      Vertice(int n, int id, bool v) : color(-1) , num(n) , id(id) , valor_de_verdad(v) , visto(false) {};
     };
 
     std::vector<std::list<int> > vecinos_;
