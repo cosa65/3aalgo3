@@ -104,7 +104,7 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, std::stri
     //  std::cout << "Obtuve " << res << " deberia tener " << resTest << std::endl;
     //}
 
-    std::cout << z << std::endl;
+    //std::cout << z << std::endl;
     ++z;
 
   }

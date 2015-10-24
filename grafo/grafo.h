@@ -17,7 +17,7 @@ class Grafo {
     void agregar_arista_digrafo(int vertice1, int vertice2);
     void agregar_vertice(std::set<int> colores);
 
-    int cant_vertices() {return aristas_.size();};
+    int cant_vertices() {return vecinos_.size();};
     Grafo invertir_aristas();
 
     std::set<int> dame_vecinos(int vertice);
@@ -29,6 +29,8 @@ class Grafo {
     bool existe_arista(int vertice1, int vertice2);
     bool existe_vertice(int vertice);
 
+  private:
+
     struct Vertice {
       std::set<int> colores_disponibles;
       int color;
@@ -37,8 +39,6 @@ class Grafo {
       Vertice(std::set<int > colores, int n) : colores_disponibles(colores) , color(-1) , visto(false) , num(n) {};
     };
 
-  private:
-
-    std::vector<std::list<int> > aristas_;
+    std::vector<std::list<int> > vecinos_;
     std::vector<Vertice> vertices_;
 };
