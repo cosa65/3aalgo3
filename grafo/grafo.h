@@ -1,3 +1,6 @@
+#ifndef GRAFO_H_
+#define GRAFO_H_
+
 #include <vector>
 #include <set>
 #include <list>
@@ -17,6 +20,7 @@ class Grafo {
     void agregar_vertice(std::set<int> colores);
 
     int cant_vertices() {return vecinos_.size();};
+    std::set<int> dame_colores_posibles(int vertice);
 
     std::set<int> dame_vecinos(int vertice);
 
@@ -40,3 +44,5 @@ class Grafo {
     std::vector<std::list<int> > vecinos_;
     std::vector<Vertice> vertices_;
 };
+
+#endif

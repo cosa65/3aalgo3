@@ -21,17 +21,15 @@ void Grafo::agregar_arista(int vertice1, int vertice2) {
   vecinos_[vertice2].push_back(vertice1);
 }
 
-void Grafo::agregar_arista_digrafo(int vertice1, int vertice2) {
-  assert (existe_vertice(vertice1) && existe_vertice(vertice2));
-
-  vecinos_[vertice1].push_back(vertice2);
-}
-
 void Grafo::agregar_vertice(std::set<int> colores) {
   Vertice v(colores, vertices_.size());
   std::list<int> l; 
   vertices_.push_back(v);
   vecinos_.push_back(l);
+}
+
+std::set<int> Grafo::dame_colores_posibles(int vertice) {
+  return vertices_[vertice].colores_disponibles;
 }
 
 void Grafo::imprimir() {
@@ -94,24 +92,6 @@ std::set<int> Grafo::dame_vecinos(int vertice) {
   return vecinos;
 }
 
-Grafo Grafo::invertir_aristas() {
-  Grafo invertido;
-  for (Vertice& v : vertices_) {
-
-    if (!invertido.existe_vertice(v.num))
-      invertido.agregar_vertice(v.colores_disponibles);
-
-    for (int i : vecinos_[v.num]) {
-
-      if (!invertido.existe_vertice(i))
-        invertido.agregar_vertice(vertices_[i].colores_disponibles);
-
-      invertido.agregar_arista_digrafo(i, v.num);
-    }
-  }
-  return invertido;
-}
-
 void Grafo::dfs(int inicial, std::stack<int>& vertices_vistos) {
   assert(existe_vertice(inicial));
 
@@ -137,65 +117,3 @@ void Grafo::dfs(int inicial, std::stack<int>& vertices_vistos) {
       vertices_vistos.push(vertice);
   }
 }
-
-//int main() {
-//  Grafo grafo;
-//  std::set<int> color{1,2};
-//  grafo.agregar_vertice(color);
-//  grafo.agregar_vertice(color);
-//  grafo.agregar_vertice(color);
-//  grafo.agregar_arista_digrafo(1,2);
-//  grafo.agregar_arista_digrafo(2,0);
-//  grafo.agregar_arista_digrafo(2,1);
-//  grafo.imprimir();
-//  //std::cout << "vecinos 0" << std::endl;
-//  //grafo.dame_vecinos(0);
-//  //std::cout << "vecinos 1" << std::endl;
-//  //grafo.dame_vecinos(1);
-//  //std::cout << "vecinos 2" << std::endl;
-//  //grafo.dame_vecinos(2);
-//  
-//  std::stack<int> s;
-//  //grafo.dfs(0, s);
-//  //for (int i = 0 ; i < s.size() ; ++i) {
-//  //  std::cout << " v: " << s.top();
-//  //  s.pop();
-//  //}
-//  //std::cout << std::endl;
-//
-//  grafo.dfs(2, s);
-//  for (int i = 0 ; i < s.size() ; ++i) {
-//    std::cout << " v: " << s.top();
-//    s.pop();
-//  }
-//  std::cout << std::endl;
-//
-//
-//  std::cout << "segundo grafo" << std::endl;
-//
-//
-//
-//  Grafo invertido = grafo.invertir_aristas();
-//  //invertido.imprimir();
-//  //std::cout << "vecinos 0" << std::endl;
-//  //invertido.dame_vecinos(0);
-//  //std::cout << "vecinos 1" << std::endl;
-//  //invertido.dame_vecinos(1);
-//  //std::cout << "vecinos 2" << std::endl;
-//  //invertido.dame_vecinos(2);
-//
-//  return 0;
-//}
-
-
-//  while (vertices_vistos.size() < cant_vertices) {
-//
-//    int vertice;
-//    bool encontre = false;
-//    for (int i = 0 ; i < vertices_.size() && !encontre ; ++i) {
-//      if (!vertices_[i].visto) {
-//        vertice = v.num;
-//        encontre = true;
-//      }
-//    }
-//

@@ -1,3 +1,6 @@
+#ifndef DIGRAFO_H_
+#define DIGRAFO_H_
+
 #include <vector>
 #include <set>
 #include <list>
@@ -5,17 +8,21 @@
 #include <stack>
 #include <assert.h>
 #include <iostream>
-#include "Grafo.h"
+#include <algorithm>
+//#include <boost/foreach.hpp>
+#include "grafo.h"
+
+//#define foreach BOOST_FOREACH
 
 class Digrafo {
   
   public:
 
     Digrafo();
-    Digrafo(Grafo g);
+    Digrafo(Grafo& g);
 
     void agregar_arista(int vertice1, int vertice2);
-    void agregar_vertice(std::set<int> colores);
+    int agregar_vertice(int color, int num, bool valor_de_verdad);
 
     int cant_vertices() {return vecinos_.size();};
     Digrafo invertir_aristas();
@@ -37,9 +44,19 @@ class Digrafo {
       int id;
       bool valor_de_verdad; 
       bool visto;
-      Vertice(int n, int id, bool v) : color(-1) , num(n) , id(id) , valor_de_verdad(v) , visto(false) {};
+      Vertice(int col, int n, int id, bool v) : color(col) , num(n) , id(id) , valor_de_verdad(v) , visto(false) {};
     };
+
+    void expandir_vertice_1_color(std::set<int> colores, int v1);
+    void expandir_vertice_2_colores(std::set<int> colores, int v1);
+
+    void agregar_arista_1_color(std::set<int> colores, int v1, int v2);
+    void agregar_arista_2_colores(std::set<int> colores, int v1, int v2);
+
+    int dame_posicion_vertice(int vertice, int color, bool valor_de_verdad);
 
     std::vector<std::list<int> > vecinos_;
     std::vector<Vertice> vertices_;
 };
+
+#endif
