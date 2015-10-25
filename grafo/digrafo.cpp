@@ -160,6 +160,58 @@ void Digrafo::dfs(int inicial, std::stack<int>& vertices_vistos) {
   }
 }
 
+std::list<Digrafo> Digrafo::Kosaraju( int init )
+{
+  std::stack<int> finish_time;
+  std::set<int> visitados; 
+
+  visitados.insert(init);
+  vertices_[init].visto = true;
+
+  while ( visitados.size() < vertices_.size() )
+  {
+    for ( auto& nodo: vertices_)
+    {
+      if ( !nodo.visitado )
+      {
+
+        while (!visitados.empty())
+        {
+
+          int vertice = visitados.top();
+          int ultimo_visto = true;
+
+          for (auto nodo : vertices_[vecinos_[vertice]])
+          {
+            if (!nodo.visto)
+            {
+              nodo.visto = true;
+              visitados.push(nodo);
+              ultimo_visto = false;
+            }
+          }
+
+          if (ultimo_visto)
+          {
+            finish_time.push(visitados.top());
+            visitados.pop();
+          }
+
+        }
+        
+      }
+    }
+  }
+
+  Digrafo complemento = invertir_aristas();
+
+  while (!visitados.empty())
+  {
+    
+  }
+
+}
+
 // Funciones privadas
 
 void Digrafo::expandir_vertice_1_color(std::set<int> colores, int vertice) {
