@@ -160,6 +160,23 @@ void Digrafo::dfs(int inicial, std::stack<int>& vertices_vistos) {
   }
 }
 
+void Digrafo::dfs2( int inicial )
+{
+  Digrafo dig = new Digrafo();
+
+  vertices_[inicial].visto = true;
+
+  dig.agregar_vertice(inicial);
+
+  for (nodo* v: dig.vecinos_[inicial])
+  {
+    if (!v.visto)
+      dfs2(v);
+  }
+
+  return dig;
+}
+
 std::list<Digrafo> Digrafo::Kosaraju( int init )
 {
   std::stack<int> finish_time;
@@ -170,9 +187,9 @@ std::list<Digrafo> Digrafo::Kosaraju( int init )
 
   while ( visitados.size() < vertices_.size() )
   {
-    for ( auto& nodo: vertices_)
+    for ( auto& noda: vertices_)
     {
-      if ( !nodo.visitado )
+      if ( !noda.visitado )
       {
 
         while (!visitados.empty())
@@ -205,10 +222,18 @@ std::list<Digrafo> Digrafo::Kosaraju( int init )
 
   Digrafo complemento = invertir_aristas();
 
-  while (!visitados.empty())
+  std::list<Digrafo> cfc = new std::list<Digrafo>;
+
+  while (!finish_time.empty())
   {
-    
-  }
+
+    int vertice = finish_time.top();
+    finish_time.pop();
+
+    if (!vertices_[vertice].visto)
+    {
+      cfc.add( dfs2(vertice) );
+    }
 
 }
 
