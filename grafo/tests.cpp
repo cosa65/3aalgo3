@@ -1,17 +1,10 @@
 #include "grafo.h"
 #include "digrafo.h"
 
-int main() {
+void test_vertice_con_un_color() {
   Grafo grafo;
-  std::set<int> color1{1,2};
-  std::set<int> color2{2,1};
-  std::set<int> color3{2};
-  grafo.agregar_vertice(color1);
-  grafo.agregar_vertice(color2);
-  //grafo.agregar_vertice(color3);
-  grafo.agregar_arista(0,1);
-  //grafo.agregar_arista(2,0);
-  //grafo.agregar_arista(2,1);
+  std::set<int> color{0};
+  grafo.agregar_vertice(color);
   std::cout << "<<< Imprimo Grafo original >>>" << std::endl;
   grafo.imprimir();
   std::cout << "<<< Termino Grafo original >>>" << std::endl;
@@ -26,12 +19,99 @@ int main() {
   std::cout << "<<< Imprimo Digrafo invertido >>>" << std::endl;
   invertido.imprimir();
   std::cout << "<<< Termino Digrafo invertido >>>" << std::endl;
-  //std::cout << "vecinos 0" << std::endl;
-  //invertido.dame_vecinos(0);
-  //std::cout << "vecinos 1" << std::endl;
-  //invertido.dame_vecinos(1);
-  //std::cout << "vecinos 2" << std::endl;
-  //invertido.dame_vecinos(2);
+} 
 
+void test_vertice_con_dos_colores() {
+  Grafo grafo;
+  std::set<int> color{0,1};
+  grafo.agregar_vertice(color);
+  std::cout << "<<< Imprimo Grafo original >>>" << std::endl;
+  grafo.imprimir();
+  std::cout << "<<< Termino Grafo original >>>" << std::endl;
+
+  Digrafo digrafo(grafo);
+
+  std::cout << "<<< Imprimo Digrafo original >>>" << std::endl;
+  digrafo.imprimir();
+  std::cout << "<<< Termino Digrafo original >>>" << std::endl;
+  
+  Digrafo invertido = digrafo.invertir_aristas();
+  std::cout << "<<< Imprimo Digrafo invertido >>>" << std::endl;
+  invertido.imprimir();
+  std::cout << "<<< Termino Digrafo invertido >>>" << std::endl;
+} 
+
+void test_arista_entre_vertice_interseccion_un_color() {
+  Grafo grafo;
+  std::set<int> color{0};
+  grafo.agregar_vertice(color);
+  grafo.agregar_vertice(color);
+  std::cout << "<<< Imprimo Grafo original >>>" << std::endl;
+  grafo.imprimir();
+  std::cout << "<<< Termino Grafo original >>>" << std::endl;
+
+  Digrafo digrafo(grafo);
+
+  std::cout << "<<< Imprimo Digrafo original >>>" << std::endl;
+  digrafo.imprimir();
+  std::cout << "<<< Termino Digrafo original >>>" << std::endl;
+  
+  Digrafo invertido = digrafo.invertir_aristas();
+  std::cout << "<<< Imprimo Digrafo invertido >>>" << std::endl;
+  invertido.imprimir();
+  std::cout << "<<< Termino Digrafo invertido >>>" << std::endl;
+} 
+
+void test_arista_entre_vertice_interseccion_dos_colores() {
+  Grafo grafo;
+  std::set<int> color1{0,1};
+  std::set<int> color2{0,1};
+  grafo.agregar_vertice(color1);
+  grafo.agregar_vertice(color2);
+  std::cout << "<<< Imprimo Grafo original >>>" << std::endl;
+  grafo.imprimir();
+  std::cout << "<<< Termino Grafo original >>>" << std::endl;
+
+  Digrafo digrafo(grafo);
+
+  std::cout << "<<< Imprimo Digrafo original >>>" << std::endl;
+  digrafo.imprimir();
+  std::cout << "<<< Termino Digrafo original >>>" << std::endl;
+  
+  Digrafo invertido = digrafo.invertir_aristas();
+  std::cout << "<<< Imprimo Digrafo invertido >>>" << std::endl;
+  invertido.imprimir();
+  std::cout << "<<< Termino Digrafo invertido >>>" << std::endl;
+} 
+
+void test_arista_entre_vertice_interseccion_nula() {
+  Grafo grafo;
+  std::set<int> color1{0};
+  std::set<int> color2{1};
+  grafo.agregar_vertice(color1);
+  grafo.agregar_vertice(color2);
+  std::cout << "<<< Imprimo Grafo original >>>" << std::endl;
+  grafo.imprimir();
+  std::cout << "<<< Termino Grafo original >>>" << std::endl;
+
+  Digrafo digrafo(grafo);
+
+  std::cout << "<<< Imprimo Digrafo original >>>" << std::endl;
+  digrafo.imprimir();
+  std::cout << "<<< Termino Digrafo original >>>" << std::endl;
+  
+  Digrafo invertido = digrafo.invertir_aristas();
+  std::cout << "<<< Imprimo Digrafo invertido >>>" << std::endl;
+  invertido.imprimir();
+  std::cout << "<<< Termino Digrafo invertido >>>" << std::endl;
+} 
+
+int main() {
+  //test_vertice_con_un_color();
+  //test_vertice_con_dos_colores();
+  //test_arista_entre_vertice_interseccion_un_color();
+  //test_arista_entre_vertice_interseccion_dos_colores();
+  //test_arista_entre_vertice_interseccion_nula();
+ 
   return 0;
 }

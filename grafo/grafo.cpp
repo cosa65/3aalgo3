@@ -28,58 +28,12 @@ void Grafo::agregar_vertice(std::set<int> colores) {
   vecinos_.push_back(l);
 }
 
+int Grafo::dame_grado(int vertice) {
+  return vertices_[vertice].grado;
+}
+
 std::set<int> Grafo::dame_colores_posibles(int vertice) {
   return vertices_[vertice].colores_disponibles;
-}
-
-void Grafo::imprimir() {
-  for (Vertice& v : vertices_) {
-    std::cout << "{ " << std::endl; 
-    std::cout << "  vertice: " << v.num << std::endl;
-    std::cout << "  Posibles colores: {";
-    int j = 0;
-    for (int i : v.colores_disponibles) {
-      if (j == 0) {
-        std::cout << i;
-        ++j;
-      } else {
-      std::cout << ", " << i;
-      }
-    }
-    std::cout << "}" << std::endl;
-    std::cout << "  Vecinos y su color";
-    for (int i : vecinos_[v.num]) {
-      std::cout << " --> " << i;
-    }
-    std::cout << std::endl;
-    //for (std::list<int>::iterator it = vecinos_[i].begin() ; it != vecinos_[i].end() ; ++it) {
-    //  std::cout << " --> (" << *it << ", " << vertices_[*it]).color << ")";
-    //}
-    //std::cout << "]"<< std::endl;
-
-    std::cout << "                   ";
-    for (int i : vecinos_[v.num]) {
-      std::cout << "     " << vertices_[i].color;
-    }
-    std::cout << std::endl;
-
-    std::cout << "}" << std::endl;
-  }
-}
-
-bool Grafo::existe_vertice(int vertice) {
-  return (vertice >= 0) && (vertice < vecinos_.size());
-}
-
-bool Grafo::existe_arista(int vertice1, int vertice2) {
-  assert (existe_vertice(vertice1) && existe_vertice(vertice2));
-
-  bool res = false; 
-  for (int i : vecinos_[vertice1]) {
-    if (vertice2 == i) 
-      res = true;
-  }
-  return res; 
 }
 
 std::set<int> Grafo::dame_vecinos(int vertice) {
@@ -115,5 +69,56 @@ void Grafo::dfs(int inicial, std::stack<int>& vertices_vistos) {
     }
     if (ultimo_visto)
       vertices_vistos.push(vertice);
+  }
+}
+
+bool Grafo::existe_vertice(int vertice) {
+  return (vertice >= 0) && (vertice < vecinos_.size());
+}
+
+bool Grafo::existe_arista(int vertice1, int vertice2) {
+  assert (existe_vertice(vertice1) && existe_vertice(vertice2));
+
+  bool res = false; 
+  for (int i : vecinos_[vertice1]) {
+    if (vertice2 == i) 
+      res = true;
+  }
+  return res; 
+}
+
+
+void Grafo::imprimir() {
+  for (Vertice& v : vertices_) {
+    std::cout << "{ " << std::endl; 
+    std::cout << "  vertice: " << v.num << std::endl;
+    std::cout << "  Posibles colores: {";
+    int j = 0;
+    for (int i : v.colores_disponibles) {
+      if (j == 0) {
+        std::cout << i;
+        ++j;
+      } else {
+      std::cout << ", " << i;
+      }
+    }
+    std::cout << "}" << std::endl;
+    std::cout << "  Vecinos y su color";
+    for (int i : vecinos_[v.num]) {
+      std::cout << " --> " << i;
+    }
+    std::cout << std::endl;
+    //for (std::list<int>::iterator it = vecinos_[i].begin() ; it != vecinos_[i].end() ; ++it) {
+    //  std::cout << " --> (" << *it << ", " << vertices_[*it]).color << ")";
+    //}
+    //std::cout << "]"<< std::endl;
+
+    std::cout << "                   ";
+    for (int i : vecinos_[v.num]) {
+      std::cout << "     " << vertices_[i].color;
+    }
+    std::cout << std::endl;
+
+    std::cout << "}" << std::endl;
   }
 }

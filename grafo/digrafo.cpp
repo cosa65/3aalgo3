@@ -46,6 +46,8 @@ Digrafo::Digrafo(Grafo& g) {
       if (interseccion.size() == 2) {
         agregar_arista_2_colores(interseccion, i, v);
       }
+
+      // Si no tienen colores en comun esta todo bien (Y)
     }
   }
 }
@@ -159,83 +161,83 @@ void Digrafo::dfs(int inicial, std::stack<int>& vertices_vistos) {
       vertices_vistos.push(vertice);
   }
 }
-
-void Digrafo::dfs2( int inicial )
-{
-  Digrafo dig = new Digrafo();
-
-  vertices_[inicial].visto = true;
-
-  dig.agregar_vertice(inicial);
-
-  for (nodo* v: dig.vecinos_[inicial])
-  {
-    if (!v.visto)
-      dfs2(v);
-  }
-
-  return dig;
-}
-
-std::list<Digrafo> Digrafo::Kosaraju( int init )
-{
-  std::stack<int> finish_time;
-  std::set<int> visitados; 
-
-  visitados.insert(init);
-  vertices_[init].visto = true;
-
-  while ( visitados.size() < vertices_.size() )
-  {
-    for ( auto& noda: vertices_)
-    {
-      if ( !noda.visitado )
-      {
-
-        while (!visitados.empty())
-        {
-
-          int vertice = visitados.top();
-          int ultimo_visto = true;
-
-          for (auto nodo : vertices_[vecinos_[vertice]])
-          {
-            if (!nodo.visto)
-            {
-              nodo.visto = true;
-              visitados.push(nodo);
-              ultimo_visto = false;
-            }
-          }
-
-          if (ultimo_visto)
-          {
-            finish_time.push(visitados.top());
-            visitados.pop();
-          }
-
-        }
-        
-      }
-    }
-  }
-
-  Digrafo complemento = invertir_aristas();
-
-  std::list<Digrafo> cfc = new std::list<Digrafo>;
-
-  while (!finish_time.empty())
-  {
-
-    int vertice = finish_time.top();
-    finish_time.pop();
-
-    if (!vertices_[vertice].visto)
-    {
-      cfc.add( dfs2(vertice) );
-    }
-
-}
+//
+//void Digrafo::dfs2( int inicial )
+//{
+//  Digrafo dig = new Digrafo();
+//
+//  vertices_[inicial].visto = true;
+//
+//  dig.agregar_vertice(inicial);
+//
+//  for (nodo* v: dig.vecinos_[inicial])
+//  {
+//    if (!v.visto)
+//      dfs2(v);
+//  }
+//
+//  return dig;
+//}
+//
+//std::list<Digrafo> Digrafo::Kosaraju( int init )
+//{
+//  std::stack<int> finish_time;
+//  std::set<int> visitados; 
+//
+//  visitados.insert(init);
+//  vertices_[init].visto = true;
+//
+//  while ( visitados.size() < vertices_.size() )
+//  {
+//    for ( auto& noda: vertices_)
+//    {
+//      if ( !noda.visitado )
+//      {
+//
+//        while (!visitados.empty())
+//        {
+//
+//          int vertice = visitados.top();
+//          int ultimo_visto = true;
+//
+//          for (auto nodo : vertices_[vecinos_[vertice]])
+//          {
+//            if (!nodo.visto)
+//            {
+//              nodo.visto = true;
+//              visitados.push(nodo);
+//              ultimo_visto = false;
+//            }
+//          }
+//
+//          if (ultimo_visto)
+//          {
+//            finish_time.push(visitados.top());
+//            visitados.pop();
+//          }
+//
+//        }
+//        
+//      }
+//    }
+//  }
+//
+//  Digrafo complemento = invertir_aristas();
+//
+//  std::list<Digrafo> cfc = new std::list<Digrafo>;
+//
+//  while (!finish_time.empty())
+//  {
+//
+//    int vertice = finish_time.top();
+//    finish_time.pop();
+//
+//    if (!vertices_[vertice].visto)
+//    {
+//      cfc.add( dfs2(vertice) );
+//    }
+//
+//}
 
 // Funciones privadas
 
@@ -243,14 +245,10 @@ void Digrafo::expandir_vertice_1_color(std::set<int> colores, int vertice) {
   std::set<int>::iterator it = colores.begin();
   int color = *it;
 
-  agregar_vertice(color, vertice, true);
-  agregar_vertice(color, vertice, false);
-
   // Creo dos vértices para el nodo inicial, su color 
   // y su negación
-
-  agregar_vertice(color, vertice, true);
-  agregar_vertice(color, vertice, false);
+  int id1 = agregar_vertice(color, vertice, true);
+  int id2 = agregar_vertice(color, vertice, false);
 
   // Creo dos vértices "fantasmas" ya que necesito poder 
   // volver a acceder a los vértices de manera relativa 
@@ -261,9 +259,15 @@ void Digrafo::expandir_vertice_1_color(std::set<int> colores, int vertice) {
   // De esta manera se puede buscar fácil la ubicación del vértice 
   // original y, a partir de esa posición, tiene 4 posiciones 
   // fijas para sus nuevos vértices creados.
+  agregar_vertice(color, vertice, true);
+  agregar_vertice(color, vertice, false);
 
-  // Si tenía un solo color no tiene ningun conexión entre 
-  // sus nuevos vértices (??????????)
+  // Si tiene un solo color me tengo que asegurar 
+  // que valga ese color en ese vértice.
+  // Por esa razon, ¬Rojo -> Rojo
+  // ya que falso implicando es verdadero
+  // y quiero que el vertice tenga color rojo
+  agregar_arista(id2, id1);
 }
 
 void Digrafo::expandir_vertice_2_colores(std::set<int> colores, int vertice) {

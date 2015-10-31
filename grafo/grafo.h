@@ -20,9 +20,10 @@ class Grafo {
     void agregar_vertice(std::set<int> colores);
 
     int cant_vertices() {return vecinos_.size();};
-    std::set<int> dame_colores_posibles(int vertice);
 
+    std::set<int> dame_colores_posibles(int vertice);
     std::set<int> dame_vecinos(int vertice);
+    int dame_grado(int vertice);
 
     void imprimir();
 
@@ -35,10 +36,11 @@ class Grafo {
 
     struct Vertice {
       std::set<int> colores_disponibles;
+      int grado;
       int color;
       int num;
       bool visto;
-      Vertice(std::set<int > colores, int n) : colores_disponibles(colores) , color(-1) , visto(false) , num(n) {};
+      Vertice(std::set<int > colores, int n) : colores_disponibles(colores) , grado(0) ,color(-1) , visto(false) , num(n) {};
     };
 
     std::vector<std::list<int> > vecinos_;

@@ -29,9 +29,12 @@ class Digrafo {
 
     std::set<int> dame_vecinos(int vertice);
 
+    std::list<Digrafo> Kosaraju(int init);
+
     void imprimir();
 
     void dfs(int inicial, std::stack<int>& vertices_vistos);
+    void dfs2(int inicial);
     
     bool existe_arista(int vertice1, int vertice2);
     bool existe_vertice(int vertice);
