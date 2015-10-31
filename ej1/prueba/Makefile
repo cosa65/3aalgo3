@@ -1,21 +1,14 @@
-CC = g++
-CFLAGS = -std=c++11 -o
-EFLAGS = -g
+CC=g++
+CFLAGS=-std=c++11
+# CFLAGS=-std=c++11 -Wall -Wextra -pedantic -O0 -ggdb -lm
+SOURCE=test.cpp grafo.cpp digrafo.cpp
+TARGET=test
 
-BINARIES = test grafo digrafo
+all: $(TARGET)
 
-all: $(BINARIES)
-
-grafo: grafo.cpp 
-	$(CC) grafo.cpp $(CFLAGS) grafo 
-
-digrafo: digrafo.cpp 
-	$(CC) digrafo.cpp $(CFLAGS) digrafo 
-
-test: test.cpp
-	$(CC) grafo.cpp digrafo.cpp test.cpp $(CFLAGS) test
+$(TARGET): $(SOURCE)
+	$(CC) $(CFLAGS) -o $(TARGET) $(SOURCE)
 
 clean:
-	rm -f *.o grafo 
-	rm -f *.o digrafo 
-	rm -f *.o test 
+	rm -f *.o
+	rm -f $(TARGET)

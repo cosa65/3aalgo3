@@ -1,4 +1,5 @@
 #include "digrafo.h"
+#include <iterator>
 
 Digrafo::Digrafo() {
   return;
@@ -135,14 +136,14 @@ Digrafo Digrafo::invertir_aristas() {
 }
 
 
-void Digrafo::dfs( bool visitados[], stack<int>& finish_time) // El parámetro visitados es un putero al primer elemento del array ;)
+void Digrafo::dfs( vector<bool>& visitados, stack<int>& finish_time) // El parámetro visitados es reemplazado por un putero al primer elemento del array ;). Para evitar el cambio implícito, usar una referencia. Lo cambié por un vector, el comentario queda anuado.
 {
 	for (int i = 0; i < vertices_.size(); ++i)
 		if (!visitados[i])
 			recorrer(i, visitados, finish_time);
 }
 
-void Digrafo::recorrer(int i, bool visitados[], stack<int>& finish_time)
+void Digrafo::recorrer(int i, vector<bool>& visitados, stack<int>& finish_time)
 {
 	visitados[i] = true;
 	for (int v: vecinos_[i])
@@ -153,7 +154,7 @@ void Digrafo::recorrer(int i, bool visitados[], stack<int>& finish_time)
 	finish_time.push(i);
 }
 
-list<list<int>> Digrafo::dfs2( bool visitados[], stack<int>& finish_time)
+list<list<int>> Digrafo::dfs2( vector<bool>& visitados, stack<int>& finish_time)
 {
 	// Armo lista de componentes fuertemente conexas en orden topológico. De esto último no estoy seguro.
 	list<list<int>>* cfc = new list<list<int>>;
@@ -169,9 +170,10 @@ list<list<int>> Digrafo::dfs2( bool visitados[], stack<int>& finish_time)
 			cfc->push_back( recorrer2(i, visitados, *componente) );
 		}
 	}
+	return *cfc;
 }
 
-list<int> Digrafo::recorrer2(int i, bool visitados[], list<int>& componente)
+list<int> Digrafo::recorrer2(int i, vector<bool>& visitados, list<int>& componente)
 {
 	visitados[i] = true;
 	componente.push_back(i);
@@ -184,13 +186,11 @@ list<int> Digrafo::recorrer2(int i, bool visitados[], list<int>& componente)
 }
 
 // Algoritmo de Kosaraju, para calcular componentes fuertemente conexas
-list<Digrafo> Digrafo::Kosaraju( int init )
+list<list<int>> Digrafo::Kosaraju()
 {
-
-	// Creo arreglo de visitados y lo inicializo. Al principio no hay visitados
-	bool* visitados = new bool[vertices_.size()];
-	for( bool b: visitados )
-    	b = false;
+	// Creo vector de visitados y lo inicializo. Al principio no hay visitados
+	vector<bool> visitados;
+	fill(visitados.begin(), visitados.end(), false);
 
     // Primer DFS: me armo un stack de acuerdo al orden en que visito cada nodo
 	stack<int> finish_time;
@@ -199,13 +199,11 @@ list<Digrafo> Digrafo::Kosaraju( int init )
 	// Busco el grafo complemento
 	Digrafo complemento = invertir_aristas();
 
-	// Vuelvo a inicializar el arreglo para el segundo dfs
-	for( bool b: visitados )
-    	b = false;
+	// Vuelvo a inicializar el vector para el segundo dfs
+	fill(visitados.begin(), visitados.end(), false);
 
     // Segundo DFS: recorro el stack que me armé
-    list<Digrafo> cfc = dfs2( visitados, finish_time );
-
+    return dfs2( visitados, finish_time );
 }
 
 
@@ -213,65 +211,65 @@ list<Digrafo> Digrafo::Kosaraju( int init )
 /////////////////////////////////////////////////////////////////////////
 
 
-list<Digrafo> Digrafo::Kosaraju_poco_amistoso( int init )
-{
-  stack<int> finish_time;
-  set<int> visitados; 
+// list<Digrafo> Digrafo::Kosaraju_poco_amistoso( int init )
+// {
+//   stack<int> finish_time;
+//   set<int> visitados; 
 
-  visitados.insert(init);
-  vertices_[init].visto = true;
+//   visitados.insert(init);
+//   vertices_[init].visto = true;
 
-  while ( visitados.size() < vertices_.size() )
-  {
-    for ( auto& noda: vertices_)
-    {
-      if ( !noda.visitado )
-      {
+//   while ( visitados.size() < vertices_.size() )
+//   {
+//     for ( auto& noda: vertices_)
+//     {
+//       if ( !noda.visitado )
+//       {
 
-        while (!visitados.empty())
-        {
+//         while (!visitados.empty())
+//         {
 
-          int vertice = visitados.top();
-          int ultimo_visto = true;
+//           int vertice = visitados.top();
+//           int ultimo_visto = true;
 
-          for (auto nodo : vertices_[vecinos_[vertice]])
-          {
-            if (!nodo.visto)
-            {
-              nodo.visto = true;
-              visitados.push(nodo);
-              ultimo_visto = false;
-            }
-          }
+//           for (auto nodo : vertices_[vecinos_[vertice]])
+//           {
+//             if (!nodo.visto)
+//             {
+//               nodo.visto = true;
+//               visitados.push(nodo);
+//               ultimo_visto = false;
+//             }
+//           }
 
-          if (ultimo_visto)
-          {
-            finish_time.push(visitados.top());
-            visitados.pop();
-          }
+//           if (ultimo_visto)
+//           {
+//             finish_time.push(visitados.top());
+//             visitados.pop();
+//           }
 
-        }
+//         }
         
-      }
-    }
-  }
+//       }
+//     }
+//   }
 
-  Digrafo complemento = invertir_aristas();
+//   Digrafo complemento = invertir_aristas();
 
-  list<Digrafo> cfc = new list<Digrafo>;
+//   list<Digrafo> cfc = new list<Digrafo>;
 
-  while (!finish_time.empty())
-  {
+//   while (!finish_time.empty())
+//   {
 
-    int vertice = finish_time.top();
-    finish_time.pop();
+//     int vertice = finish_time.top();
+//     finish_time.pop();
 
-    if (!vertices_[vertice].visto)
-    {
-      cfc.add( dfs(vertice) );
-    }
+//     if (!vertices_[vertice].visto)
+//     {
+//       cfc.add( dfs(vertice) );
+//     }
 
-}
+// }
 
 // Funciones privadas
 
