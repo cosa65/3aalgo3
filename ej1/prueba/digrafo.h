@@ -53,11 +53,11 @@ class Digrafo {
 
     int dame_posicion_vertice(int vertice, int color, bool valor_de_verdad);
 
-    void dfs( bool visitados[], stack<int>& finish_time);
-    void recorrer(int i, bool visitados[], stack<int>& finish_time);
-    list<list<int>> dfs2( bool visitados[], stack<int>& finish_time);
-    list<int> recorrer2(int i, bool visitados[], list<int>& componente);
-    list<Digrafo> Kosaraju( int init );
+    void dfs( vector<bool>& visitados, stack<int>& finish_time);
+    void recorrer(int i, vector<bool>& visitados, stack<int>& finish_time);
+    list<list<int>> dfs2( vector<bool>& visitados, stack<int>& finish_time);
+    list<int> recorrer2(int i, vector<bool>& visitados, list<int>& componente);
+    list<list<int>> Kosaraju();
 
     std::vector<std::list<int> > vecinos_;
     std::vector<Vertice> vertices_;
