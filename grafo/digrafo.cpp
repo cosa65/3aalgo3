@@ -61,7 +61,7 @@ void Digrafo::agregar_arista(int vertice1, int vertice2) {
 
 int Digrafo::agregar_vertice(int color, int num, bool valor_de_verdad) {
   int id = vertices_.size();
-  Vertice v(color, num, id, valor_de_verdad);
+  Vertice_digrafo v(color, num, id, valor_de_verdad);
   std::list<int> l; 
   vertices_.push_back(v);
   vecinos_.push_back(l);
@@ -69,17 +69,17 @@ int Digrafo::agregar_vertice(int color, int num, bool valor_de_verdad) {
 }
 
 void Digrafo::imprimir() {
-  for (Vertice& v : vertices_) {
+  for (Vertice_digrafo& v : vertices_) {
     std::cout << "{ " << std::endl; 
-    std::cout << "  vertice:         " << v.num << std::endl;
-    std::cout << "  id     :         " << v.id << std::endl;
-    std::cout << "  color  :         " << v.color << std::endl;
-    std::cout << "  valor de verdad: " << v.valor_de_verdad << std::endl;
+    std::cout << "  vertice:         " << v.dame_nombre() << std::endl;
+    std::cout << "  id     :         " << v.dame_id() << std::endl;
+    std::cout << "  color  :         " << v.dame_color() << std::endl;
+    std::cout << "  valor de verdad: " << v.dame_valor_de_verdad() << std::endl;
 
     std::cout << "  Vecinos y su color";
-    for (int i : vecinos_[v.id]) {
-      std::cout << " --> (" << vertices_[i].num;
-      if (vertices_[i].valor_de_verdad) {
+    for (int i : vecinos_[v.dame_id()]) {
+      std::cout << " --> (" << vertices_[i].dame_nombre();
+      if (vertices_[i].dame_valor_de_verdad()) {
         std::cout << ", True)";
       } else {
         std::cout << ", False)"; 
@@ -88,8 +88,8 @@ void Digrafo::imprimir() {
     std::cout << std::endl;
 
     std::cout << "                 ";
-    for (int i : vecinos_[v.id]) {
-      std::cout << "              " << vertices_[i].color;
+    for (int i : vecinos_[v.dame_id()]) {
+      std::cout << "              " << vertices_[i].dame_color();
     }
     std::cout << std::endl;
 
@@ -125,12 +125,12 @@ std::set<int> Digrafo::dame_vecinos(int vertice) {
 Digrafo Digrafo::invertir_aristas() {
   Digrafo invertido;
 
-  for (Vertice& v : vertices_)
-    invertido.agregar_vertice(v.color, v.num, v.valor_de_verdad);
+  for (Vertice_digrafo& v : vertices_)
+    invertido.agregar_vertice(v.dame_color(), v.dame_nombre(), v.dame_valor_de_verdad());
 
-  for (Vertice& v : vertices_) {
-    for (int i : vecinos_[v.id]) {
-      invertido.agregar_arista(i, v.id);
+  for (Vertice_digrafo& v : vertices_) {
+    for (int i : vecinos_[v.dame_id()]) {
+      invertido.agregar_arista(i, v.dame_id());
     }
   }
   return invertido;
@@ -142,7 +142,7 @@ void Digrafo::dfs(int inicial, std::stack<int>& vertices_vistos) {
   std::stack<int> vertices;
 
   vertices.push(inicial);
-  vertices_[inicial].visto = true;
+  vertices_[inicial].visitar();
 
   while (!vertices.empty()) {
 
@@ -151,8 +151,8 @@ void Digrafo::dfs(int inicial, std::stack<int>& vertices_vistos) {
 
     int ultimo_visto = true;
     for (int i : vecinos_[vertice]) {
-      if (!vertices_[i].visto) {
-        vertices_[i].visto = true;
+      if (!vertices_[i].fue_visitado()) {
+        vertices_[i].visitar();
         vertices.push(i);
         ultimo_visto = false;
       }
@@ -358,7 +358,7 @@ int Digrafo::dame_posicion_vertice(int vertice, int color, bool valor_de_verdad)
   int posicion_final;
   for (int i = 0 ; i < 4 ; ++i) {
     int pos = posicion_inicial + i;
-    if (vertices_[pos].color == color && vertices_[pos].valor_de_verdad == valor_de_verdad)
+    if (vertices_[pos].dame_color() == color && vertices_[pos].dame_valor_de_verdad() == valor_de_verdad)
       posicion_final = pos;
   }
   return posicion_final;

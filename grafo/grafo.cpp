@@ -28,12 +28,13 @@ void Grafo::agregar_vertice(std::set<int> colores) {
   vecinos_.push_back(l);
 }
 
-int Grafo::dame_grado(int vertice) {
-  return vertices_[vertice].grado;
+std::set<int> Grafo::dame_colores_posibles(int vertice) {
+  Vertice v = dame_vertice(vertice);
+  return v.dame_colores_posibles();
 }
 
-std::set<int> Grafo::dame_colores_posibles(int vertice) {
-  return vertices_[vertice].colores_disponibles;
+Vertice Grafo::dame_vertice(int num) {
+  return vertices_[num];
 }
 
 std::set<int> Grafo::dame_vecinos(int vertice) {
@@ -52,7 +53,7 @@ void Grafo::dfs(int inicial, std::stack<int>& vertices_vistos) {
   std::stack<int> vertices;
 
   vertices.push(inicial);
-  vertices_[inicial].visto = true;
+  vertices_[inicial].visitar();
 
   while (!vertices.empty()) {
 
@@ -61,8 +62,8 @@ void Grafo::dfs(int inicial, std::stack<int>& vertices_vistos) {
 
     int ultimo_visto = true;
     for (int i : vecinos_[vertice]) {
-      if (!vertices_[i].visto) {
-        vertices_[i].visto = true;
+      if (!vertices_[i].fue_visitado()) {
+        vertices_[i].visitar();
         vertices.push(i);
         ultimo_visto = false;
       }
@@ -87,14 +88,13 @@ bool Grafo::existe_arista(int vertice1, int vertice2) {
   return res; 
 }
 
-
 void Grafo::imprimir() {
   for (Vertice& v : vertices_) {
     std::cout << "{ " << std::endl; 
-    std::cout << "  vertice: " << v.num << std::endl;
+    std::cout << "  vertice: " << v.dame_nombre() << std::endl;
     std::cout << "  Posibles colores: {";
     int j = 0;
-    for (int i : v.colores_disponibles) {
+    for (int i : v.dame_colores_posibles()) {
       if (j == 0) {
         std::cout << i;
         ++j;
@@ -104,7 +104,7 @@ void Grafo::imprimir() {
     }
     std::cout << "}" << std::endl;
     std::cout << "  Vecinos y su color";
-    for (int i : vecinos_[v.num]) {
+    for (int i : vecinos_[v.dame_nombre()]) {
       std::cout << " --> " << i;
     }
     std::cout << std::endl;
@@ -114,11 +114,15 @@ void Grafo::imprimir() {
     //std::cout << "]"<< std::endl;
 
     std::cout << "                   ";
-    for (int i : vecinos_[v.num]) {
-      std::cout << "     " << vertices_[i].color;
+    for (int i : vecinos_[v.dame_nombre()]) {
+      std::cout << "     " << vertices_[i].dame_color();
     }
     std::cout << std::endl;
 
     std::cout << "}" << std::endl;
   }
+}
+
+void Grafo::pintar(int vertice, int color) {
+  vertices_[vertice].pintar(color);
 }

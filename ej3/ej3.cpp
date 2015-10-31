@@ -55,14 +55,29 @@ void goloso_por_grado_vertice(Grafo& g) {
 
     // Hallar el vertice de mayor grado
     int vertice = maximo(usados);
-    std::set<int> color_vertice = g.dame_colores_posibles();
-    std::set<int>::iterator it = color_vertice.begin();
+    std::set<int> color_vertice = g.dame_colores_posibles(vertice);
 
     // recorro los vecinos del maximo
     std::set<int> vecinos = g.dame_vecinos(vertice);
     for (int v : vecinos) {
 
-      std::set<int> colores 
+      // Si tengo mas de un color disponible para pintarlo
+      if (color_vertice.size() > 1) {
+
+        int color_vecino = g.dame_color(v);
+        if (color_vecino != -1) { // Ya esta pintado y no puedo usar ese color
+          // Me fijo si el de grado maximo tiene ese color como disponible
+          std::set<int>::iterator it = colores_vertice.find(color_vecino);
+          if (it != colores_vertice.end()) 
+            // Si es asi lo borro
+            colores_vertice.erase(it);
+        } else {
+          // Si no esta pintado el vecino
+        
+        }
+        std::set<int> colores = g.dame_colores_posibles(v); 
+
+      }
 
         // Una vez que tengo el conjunto de colores del vertice tengo que verificar
         // 1) Filtrar los colores que ya estan siendo utilizados por los vertices vecinos 

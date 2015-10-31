@@ -9,6 +9,8 @@
 #include <assert.h>
 #include <iostream>
 
+#include "vertice.h"
+
 class Grafo {
   
   public:
@@ -19,11 +21,11 @@ class Grafo {
     void agregar_arista(int vertice1, int vertice2);
     void agregar_vertice(std::set<int> colores);
 
-    int cant_vertices() {return vecinos_.size();};
+    int cant_vertices() {return vertices_.size();};
 
-    std::set<int> dame_colores_posibles(int vertice);
     std::set<int> dame_vecinos(int vertice);
-    int dame_grado(int vertice);
+    std::set<int> dame_colores_posibles(int vertice);
+    Vertice dame_vertice(int num);
 
     void imprimir();
 
@@ -32,16 +34,9 @@ class Grafo {
     bool existe_arista(int vertice1, int vertice2);
     bool existe_vertice(int vertice);
 
-  private:
+    void pintar(int vertice, int color);
 
-    struct Vertice {
-      std::set<int> colores_disponibles;
-      int grado;
-      int color;
-      int num;
-      bool visto;
-      Vertice(std::set<int > colores, int n) : colores_disponibles(colores) , grado(0) ,color(-1) , visto(false) , num(n) {};
-    };
+  private:
 
     std::vector<std::list<int> > vecinos_;
     std::vector<Vertice> vertices_;

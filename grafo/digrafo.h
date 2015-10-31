@@ -11,6 +11,7 @@
 #include <algorithm>
 //#include <boost/foreach.hpp>
 #include "grafo.h"
+#include "vertice_digrafo.h"
 
 //#define foreach BOOST_FOREACH
 
@@ -41,15 +42,6 @@ class Digrafo {
 
   private:
 
-    struct Vertice {
-      int color;
-      int num;
-      int id;
-      bool valor_de_verdad; 
-      bool visto;
-      Vertice(int col, int n, int id, bool v) : color(col) , num(n) , id(id) , valor_de_verdad(v) , visto(false) {};
-    };
-
     void expandir_vertice_1_color(std::set<int> colores, int v1);
     void expandir_vertice_2_colores(std::set<int> colores, int v1);
 
@@ -59,7 +51,7 @@ class Digrafo {
     int dame_posicion_vertice(int vertice, int color, bool valor_de_verdad);
 
     std::vector<std::list<int> > vecinos_;
-    std::vector<Vertice> vertices_;
+    std::vector<Vertice_digrafo> vertices_;
 };
 
 #endif
