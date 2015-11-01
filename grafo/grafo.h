@@ -38,6 +38,9 @@ class Grafo {
 
     void pintar(int vertice, int color);
 
+    std::set<int> conjunto_colores_vecinos(int vertice);
+
+
   private:
 
     std::vector<std::list<int> > vecinos_;

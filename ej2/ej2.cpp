@@ -122,15 +122,35 @@ double get_time() {
 //  }
 //  return 0;
 //}
-
+void borrar_subconjunto(std::set<int> &c1, std::set<int> &c2) {
+  std::set<int>::iterator it;
+  for (int i : c2) {
+    it = c1.find(i);
+    if (it != c1.end())
+      c1.erase(it);
+  }  
+}
 
 bool list_coloring_desde_nodo(Grafo &g, int actual, int padre, int color){
   
   bool pude_pintar = false;
 
   //caso base
-  if (g.dame_colores_posibles(actual).size() == 0)
-    pude_pintar = true; //estoy en un nodo que pinté en el paso anterior, y no tengo otros que pintar
+  //if (g.dame_colores_posibles(actual).size() == 0)
+  //  pude_pintar = true; //estoy en un nodo que pinté en el paso anterior, y no tengo otros que pintar
+
+  if (g.dame_vecinos_no_visitados(actual).size() == 0) {
+  //estoy en una "hoja"
+    std::set<int> aux = g.dame_colores_posibles(actual);
+    std::set<int>::iterator it = aux.find(color);
+
+    // Si me da una posicion valida entonces esta
+    if (it != aux.end())
+      aux.erase(it);
+    
+
+
+  }
 
   //paso recursivo
   std::set<int> colores = g.dame_colores_posibles(actual);
@@ -147,6 +167,9 @@ bool list_coloring_desde_nodo(Grafo &g, int actual, int padre, int color){
         //si no pude pintar, tengo que volver al vértice anterior 
           pude_pintar = false; 
       }
+
+      if (!pude_pintar) 
+        g.pintar(actual, -1);
     }
   }
   return pude_pintar;
@@ -167,28 +190,39 @@ int main(/*int argc, char** argv*/) {
   // El tercero donde puedo escribir datos (tiempos)
   Grafo g;
 
-  std::set<int> color_v1;
-  color_v1.insert(1);
-  color_v1.insert(2);
+  std::set<int> color_v1{1, 2};
   g.agregar_vertice(color_v1);
 
-  std::set<int> color_v2;
-  color_v2.insert(1);
+  std::set<int> color_v2{1};
   g.agregar_vertice(color_v2);
 
-  std::set<int> color_v3;
-  color_v3.insert(1);
+  std::set<int> color_v3{3, 1};
   g.agregar_vertice(color_v3);
 
   g.agregar_arista(0, 1);
   g.agregar_arista(0, 2);
   g.agregar_arista(1, 2);
 
-  bool res = list_coloring_backtracking(g);
+  Grafo g2;
+
+  std::set<int> color_v12{1};
+  g2.agregar_vertice(color_v1);
+
+  std::set<int> color_v22{1};
+  g2.agregar_vertice(color_v2);
+
+  std::set<int> color_v32{3};
+  g2.agregar_vertice(color_v3);
+
+  g2.agregar_arista(0, 1);
+  g2.agregar_arista(0, 2);
+  g2.agregar_arista(1, 2);
+
+  bool res = list_coloring_backtracking(g2);
 
   std::cout << "Se pudo colorear " << res << std::endl;
 
-  g.imprimir();
+  g2.imprimir();
 
   //evaluarTests(fileTestData, fileTestResult, fileTestWrite);
   

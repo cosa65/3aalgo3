@@ -57,7 +57,7 @@ std::set<int> Grafo::dame_vecinos_no_visitados(int vertice) {
 
   std::set<int> vecinos;
   for (int i : vecinos_[vertice]) {
-    if (i.dame_color() == -1)
+    if (dame_color(i) == -1)
       vecinos.insert(i);
   }
   return vecinos;
@@ -142,4 +142,16 @@ void Grafo::imprimir() {
 
 void Grafo::pintar(int vertice, int color) {
   vertices_[vertice].pintar(color);
+}
+
+std::set<int> Grafo::conjunto_colores_vecinos(int vertice) {
+  std::set<int> res;
+  std::set<int> colores;
+  std::set<int> vecinos = dame_vecinos(vertice);
+  for (int i : vecinos) {
+    colores = dame_colores_posibles(i);
+    for (int j : colores) 
+      res.insert(j);
+  } 
+  return res;
 }
