@@ -26,6 +26,7 @@ class Grafo {
     std::set<int> dame_vecinos(int vertice);
     std::set<int> dame_vecinos_no_visitados(int vertice);
     std::set<int> dame_colores_posibles(int vertice);
+    int dame_color(int vertice);
     Vertice dame_vertice(int num);
 
     void imprimir();
