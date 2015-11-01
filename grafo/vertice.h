@@ -10,6 +10,8 @@ class Vertice {
     Vertice();
     Vertice(std::set<int> colores, int num);
 
+    void aumentar_grado();
+
     std::set<int> dame_colores_posibles();
     int dame_grado();
     int dame_color();

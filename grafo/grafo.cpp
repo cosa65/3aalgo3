@@ -20,6 +20,8 @@ void Grafo::agregar_arista(int vertice1, int vertice2) {
   if (!existe_arista(vertice1, vertice2)) {
     vecinos_[vertice1].push_back(vertice2);
     vecinos_[vertice2].push_back(vertice1);
+    vertices_[vertice1].aumentar_grado();
+    vertices_[vertice2].aumentar_grado();
   }
 }
 
@@ -121,7 +123,7 @@ void Grafo::imprimir() {
     //}
     //std::cout << "]"<< std::endl;
 
-    std::cout << "                   ";
+    std::cout << "                    ";
     for (int i : vecinos_[v.dame_nombre()]) {
       std::cout << "     " << vertices_[i].dame_color();
     }
