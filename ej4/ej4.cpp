@@ -8,6 +8,7 @@
 #include <sys/time.h>
 
 #include "../grafo/grafo.h"
+#include "goloso.cpp"
 
 /*
 timeval start, end;
@@ -28,7 +29,7 @@ double get_time() {
 
 bool paso_busqueda_local(Grafo in){             //Devuelve true si consiguió dar un paso que mejorara el estado anterior
   int verts = in.cant_vertices();
-  int conflictos = verts;
+  int conflictos = 0;
   int mejorPasov1, mejorPasov2;
 
   for(int i=0; i<verts; i++){
@@ -41,7 +42,7 @@ bool paso_busqueda_local(Grafo in){             //Devuelve true si consiguió da
       }
     }
   }
-  if(conflictos == verts){
+  if(conflictos == 0){
     return false;
   } else {
     in.intercambiar_color(mejorPasov1,mejorPasov2);
@@ -111,6 +112,9 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, std::stri
       grafo.agregar_arista(v1, v2);
     }
 
+    
+    goloso_por_grado_vertice(grafo);
+    grafo.imprimir();
     busqueda_local(grafo);
 
     grafo.imprimir();
