@@ -47,6 +47,17 @@ std::set<int> Grafo::dame_vecinos(int vertice) {
   return vecinos;
 }
 
+std::set<int> Grafo::dame_vecinos_no_visitados(int vertice) {
+  assert (existe_vertice(vertice)); 
+
+  std::set<int> vecinos;
+  for (int i : vecinos_[vertice]) {
+    if (i.dame_color() == -1)
+      vecinos.insert(i);
+  }
+  return vecinos;
+}
+
 void Grafo::dfs(int inicial, std::stack<int>& vertices_vistos) {
   assert(existe_vertice(inicial));
 
