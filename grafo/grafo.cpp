@@ -17,8 +17,10 @@ Grafo::Grafo(int vertices) {
 void Grafo::agregar_arista(int vertice1, int vertice2) {
   assert (existe_vertice(vertice1) && existe_vertice(vertice2));
 
-  vecinos_[vertice1].push_back(vertice2);
-  vecinos_[vertice2].push_back(vertice1);
+  if (!existe_arista(vertice1, vertice2)) {
+    vecinos_[vertice1].push_back(vertice2);
+    vecinos_[vertice2].push_back(vertice1);
+  }
 }
 
 void Grafo::agregar_vertice(std::set<int> colores) {

@@ -107,7 +107,7 @@ void test_arista_entre_vertice_interseccion_nula() {
 } 
 
 int main() {
-  //test_vertice_con_un_color();
+  test_vertice_con_un_color();
   //test_vertice_con_dos_colores();
   //test_arista_entre_vertice_interseccion_un_color();
   //test_arista_entre_vertice_interseccion_dos_colores();
