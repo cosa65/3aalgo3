@@ -37,6 +37,11 @@ Vertice Grafo::dame_vertice(int num) {
   return vertices_[num];
 }
 
+int Grafo::dame_color(int vertice) {
+  Vertice v = dame_vertice(vertice);
+  return v.dame_color();
+}
+
 std::set<int> Grafo::dame_vecinos(int vertice) {
   assert (existe_vertice(vertice)); 
 
