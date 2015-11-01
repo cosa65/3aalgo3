@@ -103,6 +103,7 @@ void Grafo::imprimir() {
       }
     }
     std::cout << "}" << std::endl;
+    std::cout << "  color: " << v.dame_color() << std::endl;
     std::cout << "  Vecinos y su color";
     for (int i : vecinos_[v.dame_nombre()]) {
       std::cout << " --> " << i;

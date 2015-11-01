@@ -39,3 +39,11 @@ int Vertice::dame_nombre() {
 void Vertice::pintar(int color) {
   color_ = color;
 }
+
+bool Vertice::operator <(Vertice v) const {
+  return grado_ < v.dame_grado(); 
+}
+
+bool Vertice::operator >(Vertice v) const {
+  return grado_ > v.dame_grado(); 
+}

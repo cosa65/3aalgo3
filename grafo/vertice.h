@@ -17,6 +17,9 @@ class Vertice {
 
     bool fue_visitado();
 
+    bool operator <(Vertice v) const;
+    bool operator >(Vertice v) const;
+
     void pintar(int color);
 
     void visitar();
