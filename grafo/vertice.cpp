@@ -44,6 +44,10 @@ void Vertice::pintar(int color) {
   color_ = color;
 }
 
+bool Vertice::coincide_color(Vertice otro){
+  return (color_ == otro.dame_color());
+}
+
 // Estas operaciones de comparacion estan hechas
 // para el ejercicio 3.
 // De esta manera puedo encolar en una cola de prioridad

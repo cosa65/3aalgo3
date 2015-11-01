@@ -6,7 +6,8 @@
 #include <sstream>
 #include <vector>
 #include <sys/time.h>
-#include "grafo.h"
+
+#include "../grafo/grafo.h"
 
 /*
 timeval start, end;
@@ -23,14 +24,43 @@ double get_time() {
 */
 //Funciones y datos utilizados para la toma de tiempos
 
-void busquedaLocal(){
+
+
+bool paso_busqueda_local(Grafo in){             //Devuelve true si consiguió dar un paso que mejorara el estado anterior
+  int verts = in.cant_vertices();
+  int conflictos = verts;
+  int mejorPasov1, mejorPasov2;
+
+  for(int i=0; i<verts; i++){
+    for(int j=0; j<verts; j++){
+      int actual = in.valor_de_intercambio(i,j);
+      if(actual < conflictos){
+        conflictos = actual;
+        mejorPasov1 = i;
+        mejorPasov2 = j;
+      }
+    }
+  }
+  if(conflictos == verts){
+    return false;
+  } else {
+    in.intercambiar_color(mejorPasov1,mejorPasov2);
+    return true;
+  }
+}
+
+void busqueda_local(Grafo in){
+  bool mejoro = true;
+  while(mejoro){
+    mejoro = paso_busqueda_local(in);
+  }
 }
 
 int evaluarTests(std::string fileTestData, std::string fileTestResult, std::string fileTestWrite) {
   std::string line;
   std::ifstream fileData (fileTestData.c_str());
   //std::ifstream fileResult (fileTestResult.c_str());
-  //std::ofstream fileWrite (fileTestWrite.c_str());
+  std::ofstream fileWrite (fileTestWrite.c_str());
   std::string s;
   std::string res;
   int z = 1;
@@ -81,6 +111,7 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, std::stri
       grafo.agregar_arista(v1, v2);
     }
 
+    busqueda_local(grafo);
 
     grafo.imprimir();
     ++z;
