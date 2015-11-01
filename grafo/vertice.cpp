@@ -12,6 +12,10 @@ Vertice::Vertice(std::set<int> colores, int num) {
   num_ = num;
 }
 
+void Vertice::aumentar_grado() {
+  grado_++;
+}
+
 std::set<int> Vertice::dame_colores_posibles() {
   return colores_disponibles_;
 }
@@ -40,10 +44,23 @@ void Vertice::pintar(int color) {
   color_ = color;
 }
 
+// Estas operaciones de comparacion estan hechas
+// para el ejercicio 3.
+// De esta manera puedo encolar en una cola de prioridad
+// por maximo grado y por minima cantidad de colores disponibles
+
+//bool Vertice::operator <(Vertice v) const {
+//  return grado_ > v.dame_grado(); 
+//}
+//
+//bool Vertice::operator >(Vertice v) const {
+//  return grado_ < v.dame_grado(); 
+//}
+
 bool Vertice::operator <(Vertice v) const {
-  return grado_ < v.dame_grado(); 
+  return colores_disponibles_.size() < v.dame_colores_posibles().size(); 
 }
 
 bool Vertice::operator >(Vertice v) const {
-  return grado_ > v.dame_grado(); 
+  return colores_disponibles_.size() > v.dame_colores_posibles().size(); 
 }
