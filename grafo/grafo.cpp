@@ -150,12 +150,10 @@ void Grafo::pintar(int vertice, int color) {
 
 std::set<int> Grafo::conjunto_colores_vecinos(int vertice) {
   std::set<int> res;
-  std::set<int> colores;
   std::set<int> vecinos = dame_vecinos(vertice);
   for (int i : vecinos) {
-    colores = dame_colores_posibles(i);
-    for (int j : colores) 
-      res.insert(j);
+    if (dame_color(i) != -1)
+      res.insert(dame_color(i));
   } 
   return res;
 }

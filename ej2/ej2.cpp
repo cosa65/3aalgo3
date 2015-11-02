@@ -122,6 +122,7 @@ double get_time() {
 //  }
 //  return 0;
 //}
+
 void borrar_subconjunto(std::set<int> &c1, std::set<int> &c2) {
   std::set<int>::iterator it;
   for (int i : c2) {
@@ -136,40 +137,44 @@ bool list_coloring_desde_nodo(Grafo &g, int actual, int padre, int color){
   bool pude_pintar = false;
 
   //caso base
-  //if (g.dame_colores_posibles(actual).size() == 0)
-  //  pude_pintar = true; //estoy en un nodo que pinté en el paso anterior, y no tengo otros que pintar
 
   if (g.dame_vecinos_no_visitados(actual).size() == 0) {
   //estoy en una "hoja"
     std::set<int> aux = g.dame_colores_posibles(actual);
-    std::set<int>::iterator it = aux.find(color);
-
-    // Si me da una posicion valida entonces esta
-    if (it != aux.end())
-      aux.erase(it);
-    
-
-
-  }
-
-  //paso recursivo
-  std::set<int> colores = g.dame_colores_posibles(actual);
-  for (std::set<int>::iterator it_c = colores.begin(); it_c != colores.end() && !pude_pintar; ++it_c) {
-  //mientras tenga colores no utilizados, y no hay podido pintar el grafo  
-    if (*it_c != color){ //pinto sólo si no es igual al color de mi padre
-      g.pintar(actual, *it_c); //pinto actual de un color determinado
+    std::set<int> aux2 = g.conjunto_colores_vecinos(actual);
+    borrar_subconjunto(aux, aux2);
+    if (!aux.empty()) {
+      std::set<int>::iterator it = aux.begin();
+      g.pintar(actual, *it);
       pude_pintar = true;
+    } else {
+      g.pintar(actual, -1);
+      pude_pintar = false;
+    }
+  } else {
 
-      std::set<int> vecinos = g.dame_vecinos_no_visitados(actual);
-      
-      for (std::set<int>::iterator it = vecinos.begin(); it!=vecinos.end() && pude_pintar; ++it) {
-        if (!list_coloring_desde_nodo(g, *it, actual, *it_c))
-        //si no pude pintar, tengo que volver al vértice anterior 
-          pude_pintar = false; 
-      }
+    //paso recursivo
 
-      if (!pude_pintar) 
-        g.pintar(actual, -1);
+    std::set<int> colores = g.dame_colores_posibles(actual);
+    std::set<int> colores_vecinos = g.conjunto_colores_vecinos(actual);
+    borrar_subconjunto(colores, colores_vecinos);
+
+    for (std::set<int>::iterator it_c = colores.begin(); it_c != colores.end() && !pude_pintar; ++it_c) {
+    //mientras tenga colores no utilizados, y no hay podido pintar el grafo  
+      //if (*it_c != color){ //pinto sólo si no es igual al color de mi padre
+        g.pintar(actual, *it_c); //pinto actual de un color determinado
+        pude_pintar = true;
+
+        std::set<int> vecinos = g.dame_vecinos_no_visitados(actual);
+        
+        for (std::set<int>::iterator it = vecinos.begin(); it!=vecinos.end() && pude_pintar; ++it) {
+          if (!list_coloring_desde_nodo(g, *it, actual, *it_c)) {
+          //si no pude pintar, tengo que volver al vértice anterior 
+            g.pintar(actual, -1);
+            pude_pintar = false; 
+          }  
+        }
+      //}
     }
   }
   return pude_pintar;
@@ -206,23 +211,44 @@ int main(/*int argc, char** argv*/) {
   Grafo g2;
 
   std::set<int> color_v12{1};
-  g2.agregar_vertice(color_v1);
+  g2.agregar_vertice(color_v12);
 
   std::set<int> color_v22{1};
-  g2.agregar_vertice(color_v2);
+  g2.agregar_vertice(color_v22);
 
   std::set<int> color_v32{3};
-  g2.agregar_vertice(color_v3);
+  g2.agregar_vertice(color_v32);
 
   g2.agregar_arista(0, 1);
   g2.agregar_arista(0, 2);
   g2.agregar_arista(1, 2);
 
-  bool res = list_coloring_backtracking(g2);
+  Grafo g3;
+
+  std::set<int> color_1{1, 2};
+  std::set<int> color_2{1, 2};
+  std::set<int> color_3{3, 1, 2};
+  std::set<int> color_4{4, 3, 1, 2};
+  g3.agregar_vertice(color_4);
+
+  g3.agregar_vertice(color_3);
+
+  g3.agregar_vertice(color_2);
+
+  g3.agregar_vertice(color_1);
+
+  g3.agregar_arista(0, 1);
+  g3.agregar_arista(0, 2);
+  g3.agregar_arista(0, 3);
+  g3.agregar_arista(1, 2);
+  g3.agregar_arista(1, 3);
+  g3.agregar_arista(2, 3);
+
+  bool res = list_coloring_backtracking(g3);
 
   std::cout << "Se pudo colorear " << res << std::endl;
 
-  g2.imprimir();
+  g3.imprimir();
 
   //evaluarTests(fileTestData, fileTestResult, fileTestWrite);
   
