@@ -40,6 +40,9 @@ class Grafo {
 
     std::set<int> conjunto_colores_vecinos(int vertice);
 
+    int conflictos(int v);
+    int valor_de_intercambio(int v1, int v2);
+    void intercambiar_color(int v1, int v2);
 
   private:
 

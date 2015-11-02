@@ -26,6 +26,8 @@ class Vertice {
 
     void visitar();
 
+    bool coincide_color(Vertice otro);
+
   private:
 
       std::set<int> colores_disponibles_;

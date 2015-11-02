@@ -157,3 +157,24 @@ std::set<int> Grafo::conjunto_colores_vecinos(int vertice) {
   } 
   return res;
 }
+
+void Grafo::intercambiar_color(int v1, int v2){            //Intercambia el color de dos vértices 
+  int swapear = vertices_[v1].dame_color();
+  vertices_[v1].pintar(vertices_[v2].dame_color());
+  vertices_[v2].pintar(swapear);
+}
+
+int Grafo::valor_de_intercambio(int v1, int v2){                        //Devuelve el balance de conflictos (cuanto aumentaron) si se intercambian los coles
+  int conf = conflictos(v1) + conflictos(v2);
+  intercambiar_color(v1,v2);
+  int res = (conflictos(v1) + conflictos(v2)) - conf;
+  intercambiar_color(v1,v2);
+  return res;
+}
+
+int Grafo::conflictos(int v){
+  int conflictos = 0;
+  for(int i : vecinos_[v]){
+    if((vertices_[i]).coincide_color(vertices_[v])) conflictos++;
+  }
+}
