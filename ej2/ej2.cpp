@@ -185,14 +185,8 @@ bool list_coloring_backtracking(Grafo &g){
   return list_coloring_desde_nodo(g, 0, 0, -1);
 }
 
-int main(/*int argc, char** argv*/) {
-  //std::string fileTestData(argv[1]);
-  //std::string fileTestResult(argv[2]);
-  //std::string fileTestWrite(argv[3]);
-  // Recibo por parametro tres archivos
-  // El primero del cual leo los datos a evaluar
-  // El segundo en el cual evaluo si los resultados fueron correctos
-  // El tercero donde puedo escribir datos (tiempos)
+void test_c3_coloreable() {
+  
   Grafo g;
 
   std::set<int> color_v1{1, 2};
@@ -208,47 +202,280 @@ int main(/*int argc, char** argv*/) {
   g.agregar_arista(0, 2);
   g.agregar_arista(1, 2);
 
-  Grafo g2;
+  bool res = list_coloring_backtracking(g);
 
-  std::set<int> color_v12{1};
-  g2.agregar_vertice(color_v12);
+  std::cout << "Se pudo colorear " << res << std::endl;
 
-  std::set<int> color_v22{1};
-  g2.agregar_vertice(color_v22);
+  g.imprimir();
+}
 
-  std::set<int> color_v32{3};
-  g2.agregar_vertice(color_v32);
+void test_c3_no_coloreable() {
 
-  g2.agregar_arista(0, 1);
-  g2.agregar_arista(0, 2);
-  g2.agregar_arista(1, 2);
+  Grafo g;
 
-  Grafo g3;
+  std::set<int> color_v1{1};
+  g.agregar_vertice(color_v1);
+
+  std::set<int> color_v2{1};
+  g.agregar_vertice(color_v2);
+
+  std::set<int> color_v3{3};
+  g.agregar_vertice(color_v3);
+
+  g.agregar_arista(0, 1);
+  g.agregar_arista(0, 2);
+  g.agregar_arista(1, 2);
+
+  bool res = list_coloring_backtracking(g);
+
+  std::cout << "Se pudo colorear " << res << std::endl;
+
+  g.imprimir();
+}
+
+void test_k4_coloreable() {
+  
+  Grafo g;
 
   std::set<int> color_1{1, 2};
   std::set<int> color_2{1, 2};
   std::set<int> color_3{3, 1, 2};
   std::set<int> color_4{4, 3, 1, 2};
-  g3.agregar_vertice(color_4);
 
-  g3.agregar_vertice(color_3);
+  g.agregar_vertice(color_4);
 
-  g3.agregar_vertice(color_2);
+  g.agregar_vertice(color_3);
 
-  g3.agregar_vertice(color_1);
+  g.agregar_vertice(color_2);
 
-  g3.agregar_arista(0, 1);
-  g3.agregar_arista(0, 2);
-  g3.agregar_arista(0, 3);
-  g3.agregar_arista(1, 2);
-  g3.agregar_arista(1, 3);
-  g3.agregar_arista(2, 3);
+  g.agregar_vertice(color_1);
 
-  bool res = list_coloring_backtracking(g3);
+  g.agregar_arista(0, 1);
+  g.agregar_arista(0, 2);
+  g.agregar_arista(0, 3);
+  g.agregar_arista(1, 2);
+  g.agregar_arista(1, 3);
+  g.agregar_arista(2, 3);
+  
+  bool res = list_coloring_backtracking(g);
 
   std::cout << "Se pudo colorear " << res << std::endl;
 
-  g3.imprimir();
+  g.imprimir();
+}
+
+void test_k6_coloreable() {
+  
+  Grafo g;
+
+  std::set<int> color_1{1, 2, 3, 4, 5, 6};
+  std::set<int> color_2{1, 2, 3};
+  std::set<int> color_3{4, 5, 6};
+  std::set<int> color_4{1, 2, 6};
+
+  g.agregar_vertice(color_1); //v0
+
+  g.agregar_vertice(color_2); //v1
+
+  g.agregar_vertice(color_3); //v2
+
+  g.agregar_vertice(color_4); //v3
+
+  g.agregar_vertice(color_2); //v4
+
+  g.agregar_vertice(color_1); //v5
+
+  g.agregar_arista(0, 1);
+  g.agregar_arista(0, 2);
+  g.agregar_arista(0, 3);
+  g.agregar_arista(0, 4);
+  g.agregar_arista(0, 5);
+  g.agregar_arista(1, 2);
+  g.agregar_arista(1, 3);
+  g.agregar_arista(1, 4);
+  g.agregar_arista(1, 5);
+  g.agregar_arista(2, 3);
+  g.agregar_arista(2, 4);
+  g.agregar_arista(2, 5);
+  g.agregar_arista(3, 4);
+  g.agregar_arista(3, 5);
+  g.agregar_arista(4, 5);
+
+  bool res = list_coloring_backtracking(g);
+
+  std::cout << "Se pudo colorear " << res << std::endl;
+
+  g.imprimir();
+}
+
+void test_k6_no_coloreable() {
+  
+  Grafo g;
+  
+  //no deberia poder colorear porque es un completo de 6 vertices y solo hay 5 colores
+  std::set<int> color_1{1, 2, 3, 4};
+  std::set<int> color_2{1, 2, 3};
+  std::set<int> color_3{4, 3, 6};
+  std::set<int> color_4{1, 2, 6};
+
+  g.agregar_vertice(color_1); //v0
+
+  g.agregar_vertice(color_2); //v1
+
+  g.agregar_vertice(color_3); //v2
+
+  g.agregar_vertice(color_4); //v3
+
+  g.agregar_vertice(color_2); //v4
+
+  g.agregar_vertice(color_1); //v5
+
+  g.agregar_arista(0, 1);
+  g.agregar_arista(0, 2);
+  g.agregar_arista(0, 3);
+  g.agregar_arista(0, 4);
+  g.agregar_arista(0, 5);
+  g.agregar_arista(1, 2);
+  g.agregar_arista(1, 3);
+  g.agregar_arista(1, 4);
+  g.agregar_arista(1, 5);
+  g.agregar_arista(2, 3);
+  g.agregar_arista(2, 4);
+  g.agregar_arista(2, 5);
+  g.agregar_arista(3, 4);
+  g.agregar_arista(3, 5);
+  g.agregar_arista(4, 5);
+
+  bool res = list_coloring_backtracking(g);
+
+  std::cout << "Se pudo colorear " << res << std::endl;
+
+  g.imprimir();
+}
+
+void test_barriletes_unidos_coloreable() {
+  
+  Grafo g;
+
+  std::set<int> color_1{1, 2, 3};
+
+  g.agregar_vertice(color_1); //v0
+
+  g.agregar_vertice(color_1); //v1
+
+  g.agregar_vertice(color_1); //v2
+
+  g.agregar_vertice(color_1); //v3
+
+  g.agregar_vertice(color_1); //v4
+
+  g.agregar_vertice(color_1); //v5
+
+  g.agregar_vertice(color_1); //v5
+
+  g.agregar_arista(0, 1);
+  g.agregar_arista(0, 2);
+  g.agregar_arista(1, 2);
+  g.agregar_arista(1, 3);
+  g.agregar_arista(2, 3);
+  g.agregar_arista(3, 4);
+  g.agregar_arista(3, 5);
+  g.agregar_arista(4, 5);
+  g.agregar_arista(4, 6);
+  g.agregar_arista(5, 6);
+
+  bool res = list_coloring_backtracking(g);
+
+  std::cout << "Se pudo colorear " << res << std::endl;
+
+  g.imprimir();
+}
+
+void test_barriletes_unidos_no_coloreable() {
+  
+  Grafo g;
+
+  std::set<int> color_1{1, 2, 3};
+
+  g.agregar_vertice(color_1); //v0
+
+  g.agregar_vertice(color_1); //v1
+
+  g.agregar_vertice(color_1); //v2
+
+  g.agregar_vertice(color_1); //v3
+
+  g.agregar_vertice(color_1); //v4
+
+  g.agregar_vertice(color_1); //v5
+
+  g.agregar_vertice(color_1); //v5
+
+  g.agregar_arista(0, 1);
+  g.agregar_arista(0, 2);
+  g.agregar_arista(0, 6);
+  g.agregar_arista(1, 2);
+  g.agregar_arista(1, 3);
+  g.agregar_arista(2, 3);
+  g.agregar_arista(3, 4);
+  g.agregar_arista(3, 5);
+  g.agregar_arista(4, 5);
+  g.agregar_arista(4, 6);
+  g.agregar_arista(5, 6);
+
+  bool res = list_coloring_backtracking(g);
+
+  std::cout << "Se pudo colorear " << res << std::endl;
+
+  g.imprimir();
+}
+
+void test_k33_coloreable() {
+    
+  Grafo g;
+
+  std::set<int> color_1{1, 2};
+
+  g.agregar_vertice(color_1); //v0
+
+  g.agregar_vertice(color_1); //v1
+
+  g.agregar_vertice(color_1); //v2
+
+  g.agregar_vertice(color_1); //v3
+
+  g.agregar_vertice(color_1); //v4
+
+  g.agregar_vertice(color_1); //v5
+
+  g.agregar_arista(0, 1);
+  g.agregar_arista(0, 3);
+  g.agregar_arista(0, 5);
+  g.agregar_arista(2, 1);
+  g.agregar_arista(2, 3);
+  g.agregar_arista(2, 5);
+  g.agregar_arista(4, 1);
+  g.agregar_arista(4, 3);
+  g.agregar_arista(4, 5);
+
+  bool res = list_coloring_backtracking(g);
+
+
+  std::cout << "Se pudo colorear " << res << std::endl;
+
+  g.imprimir();
+}
+
+int main(/*int argc, char** argv*/) {
+  //std::string fileTestData(argv[1]);
+  //std::string fileTestResult(argv[2]);
+  //std::string fileTestWrite(argv[3]);
+  // Recibo por parametro tres archivos
+  // El primero del cual leo los datos a evaluar
+  // El segundo en el cual evaluo si los resultados fueron correctos
+  // El tercero donde puedo escribir datos (tiempos)
+
+  test_k33_coloreable();
 
   //evaluarTests(fileTestData, fileTestResult, fileTestWrite);
   
