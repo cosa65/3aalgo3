@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <set>
+#include <queue>
 #include <list>
 #include <tuple>
 #include <stack>
@@ -22,27 +23,27 @@ class Grafo {
     void agregar_vertice(std::set<int> colores);
 
     int cant_vertices() {return vertices_.size();};
+    int conflictos(int v);
+    int conflictos_totales();
+    std::set<int> conjunto_colores_vecinos(int vertice);
 
     std::set<int> dame_vecinos(int vertice);
     std::set<int> dame_vecinos_no_visitados(int vertice);
     std::set<int> dame_colores_posibles(int vertice);
     int dame_color(int vertice);
     Vertice dame_vertice(int num);
+    void dfs(int inicial, std::stack<int>& vertices_vistos);
+
+    void intercambiar_color(int v1, int v2);
 
     void imprimir();
-
-    void dfs(int inicial, std::stack<int>& vertices_vistos);
     
     bool existe_arista(int vertice1, int vertice2);
     bool existe_vertice(int vertice);
 
     void pintar(int vertice, int color);
 
-    std::set<int> conjunto_colores_vecinos(int vertice);
-
-    int conflictos(int v);
     int valor_de_intercambio(int v1, int v2);
-    void intercambiar_color(int v1, int v2);
 
   private:
 

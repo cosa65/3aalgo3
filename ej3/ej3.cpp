@@ -56,6 +56,7 @@ void pintar_vertices(Grafo& g, std::priority_queue<Vertice> vertices) { //std::p
 
   // Recorro todos los vertices del grafo
   while (vistos < cant_vertices) {
+    std::cout << "vistos: " << vistos << " cant_vertices " << cant_vertices << std::endl;
 
     // Hallar el vertice de mayor grado
     Vertice vertice = vertices.top();
@@ -135,6 +136,7 @@ void pintar_vertices(Grafo& g, std::priority_queue<Vertice> vertices) { //std::p
       }
     }
     g.pintar(vertice.dame_nombre(), color);
+    g.imprimir();
     vistos++;
   }
 }
@@ -142,6 +144,7 @@ void pintar_vertices(Grafo& g, std::priority_queue<Vertice> vertices) { //std::p
 void goloso_por_colores_posibles_vertice(Grafo& g) {
   std::priority_queue<Vertice> vertices;
   pintar_vertices(g, vertices);
+  std::cout << "hare" << std::endl;
 }
 
 void goloso_por_grado_vertice(Grafo& g) {
@@ -208,7 +211,9 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, std::stri
     //goloso_por_grado_vertice(grafo);
     goloso_por_colores_posibles_vertice(grafo);
 
-    grafo.imprimir();
+    int cantidad_conflictos = grafo.conflictos_totales();
+
+    std::cout << "conflictos grafo " << cantidad_conflictos << std::endl;
 
     //double prom = acum/100;
     //FileWrite << "Test numero: " << i << " cantidad de pisos: " << cant_pisos << std::endl;
