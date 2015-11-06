@@ -138,10 +138,6 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult/*, std::st
 
     bool hay_solucion = list_coloring_backtracking(grafo);
 
-    //grafo.imprimir();
-
-    //getline(fileResult, line);
-    //std::istringstream is(line);
     if (hay_solucion) { //imprimo coloreo del grafo
 
       for (int i = 0; i < grafo.cant_vertices(); ++i) { 
