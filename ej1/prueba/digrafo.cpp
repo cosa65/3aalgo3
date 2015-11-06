@@ -189,7 +189,7 @@ list<int> Digrafo::recorrer2(int i, vector<bool>& visitados, list<int>& componen
 list<list<int>> Digrafo::Kosaraju()
 {
 	// Creo vector de visitados y lo inicializo. Al principio no hay visitados
-	vector<bool> visitados;
+	vector<bool> visitados(vertices_.size());  
 	fill(visitados.begin(), visitados.end(), false);
 
     // Primer DFS: me armo un stack de acuerdo al orden en que visito cada nodo

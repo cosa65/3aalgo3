@@ -1,4 +1,5 @@
 b main
 b 77
-b Digrafo.cpp:192
+b digrafo.cpp:192
+b digrafo.cpp:141
 r files/testEj1.in files/testEj1.out

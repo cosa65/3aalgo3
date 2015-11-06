@@ -74,7 +74,17 @@ int evaluarTests(string fileTestData, string fileTestResult)
 
 	grafo.imprimir();
 	Digrafo pepa(grafo);
-	list<list<int>> pepina = pepa.Kosaraju();	
+	list<list<int>> pepina = pepa.Kosaraju();
+
+	for (auto c: pepina)
+	{
+		for (auto d: c)
+		{
+			cout << " " << d;
+		}
+		cout << endl;
+	}
+
 	return 0;
 
 }
