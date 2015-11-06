@@ -25,7 +25,7 @@ double get_time() {
 
 
 
-bool paso_busqueda_local(Grafo in){             //Devuelve true si consiguió dar un paso que mejorara el estado anterior
+bool paso_busqueda_local_intercambiar(Grafo in){             //Devuelve true si consiguió dar un paso que mejorara el estado anterior
   int verts = in.cant_vertices();
   int conflictos = 0;
   int mejorPasov1, mejorPasov2;
@@ -33,7 +33,7 @@ bool paso_busqueda_local(Grafo in){             //Devuelve true si consiguió da
   for(int i=0; i<verts; i++){
     for(int j=0; j<verts; j++){
       int actual = in.valor_de_intercambio(i,j);
-      if(actual < conflictos){
+      if(actual > conflictos){
         conflictos = actual;
         mejorPasov1 = i;
         mejorPasov2 = j;
@@ -48,10 +48,41 @@ bool paso_busqueda_local(Grafo in){             //Devuelve true si consiguió da
   }
 }
 
-void busqueda_local(Grafo in){
+bool paso_busqueda_local_individual(Grafo& in){
+  int verts = in.cant_vertices();
+  int conflictos = 0;
+  int mejorPasov1, mejorPasoCol;
+
+  for(int i=0; i<verts; i++){
+    for(int col : in.dame_vertice(i).dame_colores_posibles()){
+      int actual = in.valor_de_pintar(i,col);
+      if(actual > conflictos){
+        conflictos = actual;
+        mejorPasov1 = i;
+        mejorPasoCol = col;
+      }
+    }
+  }
+
+  if(conflictos == 0){
+    return false;
+  } else {
+    in.pintar(mejorPasov1,mejorPasoCol);
+    return true; 
+  } 
+}
+
+void busqueda_local_intercambiar(Grafo in){
   bool mejoro = true;
   while(mejoro){
-    mejoro = paso_busqueda_local(in);
+    mejoro = paso_busqueda_local_intercambiar(in);
+  }
+}
+
+void busqueda_local_individual(Grafo& in){
+  bool mejoro = true;
+  while(mejoro){
+    mejoro = paso_busqueda_local_individual(in);
   }
 }
 
@@ -72,7 +103,7 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, std::stri
     int n;
     int m;
     int c;
-
+    getline(fileData, line);
     std::istringstream iss(line);
 
     iss >> n;
@@ -110,11 +141,12 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, std::stri
     }
 
     
+    
     goloso_por_grado_vertice(grafo);
+    grafo.impimir_color(fileTestWrite);
     grafo.imprimir();
-    busqueda_local(grafo);
+    busqueda_local_individual(grafo);
 
-    grafo.imprimir();
     grafo.impimir_color(fileTestWrite);
     ++z;
 

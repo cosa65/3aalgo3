@@ -35,6 +35,7 @@ class Digrafo {
     std::list<Digrafo> Kosaraju(int init);
 
     void imprimir();
+    void imprimir_solo_vecinos();
 
     void dfs(int inicial, std::stack<int>& vertices_vistos);
     void dfs2(int inicial);

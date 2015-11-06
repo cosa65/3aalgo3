@@ -28,13 +28,14 @@ Digrafo::Digrafo(Grafo& g) {
       std::set<int> colores_i = g.dame_colores_posibles(i);
       std::set<int> colores_v = g.dame_colores_posibles(v);
 
+
       std::set<int> interseccion;
       std::set<int>::iterator it = interseccion.begin();
 
       // Calculo la interseccion entre los colores de los dos 
       // vertices
       std::set_intersection(colores_i.begin(), colores_i.end(), 
-                            colores_v.begin(), colores_i.end(), 
+                            colores_v.begin(), colores_v.end(), 
                             std::inserter(interseccion, it)); 
 
       // Caso tienen un color en comun
@@ -74,7 +75,11 @@ void Digrafo::imprimir() {
     std::cout << "  vertice:         " << v.dame_nombre() << std::endl;
     std::cout << "  id     :         " << v.dame_id() << std::endl;
     std::cout << "  color  :         " << v.dame_color() << std::endl;
-    std::cout << "  valor de verdad: " << v.dame_valor_de_verdad() << std::endl;
+    if (v.dame_valor_de_verdad()) {
+      std::cout << "  valor de verdad: " << "True" << std::endl;
+    } else {
+      std::cout << "  valor de verdad: " << "False" << std::endl;
+    }
 
     std::cout << "  Vecinos y su color";
     for (int i : vecinos_[v.dame_id()]) {
@@ -94,6 +99,41 @@ void Digrafo::imprimir() {
     std::cout << std::endl;
 
     std::cout << "}" << std::endl;
+  }
+}
+
+void Digrafo::imprimir_solo_vecinos() {
+  for (Vertice_digrafo& v : vertices_) {
+    if (vecinos_[v.dame_id()].size() != 0) {
+    std::cout << "{ " << std::endl; 
+    std::cout << "  vertice:         " << v.dame_nombre() << std::endl;
+    std::cout << "  id     :         " << v.dame_id() << std::endl;
+    std::cout << "  color  :         " << v.dame_color() << std::endl;
+    if (v.dame_valor_de_verdad()) {
+      std::cout << "  valor de verdad: " << "True" << std::endl;
+    } else {
+      std::cout << "  valor de verdad: " << "False" << std::endl;
+    }
+
+    std::cout << "  Vecinos y su color";
+    for (int i : vecinos_[v.dame_id()]) {
+      std::cout << " --> (" << vertices_[i].dame_nombre();
+      if (vertices_[i].dame_valor_de_verdad()) {
+        std::cout << ", True)";
+      } else {
+        std::cout << ", False)"; 
+      }
+    }
+    std::cout << std::endl;
+
+    std::cout << "                 ";
+    for (int i : vecinos_[v.dame_id()]) {
+      std::cout << "              " << vertices_[i].dame_color();
+    }
+    std::cout << std::endl;
+
+    std::cout << "}" << std::endl;
+    }
   }
 }
 
@@ -367,10 +407,13 @@ bool Digrafo::son_contrarias(int id1, int id2) {
 int Digrafo::dame_posicion_vertice(int vertice, int color, bool valor_de_verdad) {
   int posicion_inicial = vertice * 4;
   int posicion_final;
-  for (int i = 0 ; i < 4 ; ++i) {
+  bool encontre = false;
+  for (int i = 0 ; i < 4 && !encontre; ++i) {
     int pos = posicion_inicial + i;
-    if (vertices_[pos].dame_color() == color && vertices_[pos].dame_valor_de_verdad() == valor_de_verdad)
+    if (vertices_[pos].dame_color() == color && vertices_[pos].dame_valor_de_verdad() == valor_de_verdad) {
       posicion_final = pos;
+      encontre = true;
+    }
   }
   return posicion_final;
 }

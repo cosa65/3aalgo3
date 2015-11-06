@@ -47,6 +47,7 @@ class Grafo {
     void pintar(int vertice, int color);
 
     int valor_de_intercambio(int v1, int v2);
+    int valor_de_pintar(int v1, int color);
 
   private:
 
