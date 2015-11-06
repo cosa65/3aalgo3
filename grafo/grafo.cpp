@@ -108,6 +108,7 @@ bool Grafo::existe_arista(int vertice1, int vertice2) {
   return res; 
 }
 
+
 void Grafo::imprimir() {
   for (Vertice& v : vertices_) {
     std::cout << "{ " << std::endl; 
@@ -142,6 +143,14 @@ void Grafo::imprimir() {
 
     std::cout << "}" << std::endl;
   }
+}
+
+void Grafo::impimir_color(std::string fileTestWrite){
+  std::ofstream fileWrite (fileTestWrite.c_str());
+  for(Vertice& v : vertices_) {
+    fileWrite << v.dame_color() << " ";
+  }
+  fileWrite << std::endl;
 }
 
 void Grafo::pintar(int vertice, int color) {

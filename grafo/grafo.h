@@ -1,6 +1,8 @@
 #ifndef GRAFO_H_
 #define GRAFO_H_
 
+#include <fstream>
+#include <sstream>
 #include <vector>
 #include <set>
 #include <queue>
@@ -37,6 +39,7 @@ class Grafo {
     void intercambiar_color(int v1, int v2);
 
     void imprimir();
+    void impimir_color(std::string);
     
     bool existe_arista(int vertice1, int vertice2);
     bool existe_vertice(int vertice);

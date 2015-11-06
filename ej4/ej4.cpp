@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include <iostream>
 #include <string>
-#include <fstream>
-#include <sstream>
 #include <vector>
 #include <sys/time.h>
 
@@ -61,7 +59,6 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, std::stri
   std::string line;
   std::ifstream fileData (fileTestData.c_str());
   //std::ifstream fileResult (fileTestResult.c_str());
-  std::ofstream fileWrite (fileTestWrite.c_str());
   std::string s;
   std::string res;
   int z = 1;
@@ -118,6 +115,7 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, std::stri
     busqueda_local(grafo);
 
     grafo.imprimir();
+    grafo.impimir_color(fileTestWrite);
     ++z;
 
   }
