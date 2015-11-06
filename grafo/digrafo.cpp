@@ -28,13 +28,14 @@ Digrafo::Digrafo(Grafo& g) {
       std::set<int> colores_i = g.dame_colores_posibles(i);
       std::set<int> colores_v = g.dame_colores_posibles(v);
 
+
       std::set<int> interseccion;
       std::set<int>::iterator it = interseccion.begin();
 
       // Calculo la interseccion entre los colores de los dos 
       // vertices
       std::set_intersection(colores_i.begin(), colores_i.end(), 
-                            colores_v.begin(), colores_i.end(), 
+                            colores_v.begin(), colores_v.end(), 
                             std::inserter(interseccion, it)); 
 
       // Caso tienen un color en comun
@@ -74,7 +75,11 @@ void Digrafo::imprimir() {
     std::cout << "  vertice:         " << v.dame_nombre() << std::endl;
     std::cout << "  id     :         " << v.dame_id() << std::endl;
     std::cout << "  color  :         " << v.dame_color() << std::endl;
-    std::cout << "  valor de verdad: " << v.dame_valor_de_verdad() << std::endl;
+    if (v.dame_valor_de_verdad()) {
+      std::cout << "  valor de verdad: " << "True" << std::endl;
+    } else {
+      std::cout << "  valor de verdad: " << "False" << std::endl;
+    }
 
     std::cout << "  Vecinos y su color";
     for (int i : vecinos_[v.dame_id()]) {

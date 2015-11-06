@@ -2,6 +2,7 @@
 #include "digrafo.h"
 
 void test_vertice_con_un_color() {
+  std::cout << "<<< TEST VERTICE UN COLOR >>>" << std::endl;
   Grafo grafo;
   std::set<int> color{0};
   grafo.agregar_vertice(color);
@@ -22,6 +23,7 @@ void test_vertice_con_un_color() {
 } 
 
 void test_vertice_con_dos_colores() {
+  std::cout << "<<< TEST VERTICE DOS COLORES >>>" << std::endl;
   Grafo grafo;
   std::set<int> color{0,1};
   grafo.agregar_vertice(color);
@@ -42,6 +44,7 @@ void test_vertice_con_dos_colores() {
 } 
 
 void test_arista_entre_vertice_interseccion_un_color() {
+  std::cout << "<<< TEST INTERSECCION UN COLOR >>>" << std::endl;
   Grafo grafo;
   std::set<int> color{0};
   grafo.agregar_vertice(color);
@@ -63,6 +66,7 @@ void test_arista_entre_vertice_interseccion_un_color() {
 } 
 
 void test_arista_entre_vertice_interseccion_dos_colores() {
+  std::cout << "<<< TEST INTERSECCION DOS COLORES >>>" << std::endl;
   Grafo grafo;
   std::set<int> color1{0,1};
   std::set<int> color2{0,1};
@@ -85,6 +89,7 @@ void test_arista_entre_vertice_interseccion_dos_colores() {
 } 
 
 void test_arista_entre_vertice_interseccion_nula() {
+  std::cout << "<<< TEST INTERSECCION NULA >>>" << std::endl;
   Grafo grafo;
   std::set<int> color1{0};
   std::set<int> color2{1};
