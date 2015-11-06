@@ -17,6 +17,10 @@ clean:
 run:
 	./ej4 tests/testEj4.in tests/testEj4.txt tests/testEj4.out
 
+runclean:
+	rm -f tests/testEj4.out
+	./ej4 tests/testEj4.in tests/testEj4.txt tests/testEj4.out
+
 test:
 	$(CC) ej4.cpp ../grafo/grafo.cpp ../grafo/vertice.cpp $(EFLAGS) $(CFLAGS) ej4
 	gdb --args ej4 tests/testEj4.in tests/testEj4.txt tests/testEj4.out
