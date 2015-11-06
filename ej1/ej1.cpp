@@ -8,6 +8,7 @@
 #include <sys/time.h>
 
 #include "../grafo/grafo.h"
+#include "../grafo/digrafo.h"
 
 /*
 timeval start, end;
@@ -23,6 +24,40 @@ double get_time() {
 }
 */
 //Funciones y datos utilizados para la toma de tiempos
+
+bool hay_contradiccion(Digrafo &g, std::list<std::list<int>> comp_conexas) {
+
+  bool res = true;
+
+  for (std::list<std::list<int>>::iterator it_componentes = comp_conexas.begin() ; it_componentes != comp_conexas.end() && res ; ++it_componentes) { //para cada componente fuertemente conexa
+    for (std::list<int>::iterator it_elems = (*it_componentes).begin() ; it_elems != (*it_componentes).end() && res ; ++it_elems) { //para cada elemento de la componente
+      int id_vertice = *it_elems; //elijo un vertice
+      for (std::list<int>::iterator it_elems = (*it_componentes).begin() ; it_elems != (*it_componentes).end() ; ++it_elems) { 
+      //recorro todos los elementos de la componente para ver que no ocurra p => ¬p
+        if (g.son_contrarias(id_vertice, *it_elems)) //si ocurre, hay contradiccion y por lo tanto no hay solucion
+          res = false;
+      }
+    
+    }
+  }
+}
+
+bool dos_list_coloring(Grafo &g) {
+  
+  //convierto el grafo g en el digrafo
+  Digrafo dg;
+
+  //kosaraju bla bla
+  std::list<std::list<int>> soy_kosaraju;
+
+  bool hay_solucion = hay_contradiccion(dg, soy_kosaraju);
+  if (hay_solucion) {
+  //aca viene el orden topologico y coloreo del grafo
+  
+  } 
+
+  return hay_solucion;
+}
 
 int evaluarTests(std::string fileTestData, std::string fileTestResult, std::string fileTestWrite) {
   std::string line;

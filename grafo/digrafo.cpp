@@ -176,31 +176,31 @@ Digrafo Digrafo::invertir_aristas() {
   return invertido;
 }
 
-void Digrafo::dfs(int inicial, std::stack<int>& vertices_vistos) {
-  assert(existe_vertice(inicial));
-
-  std::stack<int> vertices;
-
-  vertices.push(inicial);
-  vertices_[inicial].visitar();
-
-  while (!vertices.empty()) {
-
-    int vertice = vertices.top();
-    vertices.pop();
-
-    int ultimo_visto = true;
-    for (int i : vecinos_[vertice]) {
-      if (!vertices_[i].fue_visitado()) {
-        vertices_[i].visitar();
-        vertices.push(i);
-        ultimo_visto = false;
-      }
-    }
-    if (ultimo_visto)
-      vertices_vistos.push(vertice);
-  }
-}
+//void Digrafo::dfs(int inicial, std::stack<int>& vertices_vistos) {
+//  assert(existe_vertice(inicial));
+//
+//  std::stack<int> vertices;
+//
+//  vertices.push(inicial);
+//  vertices_[inicial].visitar();
+//
+//  while (!vertices.empty()) {
+//
+//    int vertice = vertices.top();
+//    vertices.pop();
+//
+//    int ultimo_visto = true;
+//    for (int i : vecinos_[vertice]) {
+//      if (!vertices_[i].fue_visitado()) {
+//        vertices_[i].visitar();
+//        vertices.push(i);
+//        ultimo_visto = false;
+//      }
+//    }
+//    if (ultimo_visto)
+//      vertices_vistos.push(vertice);
+//  }
+//}
 //
 //void Digrafo::dfs2( int inicial )
 //{
@@ -278,7 +278,8 @@ void Digrafo::dfs(int inicial, std::stack<int>& vertices_vistos) {
 //    }
 //
 //}
-
+//}
+//
 // Funciones privadas
 
 void Digrafo::expandir_vertice_1_color(std::set<int> colores, int vertice) {
@@ -391,6 +392,16 @@ void Digrafo::agregar_arista_2_colores(std::set<int> interseccion, int v1, int v
 
   // V_1_azul -> ¬V_0_azul
   agregar_arista(pos_v2_true_2, pos_v1_false_2);
+}
+
+Vertice_digrafo Digrafo::dame_vertice(int id) {
+  return vertices_[id];
+}
+
+bool Digrafo::son_contrarias(int id1, int id2) {
+  Vertice_digrafo v1 = dame_vertice(id1);
+  Vertice_digrafo v2 = dame_vertice(id2);
+  return v1.dame_nombre() == v2.dame_nombre() && v1.dame_color() == v2.dame_color() && v1.dame_valor_de_verdad() == v2.dame_valor_de_verdad();
 }
 
 int Digrafo::dame_posicion_vertice(int vertice, int color, bool valor_de_verdad) {
