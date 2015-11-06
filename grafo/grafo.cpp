@@ -146,7 +146,7 @@ void Grafo::imprimir() {
 }
 
 void Grafo::impimir_color(std::string fileTestWrite){
-  std::ofstream fileWrite (fileTestWrite.c_str());
+  std::ofstream fileWrite (fileTestWrite.c_str(), std::ofstream::app);
   for(Vertice& v : vertices_) {
     fileWrite << v.dame_color() << " ";
   }
@@ -184,8 +184,18 @@ int Grafo::valor_de_intercambio(int v1, int v2) { //Devuelve el balance de confl
 
   int conf = conflictos(v1) + conflictos(v2);
   intercambiar_color(v1,v2);
-  int res = (conflictos(v1) + conflictos(v2)) - conf;
+  int res = conf - (conflictos(v1) + conflictos(v2));
   intercambiar_color(v1,v2);
+  return res;
+}
+
+int Grafo::valor_de_pintar(int v1, int color){
+  assert(existe_vertice(v1));
+  int colOrig = dame_color(v1);
+  int conf = conflictos(v1);
+  pintar(v1, color);
+  int res = conf - conflictos(v1);
+  pintar(v1,colOrig);
   return res;
 }
 
@@ -196,6 +206,7 @@ int Grafo::conflictos(int v) {
   for(int i : vecinos_[v]){
     if((vertices_[i]).coincide_color(vertices_[v])) conflictos++;
   }
+  return conflictos;
 }
 
 int Grafo::conflictos_totales() {
