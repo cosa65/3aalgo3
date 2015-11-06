@@ -35,7 +35,7 @@ Digrafo::Digrafo(Grafo& g) {
       // Calculo la interseccion entre los colores de los dos 
       // vertices
       set_intersection(colores_i.begin(), colores_i.end(), 
-                            colores_v.begin(), colores_i.end(), 
+                            colores_v.begin(), colores_v.end(), 
                             inserter(interseccion, it)); 
 
       // Caso tienen un color en comun

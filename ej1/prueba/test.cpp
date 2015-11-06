@@ -19,12 +19,11 @@ int evaluarTests(string fileTestData, string fileTestResult)
 	ifstream fileResult (fileTestResult.c_str());
 	string s;
 	string res;
-	int z = 1;
 
+	Grafo grafo;
 	while ( getline(fileData, line) )
 	{
 
-		Grafo grafo;
 		int n;
 		int m;
 		int c;
@@ -35,47 +34,47 @@ int evaluarTests(string fileTestData, string fileTestResult)
 		iss >> m;
 		iss >> c;
 
-	for (int i = 0 ; i < n ; ++i)
-	{
-
-		getline(fileData, line);
-		istringstream iss(line);
-		int cantidad_colores;
-		iss >> cantidad_colores;
-		set<int> colores; 
-    
-		for (int j = 0 ; j < cantidad_colores ; ++j)
+		for (int i = 0 ; i < n ; ++i)
 		{
-        	int color;
-        	iss >> color;
-			colores.insert(color);
+
+			getline(fileData, line);
+			istringstream iss(line);
+			int cantidad_colores;
+			iss >> cantidad_colores;
+			set<int> colores; 
+	    
+			for (int j = 0 ; j < cantidad_colores ; ++j)
+			{
+	        	int color;
+	        	iss >> color;
+				colores.insert(color);
+			}
+
+			grafo.agregar_vertice(colores);
+
 		}
 
-		grafo.agregar_vertice(colores);
+		for (int i = 0 ; i < m ; ++i)
+		{
+	    
+			getline(fileData, line);
+			istringstream iss(line);
+			int v1;
+			int v2;
+			iss >> v1;
+			iss >> v2;
 
+			grafo.agregar_arista(v1, v2);
+	    
+		}
+
+
+		
 	}
-
-	for (int i = 0 ; i < m ; ++i)
-	{
-    
-		getline(fileData, line);
-		istringstream iss(line);
-		int v1;
-		int v2;
-		iss >> v1;
-		iss >> v2;
-
-		grafo.agregar_arista(v1, v2);
-    
-	}
-
 
 	grafo.imprimir();
-
-	++z;
-
-	}
-
+	Digrafo pepa(grafo);
+	list<list<int>> pepina = pepa.Kosaraju();	
 	return 0;
 
 }

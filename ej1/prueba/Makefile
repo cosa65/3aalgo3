@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS=-std=c++11
+CFLAGS=-std=c++11 -ggdb
 # CFLAGS=-std=c++11 -Wall -Wextra -pedantic -O0 -ggdb -lm
 SOURCE=test.cpp grafo.cpp digrafo.cpp
 TARGET=test
