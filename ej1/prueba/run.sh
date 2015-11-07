@@ -1,0 +1,1 @@
+echo -e '\0033\0143' && make clean && make && ./test files/testEj1.in files/testEj1.out

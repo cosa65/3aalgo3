@@ -1,5 +1,9 @@
 #include "digrafo.h"
 #include <iterator>
+#include <stack>
+#include <queue>
+#include <ostream>
+#include "utils.h"
 
 Digrafo::Digrafo() {
   return;
@@ -68,6 +72,7 @@ int Digrafo::agregar_vertice(int color, int num, bool valor_de_verdad) {
 }
 
 void Digrafo::imprimir() {
+  cout.setf(ios::boolalpha); // http://stackoverflow.com/questions/8261674/c-bool-returns-0-1-instead-of-true-false
   for (Vertice& v : vertices_) {
     cout << "{ " << endl; 
     cout << "  vertice:         " << v.num << endl;
@@ -77,7 +82,7 @@ void Digrafo::imprimir() {
 
     cout << "  Vecinos y su color";
     for (int i : vecinos_[v.id]) {
-      cout << " --> (" << vertices_[i].num;
+      cout << " --> (" << vertices_[i].id << " ," << vertices_[i].num;
       if (vertices_[i].valor_de_verdad) {
         cout << ", True)";
       } else {
@@ -189,21 +194,21 @@ list<int> Digrafo::recorrer2(int i, vector<bool>& visitados, list<int>& componen
 list<list<int>> Digrafo::Kosaraju()
 {
 	// Creo vector de visitados y lo inicializo. Al principio no hay visitados
-	vector<bool> visitados(vertices_.size());  
+	vector<bool> visitados(vertices_.size());
 	fill(visitados.begin(), visitados.end(), false);
+  
+  // Primer DFS: me armo un stack de acuerdo al orden en que visito cada nodo
+  stack<int> finish_time;
+  dfs( visitados, finish_time );
 
-    // Primer DFS: me armo un stack de acuerdo al orden en que visito cada nodo
-	stack<int> finish_time;
-	dfs( visitados, finish_time );
-
-	// Busco el grafo complemento
-	Digrafo complemento = invertir_aristas();
+	// Busco el grafo Invertido
+	Digrafo invertido = invertir_aristas();
 
 	// Vuelvo a inicializar el vector para el segundo dfs
 	fill(visitados.begin(), visitados.end(), false);
 
-    // Segundo DFS: recorro el stack que me armé
-    return dfs2( visitados, finish_time );
+  // Segundo DFS: recorro el stack que me armé
+  return invertido.dfs2( visitados, finish_time );
 }
 
 
@@ -393,3 +398,5 @@ int Digrafo::dame_posicion_vertice(int vertice, int color, bool valor_de_verdad)
   }
   return posicion_final;
 }
+
+

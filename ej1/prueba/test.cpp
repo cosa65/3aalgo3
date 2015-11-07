@@ -8,6 +8,7 @@
 
 #include "grafo.h"
 #include "digrafo.h"
+#include "utils.h"
 
 using namespace std;
 
@@ -72,18 +73,18 @@ int evaluarTests(string fileTestData, string fileTestResult)
 		
 	}
 
+	cout << "Grafo:" << endl;
 	grafo.imprimir();
-	Digrafo pepa(grafo);
-	list<list<int>> pepina = pepa.Kosaraju();
+	cout << endl << endl;
 
-	for (auto c: pepina)
-	{
-		for (auto d: c)
-		{
-			cout << " " << d;
-		}
-		cout << endl;
-	}
+	Digrafo pepa(grafo);
+	cout << "diGrafo:" << endl;
+	pepa.imprimir();
+	cout << endl << endl;
+
+	list<list<int>> pepina = pepa.Kosaraju();
+	cout << "Componentes fuertemente conexas:" << endl;
+	printl(pepina);
 
 	return 0;
 
