@@ -15,12 +15,12 @@ clean:
 	rm -f *.o ej4 
 
 run:
-	./ej4 tests/testEj4.in tests/testEj4.txt tests/testEj4.out
+	./ej4 tests/testEj4.in tests/testEj4.txt tests/testEj4.out $(arg1)
 
 runclean:
 	rm -f tests/testEj4.out
-	./ej4 tests/testEj4.in tests/testEj4.txt tests/testEj4.out
+	./ej4 tests/testEj4.in tests/testEj4.txt tests/testEj4.out $(arg1)
 
 test:
 	$(CC) ej4.cpp ../grafo/grafo.cpp ../grafo/vertice.cpp $(EFLAGS) $(CFLAGS) ej4
-	gdb --args ej4 tests/testEj4.in tests/testEj4.txt tests/testEj4.out
+	gdb --args ej4 tests/testEj4.in tests/testEj4.txt tests/testEj4.out $(arg1)

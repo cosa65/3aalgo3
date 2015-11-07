@@ -25,19 +25,34 @@ double get_time() {
 */
 //Funciones y datos utilizados para la toma de tiempos
 
-bool hay_contradiccion(Digrafo &g, std::list<std::list<int>> comp_conexas) {
+bool hay_contradiccion(Digrafo &digrafo, std::list<std::list<int>>& comp_conexas, std::vector<int>& vertices_por_componente) {
 
   bool res = true;
+  int indice_componente = 0;
 
-  for (std::list<std::list<int>>::iterator it_componentes = comp_conexas.begin() ; it_componentes != comp_conexas.end() && res ; ++it_componentes) { //para cada componente fuertemente conexa
-    for (std::list<int>::iterator it_elems = (*it_componentes).begin() ; it_elems != (*it_componentes).end() && res ; ++it_elems) { //para cada elemento de la componente
-      int id_vertice = *it_elems; //elijo un vertice
-      for (std::list<int>::iterator it_elems = (*it_componentes).begin() ; it_elems != (*it_componentes).end() ; ++it_elems) { 
-      //recorro todos los elementos de la componente para ver que no ocurra p => ¬p
-        if (g.son_contrarias(id_vertice, *it_elems)) //si ocurre, hay contradiccion y por lo tanto no hay solucion
-          res = false;
-      }
-    
+  for (std::list<int>& componentes : comp_conexas) {
+    for (int vertice : componentes) {
+      vertices_por_componente[vertice] = indice_componente;
+      int contrario = digrafo.dame_contrario(vertice);
+      if (vertices_por_componente[contrario] == indice_componente)
+        res = false;
+    }
+    indice_componente++;
+  }
+  return res;
+}
+
+void conectar_componentes_fuertemente_conexas(Digrafo& digrafo_comp_f_conexas, Digrafo& digrafo, std::vector<int> vertices_por_componentes) {
+  int cant_vertices = digrafo.cant_vertices();
+  for (int i = 0 ; i < cant_vertices ; ++i) {
+    digrafo.agregar_vertice(-1, i, false);
+  }
+
+  for (int i = 0 ; i < cant_vertices ; ++i) {
+    std::set<int> vecinos = digrafo.dame_vecinos(i);
+    for (int v : vecinos) {
+      if (vertices_por_componentes[i] != vertices_por_componentes[v])
+        digrafo.agregar_arista(vertices_por_componentes[i], vertices_por_componentes[v]);
     }
   }
 }
@@ -45,13 +60,18 @@ bool hay_contradiccion(Digrafo &g, std::list<std::list<int>> comp_conexas) {
 bool dos_list_coloring(Grafo &g) {
   
   //convierto el grafo g en el digrafo
-  Digrafo dg;
+  Digrafo digrafo(g);
 
   //kosaraju bla bla
   std::list<std::list<int>> soy_kosaraju;
 
-  bool hay_solucion = hay_contradiccion(dg, soy_kosaraju);
+  std::vector<int> vertices_por_componente(g.cant_vertices());
+  std::fill(vertices_por_componente.begin(), vertices_por_componente.end(), -1);
+
+  bool hay_solucion = hay_contradiccion(digrafo, soy_kosaraju, vertices_por_componente);
   if (hay_solucion) {
+    Digrafo digrafo_comp_f_conexas;
+    conectar_componentes_fuertemente_conexas(digrafo_comp_f_conexas, digrafo, vertices_por_componente);
   //aca viene el orden topologico y coloreo del grafo
   
   } 
@@ -159,3 +179,16 @@ int main(int argc, char** argv) {
   
   return 0;
 }
+
+/*
+  for (std::list<std::list<int>>::iterator it_componentes = comp_conexas.begin() ; it_componentes != comp_conexas.end() && res ; ++it_componentes) { //para cada componente fuertemente conexa
+    for (std::list<int>::iterator it_elems = (*it_componentes).begin() ; it_elems != (*it_componentes).end() && res ; ++it_elems) { //para cada elemento de la componente
+      int id_vertice = *it_elems; //elijo un vertice
+      for (std::list<int>::iterator it_elems = (*it_componentes).begin() ; it_elems != (*it_componentes).end() ; ++it_elems) { 
+      //recorro todos los elementos de la componente para ver que no ocurra p => ¬p
+        if (g.son_contrarias(id_vertice, *it_elems)) //si ocurre, hay contradiccion y por lo tanto no hay solucion
+          res = false;
+      }
+    
+    }
+  }*/
