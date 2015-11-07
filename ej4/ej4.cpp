@@ -25,23 +25,29 @@ double get_time() {
 
 
 
-bool paso_busqueda_local_intercambiar(Grafo in){             //Devuelve true si consiguió dar un paso que mejorara el estado anterior
+bool paso_busqueda_local_intercambiar(Grafo& in){             //Devuelve true si consiguió dar un paso que mejorara el estado anterior
   int verts = in.cant_vertices();
   int conflictos = 0;
   int mejorPasov1, mejorPasov2;
+  std::set<int> posibles; 
 
   for(int i=0; i<verts; i++){
-    for(int j=0; j<verts; j++){
-      int actual = in.valor_de_intercambio(i,j);
-      if(actual > conflictos){
-        conflictos = actual;
-        mejorPasov1 = i;
-        mejorPasov2 = j;
+    for(int j=i; j<verts; j++){
+
+      if(in.son_colores_intercambiables(i,j)){
+        int actual = in.valor_de_intercambio(i,j);
+        if(actual > conflictos){
+          conflictos = actual;
+          mejorPasov1 = i;
+          mejorPasov2 = j;
+        } 
       }
+
     }
   }
   if(conflictos == 0){
     return false;
+
   } else {
     in.intercambiar_color(mejorPasov1,mejorPasov2);
     return true;
@@ -72,7 +78,7 @@ bool paso_busqueda_local_individual(Grafo& in){
   } 
 }
 
-void busqueda_local_intercambiar(Grafo in){
+void busqueda_local_intercambiar(Grafo& in){
   bool mejoro = true;
   while(mejoro){
     mejoro = paso_busqueda_local_intercambiar(in);
@@ -83,10 +89,10 @@ void busqueda_local_individual(Grafo& in){
   bool mejoro = true;
   while(mejoro){
     mejoro = paso_busqueda_local_individual(in);
-  }
+	}
 }
 
-int evaluarTests(std::string fileTestData, std::string fileTestResult, std::string fileTestWrite) {
+int evaluarTests(std::string fileTestData, std::string fileTestResult, std::string fileTestWrite, std::string type) {
   std::string line;
   std::ifstream fileData (fileTestData.c_str());
   //std::ifstream fileResult (fileTestResult.c_str());
@@ -128,6 +134,7 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, std::stri
 
     }
 
+
     for (int i = 0 ; i < m ; ++i) {
       getline(fileData, line);
       std::istringstream iss(line);
@@ -142,10 +149,16 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, std::stri
 
     
     
-    goloso_por_grado_vertice(grafo);
-    grafo.impimir_color(fileTestWrite);
-    grafo.imprimir();
-    busqueda_local_individual(grafo);
+	  goloso_por_grado_vertice(grafo);
+	  grafo.impimir_color(fileTestWrite);
+	  //grafo.imprimir();
+
+	  if(type.compare("intercambiar")==0){			//Por default hace busqueda local individual.
+	   	busqueda_local_intercambiar(grafo);
+		} else {
+	   	busqueda_local_individual(grafo);
+		}
+
 
     grafo.impimir_color(fileTestWrite);
     ++z;
@@ -158,12 +171,13 @@ int main(int argc, char** argv) {
   std::string fileTestData(argv[1]);
   std::string fileTestResult(argv[2]);
   std::string fileTestWrite(argv[3]);
+  std::string type(argv[4]);
   // Recibo por parametro tres archivos
   // El primero del cual leo los datos a evaluar
   // El segundo en el cual evaluo si los resultados fueron correctos
   // El tercero donde puedo escribir datos (tiempos)
 
-  evaluarTests(fileTestData, fileTestResult, fileTestWrite);
+  evaluarTests(fileTestData, fileTestResult, fileTestWrite,type);
   
   return 0;
 }

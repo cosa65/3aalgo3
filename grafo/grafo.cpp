@@ -199,6 +199,24 @@ int Grafo::valor_de_pintar(int v1, int color){
   return res;
 }
 
+bool Grafo::son_colores_intercambiables(int v1, int v2) {
+  assert(existe_vertice(v1) && existe_vertice(v2));
+
+  if(dame_color(v1) == dame_color(v2) || !existe_arista(v1,v2)) return false;
+
+  for(int col1 : dame_colores_posibles(v1)) {
+    if(col1 == dame_color(v2)) {
+      for(int col2 : dame_colores_posibles(v2)) {
+        if(col2 == dame_color(v1)){
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+}
+
+
 int Grafo::conflictos(int v) {
   assert(existe_vertice(v));
 

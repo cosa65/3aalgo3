@@ -48,6 +48,7 @@ class Grafo {
 
     int valor_de_intercambio(int v1, int v2);
     int valor_de_pintar(int v1, int color);
+    bool son_colores_intercambiables(int v1, int v2);
 
   private:
 
