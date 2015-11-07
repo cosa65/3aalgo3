@@ -29,8 +29,8 @@ class Digrafo {
     Digrafo invertir_aristas();
 
     std::set<int> dame_vecinos(int vertice);
-    Vertice_digrafo dame_vertice(int id);
-    bool son_contrarias(int id1, int id2);
+    Vertice_digrafo dame_vertice(int vertice);
+    int dame_contrario(int vertice);
 
     std::list<Digrafo> Kosaraju(int init);
 
@@ -43,6 +43,7 @@ class Digrafo {
     bool existe_arista(int vertice1, int vertice2);
     bool existe_vertice(int vertice);
     
+    bool son_contrarias(int id1, int id2);
 
   private:
 
