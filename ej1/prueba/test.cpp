@@ -73,14 +73,8 @@ int evaluarTests(string fileTestData, string fileTestResult)
 		
 	}
 
-	cout << "Grafo:" << endl;
-	grafo.imprimir();
-	cout << endl << endl;
 
 	Digrafo pepa(grafo);
-	cout << "diGrafo:" << endl;
-	pepa.imprimir();
-	cout << endl << endl;
 
 	list<list<int>> pepina = pepa.Kosaraju();
 	cout << "Componentes fuertemente conexas:" << endl;
