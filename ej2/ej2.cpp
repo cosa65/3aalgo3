@@ -6,6 +6,7 @@
 #include <sstream>
 #include <vector>
 #include <sys/time.h>
+#include <algorithm>
 
 #include "../grafo/grafo.h"
 
@@ -32,55 +33,100 @@ void borrar_subconjunto(std::set<int> &c1, std::set<int> &c2) {
   }  
 }
 
-bool list_coloring_desde_nodo(Grafo &g, int actual, int padre, int color){
-  
-  bool pude_pintar = false;
-
-  std::set<int> colores = g.dame_colores_posibles(actual); //colores posibles para ese vertice
-  std::set<int> colores_vecinos = g.conjunto_colores_vecinos(actual); //colores de los vecinos (aquellos que ya estan definidos)
-  borrar_subconjunto(colores, colores_vecinos); //elimino los colores de mis vecinos, ya que no puedo utilizarlos
-
-  std::set<int> vecinos = g.dame_vecinos_no_visitados(actual); //conjunto de vecinos no visitados de actual
-
+bool list_coloring_recursivo(Grafo &g, std::vector<Vertice> vertices, int i) {
+  bool pude_pintar = false; // ! ver que este bien esta inicializacion
   //caso base
-
-  if (vecinos.size() == 0) {
-  //todos mis vecinos fueron coloreados
+  if (i == (g.cant_vertices() - 1)) { //estoy pintando al ultimo nodo
+    Vertice actual = g.dame_vertice(i);
+    std::set<int> colores = g.dame_colores_posibles(i); //colores posibles para ese vertice
+    std::set<int> colores_vecinos = g.conjunto_colores_vecinos(i); //colores de los vecinos (aquellos que ya estan definidos)
+    borrar_subconjunto(colores, colores_vecinos); //elimino los colores de mis vecinos, ya que no puedo utilizarlos
     if (!colores.empty()) { //si me queda algun color disponible
       std::set<int>::iterator it = colores.begin();
-      g.pintar(actual, *it); //elijo uno arbitrariamente y pinto
+      g.pintar(i, *it); //elijo un color arbitrariamente y pinto
       pude_pintar = true;
     } else { //si no quedan colores disponibles, retorno false
-      g.pintar(actual, -1); 
-      pude_pintar = false;
+      g.pintar(i, -1);
+      pude_pintar = false; //voy a volver a la rama anterior de la recursion
     }
+      
   } else {
-
     //paso recursivo
-
-    for (std::set<int>::iterator it_c = colores.begin(); it_c != colores.end() && !pude_pintar; ++it_c) {
-    //mientras tenga colores no utilizados, y no hay podido pintar el grafo  
-      //if (*it_c != color){ //pinto sólo si no es igual al color de mi padre
-        g.pintar(actual, *it_c); //pinto actual de un color determinado
-        pude_pintar = true;
-        
-        for (std::set<int>::iterator it = vecinos.begin(); it!=vecinos.end() && pude_pintar; ++it) {
-          if (!list_coloring_desde_nodo(g, *it, actual, *it_c)) {
-          //si no pude pintar, tengo que volver al vértice anterior 
-            g.pintar(actual, -1);
-            pude_pintar = false; 
-          }  
+      Vertice actual = g.dame_vertice(i);
+      std::set<int> colores = g.dame_colores_posibles(i); //colores posibles para ese vertice
+      std::set<int> colores_vecinos = g.conjunto_colores_vecinos(i); //colores de los vecinos (aquellos que ya estan definidos)
+      borrar_subconjunto(colores, colores_vecinos); //elimino los colores de mis vecinos, ya que no puedo utilizarlos
+      for (std::set<int>::iterator it_c = colores.begin(); it_c != colores.end() && !pude_pintar; ++it_c) { //mientras tenga colores no utilizados, y no hay podido pintar el grafo  
+        g.pintar(i, *it_c); //pinto actual de un color determinado
+        pude_pintar = list_coloring_recursivo(g, vertices, ++i);
+        if (!pude_pintar) {
+          g.pintar(i, -1); //pinto actual de un color determinado
+          --i;
         }
-      //}
-    }
+      }
   }
   return pude_pintar;
 }
 
-//False si no hay solución, True si la hay
 bool list_coloring_backtracking(Grafo &g){
-  return list_coloring_desde_nodo(g, 0, 0, -1);
+  std::vector<Vertice> vertices;
+  for (int i = 0 ; i < g.cant_vertices() ; ++i) {
+    vertices.push_back(g.dame_vertice(i));
+  }
+  std::sort(vertices.begin(), vertices.end());
+  return list_coloring_recursivo(g, vertices, 0);
 }
+
+
+//bool list_coloring_desde_nodo(Grafo &g, int actual, int padre, int color){
+//  
+//  bool pude_pintar = false;
+//
+//  std::set<int> colores = g.dame_colores_posibles(actual); //colores posibles para ese vertice
+//  std::set<int> colores_vecinos = g.conjunto_colores_vecinos(actual); //colores de los vecinos (aquellos que ya estan definidos)
+//  borrar_subconjunto(colores, colores_vecinos); //elimino los colores de mis vecinos, ya que no puedo utilizarlos
+//
+//  std::set<int> vecinos = g.dame_vecinos_no_visitados(actual); //conjunto de vecinos no visitados de actual
+//
+//  //caso base
+//
+//  if (vecinos.size() == 0) {
+//  //todos mis vecinos fueron coloreados
+//    if (!colores.empty()) { //si me queda algun color disponible
+//      std::set<int>::iterator it = colores.begin();
+//      g.pintar(actual, *it); //elijo uno arbitrariamente y pinto
+//      pude_pintar = true;
+//    } else { //si no quedan colores disponibles, retorno false
+//      g.pintar(actual, -1); 
+//      pude_pintar = false;
+//    }
+//  } else {
+//
+//    //paso recursivo
+//
+//    for (std::set<int>::iterator it_c = colores.begin(); it_c != colores.end() && !pude_pintar; ++it_c) {
+//    //mientras tenga colores no utilizados, y no hay podido pintar el grafo  
+//      //if (*it_c != color){ //pinto sólo si no es igual al color de mi padre
+//        g.pintar(actual, *it_c); //pinto actual de un color determinado
+//        pude_pintar = true;
+//        
+//        for (std::set<int>::iterator it = vecinos.begin(); it!=vecinos.end() && pude_pintar; ++it) {
+//          if (!list_coloring_desde_nodo(g, *it, actual, *it_c)) {
+//          //si no pude pintar, tengo que volver al vértice anterior 
+//            g.pintar(actual, -1);
+//            pude_pintar = false; 
+//          }  
+//        }
+//      //}
+//    }
+//  }
+//  return pude_pintar;
+//}
+//
+////False si no hay solución, True si la hay
+//bool list_coloring_backtracking(Grafo &g){
+//  return list_coloring_desde_nodo(g, 0, 0, -1);
+//}
 
 int evaluarTests(std::string fileTestData, std::string fileTestResult/*, std::string fileTestWrite*/) {
   std::string line;
@@ -137,6 +183,10 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult/*, std::st
     }
 
     bool hay_solucion = list_coloring_backtracking(grafo);
+     
+    std::cout << "Hay solución: " << hay_solucion << std::endl;
+
+    grafo.imprimir();
 
     if (hay_solucion) { //imprimo coloreo del grafo
 
