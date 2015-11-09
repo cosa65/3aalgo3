@@ -33,11 +33,21 @@ void borrar_subconjunto(std::set<int> &c1, std::set<int> &c2) {
   }  
 }
 
+bool cardinal_menor_dos(Grafo &g, std::vector<Vertice> vertices, int i) {
+  bool res = true;
+  for (int j = i; j < vertices.size() && res; ++j) {
+    std::set<int> colores = g.dame_colores_posibles(i); //colores posibles para ese vertice
+    std::set<int> colores_vecinos = g.conjunto_colores_vecinos(i); //colores de los vecinos (aquellos que ya estan definidos)
+    borrar_subconjunto(colores, colores_vecinos); //elimino los colores de mis vecinos, ya que no puedo utilizarlos
+    if (colores.size() > 2)
+      res = false;
+  }
+}
+
 bool list_coloring_recursivo(Grafo &g, std::vector<Vertice> vertices, int i) {
   bool pude_pintar = false; // ! ver que este bien esta inicializacion
   //caso base
   if (i == (g.cant_vertices() - 1)) { //estoy pintando al ultimo nodo
-    Vertice actual = g.dame_vertice(i);
     std::set<int> colores = g.dame_colores_posibles(i); //colores posibles para ese vertice
     std::set<int> colores_vecinos = g.conjunto_colores_vecinos(i); //colores de los vecinos (aquellos que ya estan definidos)
     borrar_subconjunto(colores, colores_vecinos); //elimino los colores de mis vecinos, ya que no puedo utilizarlos
@@ -52,18 +62,22 @@ bool list_coloring_recursivo(Grafo &g, std::vector<Vertice> vertices, int i) {
       
   } else {
     //paso recursivo
-      Vertice actual = g.dame_vertice(i);
-      std::set<int> colores = g.dame_colores_posibles(i); //colores posibles para ese vertice
-      std::set<int> colores_vecinos = g.conjunto_colores_vecinos(i); //colores de los vecinos (aquellos que ya estan definidos)
-      borrar_subconjunto(colores, colores_vecinos); //elimino los colores de mis vecinos, ya que no puedo utilizarlos
-      for (std::set<int>::iterator it_c = colores.begin(); it_c != colores.end() && !pude_pintar; ++it_c) { //mientras tenga colores no utilizados, y no hay podido pintar el grafo  
-        g.pintar(i, *it_c); //pinto actual de un color determinado
-        pude_pintar = list_coloring_recursivo(g, vertices, ++i);
-        if (!pude_pintar) {
-          g.pintar(i, -1); //pinto actual de un color determinado
-          --i;
+    //if (cardinal_menor_dos(g, vertices, i)) {
+    //  aca armo el grafo para pasarle a 2-list-coloring
+    //} else { //hago la recursion comun
+        std::set<int> colores = g.dame_colores_posibles(i); //colores posibles para ese vertice
+        std::set<int> colores_vecinos = g.conjunto_colores_vecinos(i); //colores de los vecinos (aquellos que ya estan definidos)
+        borrar_subconjunto(colores, colores_vecinos); //elimino los colores de mis vecinos, ya que no puedo utilizarlos
+
+        for (std::set<int>::iterator it_c = colores.begin(); it_c != colores.end() && !pude_pintar; ++it_c) { //mientras tenga colores no utilizados, y no hay podido pintar el grafo  
+          g.pintar(i, *it_c); //pinto actual de un color determinado
+          pude_pintar = list_coloring_recursivo(g, vertices, ++i);
+          if (!pude_pintar) {
+            g.pintar(i, -1); //pinto actual de un color determinado
+            --i;
+          }
         }
-      }
+      //}
   }
   return pude_pintar;
 }
