@@ -5,8 +5,9 @@
 int main(int argc, char **argv){
 	int N,M,C;
 	N = atoi(argv[1]);				//Cantidad de nodos del grafo a generar
-	C = atoi(argv[2]);
-	std::string filename(argv[3]);
+	M = atoi(argv[2]);
+	C = atoi(argv[3]);
+	std::string filename(argv[4]);
 
 
 	std::ofstream file(filename.c_str());
@@ -38,8 +39,8 @@ int main(int argc, char **argv){
 		}
 
 		for(int i=0; i<N; i++){
-			for(int j=0; j<N; j++){
-				if(rand()%2 == 1) {
+			for(int j=i; j<N; j++){
+				if(rand()%2 == 1 && j!=i) {
 					file << i << " " << j << std::endl;
 					M++;
 				}
