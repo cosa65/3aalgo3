@@ -14,13 +14,12 @@ int main(int argc, char **argv){
 
 	file << N << " ";
 	long posM = file.tellp(); //Defino cantidad de aristas al final de todo
-	file << " ";
-	file << C << std::endl;
+	file << std::endl;
 
 	if(M == 0) {
 		int colsTot;
 		long posIn,posFin;
-		for(int i=0; i<N; i++){
+		for(int i=0; i<=N; i++){
 			colsTot = 0;
 			posIn = file.tellp();
 			file << "  ";
@@ -29,6 +28,10 @@ int main(int argc, char **argv){
 					file << j << " ";
 					colsTot++;
 				}	
+			}
+			if(colsTot==0) {
+				file << rand()%C;
+				colsTot++;
 			}
 			posFin = file.tellp();
 
@@ -48,7 +51,7 @@ int main(int argc, char **argv){
 		}
 		
 		file.seekp(posM);
-		file << M;
+		file << M << " " << C;
 
 		file.close();
 	} else {
