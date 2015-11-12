@@ -10,9 +10,10 @@ all: $(BINARIES)
 
 ej4: ej4.cpp  
 	$(CC) ej4.cpp ../grafo/grafo.cpp ../grafo/vertice.cpp $(CFLAGS) ej4 
+	$(CC) random.cpp $(CFLAGS) random
 
 clean:
-	rm -f *.o ej4 
+	rm -f *.o ej4 random
 
 run:
 	./ej4 tests/testEj4.in tests/testEj4.txt tests/testEj4.out $(arg1)
@@ -24,3 +25,6 @@ runclean:
 test:
 	$(CC) ej4.cpp ../grafo/grafo.cpp ../grafo/vertice.cpp $(EFLAGS) $(CFLAGS) ej4
 	gdb --args ej4 tests/testEj4.in tests/testEj4.txt tests/testEj4.out $(arg1)
+
+exp:
+	./random $(N) $(M) $(C) $(nombre)
