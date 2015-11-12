@@ -177,6 +177,14 @@ std::set<int> Grafo::conjunto_colores_vecinos(int vertice) {
   return res;
 }
 
+void Grafo::agregar_color_a_vertice(int i, int color) {
+  vertices_[i].agregar_color(color);  
+}
+
+void Grafo::eliminar_color_de_vertice(int i, int color) {
+  vertices_[i].eliminar_color(color);
+}
+
 void Grafo::intercambiar_color(int v1, int v2) { //Intercambia el color de dos vértices 
   assert(existe_vertice(v1) && existe_vertice(v2));
 
