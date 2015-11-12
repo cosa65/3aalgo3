@@ -24,6 +24,7 @@ class Grafo {
     void agregar_arista(int vertice1, int vertice2);
     void agregar_vertice(std::set<int> colores);
 
+    
     int cant_vertices() {return vertices_.size();};
     int conflictos(int v);
     int conflictos_totales();
@@ -48,6 +49,7 @@ class Grafo {
     bool existe_vertice(int vertice);
 
     void pintar(int vertice, int color);
+    void desvisitar_vertices();
 
     int valor_de_intercambio(int v1, int v2);
     int valor_de_pintar(int v1, int color);

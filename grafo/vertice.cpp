@@ -32,6 +32,10 @@ void Vertice::visitar() {
   visto_ = true;
 }
 
+void Vertice::desvisitar() {
+  visto_ = false;
+}
+
 bool Vertice::fue_visitado() {
   return visto_;
 }
