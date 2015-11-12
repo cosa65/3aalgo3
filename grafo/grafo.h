@@ -29,6 +29,9 @@ class Grafo {
     int conflictos_totales();
     std::set<int> conjunto_colores_vecinos(int vertice);
 
+    void agregar_color_a_vertice(int vertice, int color);
+    void eliminar_color_de_vertice(int vertice, int color);
+
     std::set<int> dame_vecinos(int vertice);
     std::set<int> dame_vecinos_no_visitados(int vertice);
     std::set<int> dame_colores_posibles(int vertice);
