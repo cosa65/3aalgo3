@@ -28,6 +28,7 @@ class Vertice {
     void pintar(int color);
 
     void visitar();
+    void desvisitar();
 
     bool coincide_color(Vertice otro);
 
