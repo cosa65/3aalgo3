@@ -20,25 +20,20 @@ int main(int argc, char **argv){
 		int colsTot;
 		long posIn,posFin;
 		for(int i=0; i<N; i++){
+			std::ostringstream saveOne;
 			colsTot = 0;
-			posIn = save.tellp();
-			save << "  ";
 			for(int j=0; j<C; j++){
 				if(rand()%2	== 1) {
-					save << j << " ";
+					saveOne << j << " ";
 					colsTot++;
 				}	
 			}
 			if(colsTot==0) {
-				save << rand()%C;
+				saveOne << rand()%C;
 				colsTot++;
 			}
-			posFin = save.tellp();
 
-			save.seekp(posIn);
-			save << colsTot;
-			save.seekp(posFin);
-			save << std::endl;
+			save << colsTot << " " << saveOne.str() << std::endl;
 		}
 
 		for(int i=0; i<N; i++){
