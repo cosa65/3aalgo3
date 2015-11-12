@@ -12,7 +12,7 @@
 
 #include "../grafo/grafo.h"
 
-/*
+
 timeval start, end;
 double acum = 0;
 
@@ -24,7 +24,7 @@ double get_time() {
   gettimeofday(&end, NULL);
   return (1000000*(end.tv_sec-start.tv_sec) + (end.tv_usec-start.tv_usec))/1000000.0;
 }
-*/
+
 //Funciones y datos utilizados para la toma de tiempos
 //
 
@@ -47,6 +47,7 @@ int dame_el_de_maxima_aparicion(std::map<int, int>& colores_usados) {
 }
 
 void pintar_vertices(Grafo& g, std::priority_queue<Vertice> vertices) { //std::priority_queue<Vertice> vertices) {
+  init_time();
   int vistos = 0;
   int cant_vertices = g.cant_vertices();
   // Creo vector para obtener el maximo
@@ -56,11 +57,11 @@ void pintar_vertices(Grafo& g, std::priority_queue<Vertice> vertices) { //std::p
 
   // Recorro todos los vertices del grafo
   while (vistos < cant_vertices) {
-    std::cout << "vistos: " << vistos << " cant_vertices " << cant_vertices << std::endl;
+    //std::cout << "vistos: " << vistos << " cant_vertices " << cant_vertices << std::endl;
 
     // Hallar el vertice de mayor grado
     Vertice vertice = vertices.top();
-    std::cout << "vertice: " << vertice.dame_nombre() << std::endl;
+    //std::cout << "vertice: " << vertice.dame_nombre() << std::endl;
     vertices.pop();
     std::set<int> colores_vertice = vertice.dame_colores_posibles(); 
 
@@ -136,15 +137,15 @@ void pintar_vertices(Grafo& g, std::priority_queue<Vertice> vertices) { //std::p
       }
     }
     g.pintar(vertice.dame_nombre(), color);
-    g.imprimir();
+    //g.imprimir();
     vistos++;
   }
+  acum += get_time(); 
 }
 
 void goloso_por_colores_posibles_vertice(Grafo& g) {
   std::priority_queue<Vertice> vertices;
   pintar_vertices(g, vertices);
-  std::cout << "hare" << std::endl;
 }
 
 void goloso_por_grado_vertice(Grafo& g) {
@@ -209,17 +210,22 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, std::stri
 
 
     //goloso_por_grado_vertice(grafo);
-    goloso_por_colores_posibles_vertice(grafo);
+    //for (int k = 0 ; k < 100 ; k++) {
+    std::cout << "por entrar" << std::endl;
+      goloso_por_colores_posibles_vertice(grafo);
+    std::cout << "sali" << std::endl;
+    //}
 
-    int cantidad_conflictos = grafo.conflictos_totales();
+    //int cantidad_conflictos = grafo.conflictos_totales();
 
-    std::cout << "conflictos grafo " << cantidad_conflictos << std::endl;
+    //std::cout << "conflictos grafo " << cantidad_conflictos << std::endl;
 
-    //double prom = acum/100;
+    double prom = acum;
     //FileWrite << "Test numero: " << i << " cantidad de pisos: " << cant_pisos << std::endl;
     //FileWrite << std::fixed << acum << std::endl;
-    //fileWrite << std::fixed << prom << std::endl;
-    //acum = 0;
+    fileWrite << std::fixed << prom << std::endl;
+    std::cout << prom << std::endl;
+    acum = 0;
 
 
     //getline (fileResult, line);
@@ -237,7 +243,7 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, std::stri
     //  std::cout << "Obtuve " << res << " deberia tener " << resTest << std::endl;
     //}
 
-    //std::cout << z << std::endl;
+    std::cout << z << std::endl;
     ++z;
 
   }
