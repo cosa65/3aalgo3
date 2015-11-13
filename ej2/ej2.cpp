@@ -65,17 +65,18 @@ double get_time() {
 //  }
 //  return pude_pintar;
 //}
+//
+//void borrar_subconjunto(std::set<int> &c1, std::set<int> &c2) {
+//  std::set<int>::iterator it;
+//  for (int i : c2) {
+//    it = c1.find(i);
+//    if (it != c1.end())
+//      c1.erase(it);
+//  }  
+//}
+
 
 ///////////////////////////////////////////AUXILIARES//////////////////////////////////////////////
-
-void borrar_subconjunto(std::set<int> &c1, std::set<int> &c2) {
-  std::set<int>::iterator it;
-  for (int i : c2) {
-    it = c1.find(i);
-    if (it != c1.end())
-      c1.erase(it);
-  }  
-}
 
 bool cardinal_menor_dos(Grafo &g, std::vector<Vertice> vertices, int i) {
   bool res = true;
@@ -194,7 +195,7 @@ bool list_coloring_recursivo(Grafo &g, std::vector<Vertice> &vertices, std::vect
 //  }
 //  return pude_pintar;
 //}
-
+//
 bool list_coloring_backtracking(Grafo &g){
   
   std::vector<Vertice> vertices;
