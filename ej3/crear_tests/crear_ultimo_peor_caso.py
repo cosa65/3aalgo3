@@ -8,11 +8,11 @@ a = 50
 while (a <= 1000): # and i < 3):
   vertex = str(a) 
   edges = (a*(a-1))/2
-  colors = edges*a
+  colors = edges*5
   line = vertex + ' ' + str(edges) + ' ' + str(colors) + '\n'
   f.write(line)
   for i in range(0, a):
-    color = random.randint(1, colors)
+    color = random.randint(edges, colors)
     col = Set()
     
     for j in range(0, color):

@@ -210,17 +210,15 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, std::stri
 
 
     //goloso_por_grado_vertice(grafo);
-    //for (int k = 0 ; k < 100 ; k++) {
-    std::cout << "por entrar" << std::endl;
+    for (int k = 0 ; k < 100 ; k++) {
       goloso_por_colores_posibles_vertice(grafo);
-    std::cout << "sali" << std::endl;
-    //}
+    }
 
     //int cantidad_conflictos = grafo.conflictos_totales();
 
     //std::cout << "conflictos grafo " << cantidad_conflictos << std::endl;
 
-    double prom = acum;
+    double prom = acum / 100;
     //FileWrite << "Test numero: " << i << " cantidad de pisos: " << cant_pisos << std::endl;
     //FileWrite << std::fixed << acum << std::endl;
     fileWrite << std::fixed << prom << std::endl;
