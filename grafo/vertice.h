@@ -17,6 +17,9 @@ class Vertice {
     int dame_color();
     int dame_nombre();
 
+    void eliminar_color(int color);
+    void agregar_color(int color);
+
     bool fue_visitado();
 
     bool operator <(Vertice v) const;
@@ -25,6 +28,7 @@ class Vertice {
     void pintar(int color);
 
     void visitar();
+    void desvisitar();
 
     bool coincide_color(Vertice otro);
 

@@ -24,10 +24,14 @@ class Grafo {
     void agregar_arista(int vertice1, int vertice2);
     void agregar_vertice(std::set<int> colores);
 
+    
     int cant_vertices() {return vertices_.size();};
     int conflictos(int v);
     int conflictos_totales();
     std::set<int> conjunto_colores_vecinos(int vertice);
+
+    void agregar_color_a_vertice(int vertice, int color);
+    void eliminar_color_de_vertice(int vertice, int color);
 
     std::set<int> dame_vecinos(int vertice);
     std::set<int> dame_vecinos_no_visitados(int vertice);
@@ -45,6 +49,7 @@ class Grafo {
     bool existe_vertice(int vertice);
 
     void pintar(int vertice, int color);
+    void desvisitar_vertices();
 
     int valor_de_intercambio(int v1, int v2);
     int valor_de_pintar(int v1, int color);

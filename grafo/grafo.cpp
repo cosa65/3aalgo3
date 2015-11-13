@@ -4,7 +4,7 @@ Grafo::Grafo() {
   return;
 }
 
-Grafo::Grafo(int vertices) {
+Grafo::Grafo(int vertices) {//Genera un grafo de tamaño vertices
   std::list<int> l; 
   std::set<int> s;
   for (int i = 0 ; i < vertices ; ++i) {
@@ -32,21 +32,21 @@ void Grafo::agregar_vertice(std::set<int> colores) {
   vecinos_.push_back(l);
 }
 
-std::set<int> Grafo::dame_colores_posibles(int vertice) {
+std::set<int> Grafo::dame_colores_posibles(int vertice) {//Devuelve un set<int> los colores que puede tomar un vértice
   Vertice v = dame_vertice(vertice);
   return v.dame_colores_posibles();
 }
 
-Vertice Grafo::dame_vertice(int num) {
+Vertice Grafo::dame_vertice(int num) {//devuelve el vértice número num
   return vertices_[num];
 }
 
-int Grafo::dame_color(int vertice) {
+int Grafo::dame_color(int vertice) {//devuelve el valor del color del que actualmente está pintando el vértice número vertice
   Vertice v = dame_vertice(vertice);
   return v.dame_color();
 }
 
-std::set<int> Grafo::dame_vecinos(int vertice) {
+std::set<int> Grafo::dame_vecinos(int vertice) {//devuelve los vértices adyacentes al vértice número vertice
   assert (existe_vertice(vertice)); 
 
   std::set<int> vecinos;
@@ -56,8 +56,8 @@ std::set<int> Grafo::dame_vecinos(int vertice) {
   return vecinos;
 }
 
-std::set<int> Grafo::dame_vecinos_no_visitados(int vertice) {
-  assert (existe_vertice(vertice)); 
+std::set<int> Grafo::dame_vecinos_no_visitados(int vertice) {//devuelve aquellos vecinos que aún no han sido visitados 
+  assert (existe_vertice(vertice));                           //(se recurre a esta función en ciertos algoritmos presentados en el trabaji práctico)
 
   std::set<int> vecinos;
   for (int i : vecinos_[vertice]) {
@@ -159,6 +159,12 @@ void Grafo::pintar(int vertice, int color) {
   vertices_[vertice].pintar(color);
 }
 
+void Grafo::desvisitar_vertices(){
+  for(int i=0;i<vertices_.size();i++) {
+    vertices_[i].desvisitar();
+  }
+}
+
 std::set<int> Grafo::conjunto_colores_vecinos(int vertice) {
   assert(existe_vertice(vertice));
 
@@ -171,6 +177,14 @@ std::set<int> Grafo::conjunto_colores_vecinos(int vertice) {
   return res;
 }
 
+void Grafo::agregar_color_a_vertice(int i, int color) {
+  vertices_[i].agregar_color(color);  
+}
+
+void Grafo::eliminar_color_de_vertice(int i, int color) {
+  vertices_[i].eliminar_color(color);
+}
+
 void Grafo::intercambiar_color(int v1, int v2) { //Intercambia el color de dos vértices 
   assert(existe_vertice(v1) && existe_vertice(v2));
 
@@ -179,7 +193,7 @@ void Grafo::intercambiar_color(int v1, int v2) { //Intercambia el color de dos v
   vertices_[v2].pintar(swapear);
 }
 
-int Grafo::valor_de_intercambio(int v1, int v2) { //Devuelve el balance de conflictos (cuanto aumentaron) si se intercambian los coles
+int Grafo::valor_de_intercambio(int v1, int v2) { //Devuelve el balance de conflictos si se intercambian dos colores
   assert(existe_vertice(v1) && existe_vertice(v2));
 
   int conf = conflictos(v1) + conflictos(v2);
@@ -189,7 +203,7 @@ int Grafo::valor_de_intercambio(int v1, int v2) { //Devuelve el balance de confl
   return res;
 }
 
-int Grafo::valor_de_pintar(int v1, int color){
+int Grafo::valor_de_pintar(int v1, int color){//
   assert(existe_vertice(v1));
   int colOrig = dame_color(v1);
   int conf = conflictos(v1);
@@ -199,7 +213,7 @@ int Grafo::valor_de_pintar(int v1, int color){
   return res;
 }
 
-bool Grafo::son_colores_intercambiables(int v1, int v2) {
+bool Grafo::son_colores_intercambiables(int v1, int v2) {//Determina si es posible intercambiar los colores actuales de dos nodos
   assert(existe_vertice(v1) && existe_vertice(v2));
 
   if(dame_color(v1) == dame_color(v2) || !existe_arista(v1,v2)) return false;
@@ -217,7 +231,7 @@ bool Grafo::son_colores_intercambiables(int v1, int v2) {
 }
 
 
-int Grafo::conflictos(int v) {
+int Grafo::conflictos(int v) {//Devuelve la cantidad de conflictos en los que cae el nodo número v estando pintado de su color actual
   assert(existe_vertice(v));
 
   int conflictos = 0;
@@ -227,7 +241,7 @@ int Grafo::conflictos(int v) {
   return conflictos;
 }
 
-int Grafo::conflictos_totales() {
+int Grafo::conflictos_totales() {//Devuelve la cantidad de conflictos existentes en el grafo actual
   int conflictos = 0;
   int cantidad_vertices = vertices_.size();
 

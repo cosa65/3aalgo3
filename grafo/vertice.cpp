@@ -32,12 +32,26 @@ void Vertice::visitar() {
   visto_ = true;
 }
 
+void Vertice::desvisitar() {
+  visto_ = false;
+}
+
 bool Vertice::fue_visitado() {
   return visto_;
 }
 
 int Vertice::dame_nombre() {
   return num_;
+}
+
+void Vertice::eliminar_color(int color) {
+  std::set<int>::iterator it;
+  it = colores_disponibles_.find(color);
+  if (it != colores_disponibles_.end()) colores_disponibles_.erase(it);
+}
+
+void Vertice::agregar_color(int color) {
+  colores_disponibles_.insert(color);
 }
 
 void Vertice::pintar(int color) {
