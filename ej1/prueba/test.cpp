@@ -6,8 +6,8 @@
 #include <sstream>
 #include <vector>
 
-#include "grafo.h"
 #include "digrafo.h"
+#include "grafo.h"
 #include "utils.h"
 
 using namespace std;
@@ -73,12 +73,7 @@ int evaluarTests(string fileTestData, string fileTestResult)
 		
 	}
 
-
-	Digrafo pepa(grafo);
-
-	list<list<int>> pepina = pepa.Kosaraju();
-	cout << "Componentes fuertemente conexas:" << endl;
-	printl(pepina);
+	grafo.ListColoring();
 
 	return 0;
 

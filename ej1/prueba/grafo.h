@@ -9,6 +9,10 @@
 #include <assert.h>
 #include <iostream>
 
+using namespace std;
+
+class Digrafo; // Forward declaration, para que pueda usar Digrafo en la función colorear.
+
 class Grafo {
   
   public:
@@ -30,6 +34,9 @@ class Grafo {
     
     bool existe_arista(int vertice1, int vertice2);
     bool existe_vertice(int vertice);
+
+    list<int> ListColoring();
+    vector<bool> colorear(list<list<int>> cfc, Digrafo digrafo);
 
   private:
 

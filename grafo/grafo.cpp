@@ -207,7 +207,7 @@ int Grafo::valor_de_pintar(int v1, int color){//
   assert(existe_vertice(v1));
   int colOrig = dame_color(v1);
   int conf = conflictos(v1);
-  pintar(v1, color);
+  pintar(v1,  color);
   int res = conf - conflictos(v1);
   pintar(v1,colOrig);
   return res;
@@ -223,6 +223,8 @@ bool Grafo::son_colores_intercambiables(int v1, int v2) {//Determina si es posib
       for(int col2 : dame_colores_posibles(v2)) {
         if(col2 == dame_color(v1)){
           return true;
+        } else {
+          return false;
         }
       }
     }

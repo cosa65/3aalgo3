@@ -14,7 +14,10 @@
 
 using namespace std;
 
+class Grafo;
 class Digrafo {
+
+  friend class Grafo;
   
   public:
 
@@ -34,6 +37,9 @@ class Digrafo {
     bool existe_arista(int vertice1, int vertice2);
     bool existe_vertice(int vertice);
     list<list<int>> Kosaraju();
+    bool dfs3( int init , vector<bool> vooleanos );
+    bool recorrer3(int init, int i, vector<bool>& visitados, vector<bool> vooleanos );
+
 
   private:
 
@@ -58,6 +64,7 @@ class Digrafo {
     void recorrer(int i, vector<bool>& visitados, stack<int>& finish_time);
     list<list<int>> dfs2( vector<bool>& visitados, stack<int>& finish_time);
     list<int> recorrer2(int i, vector<bool>& visitados, list<int>& componente);
+
 
     std::vector<std::list<int> > vecinos_;
     std::vector<Vertice> vertices_;
