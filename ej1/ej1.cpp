@@ -63,15 +63,27 @@ bool dos_list_coloring(Grafo &g) {
   Digrafo digrafo(g);
 
   //kosaraju bla bla
-  std::list<std::list<int>> soy_kosaraju;
+  std::list<std::list<int>> cfc = digrafo.kosaraju();
 
   std::vector<int> vertices_por_componente(g.cant_vertices());
   std::fill(vertices_por_componente.begin(), vertices_por_componente.end(), -1);
 
-  bool hay_solucion = hay_contradiccion(digrafo, soy_kosaraju, vertices_por_componente);
+  bool hay_solucion = hay_contradiccion(digrafo, cfc, vertices_por_componente);
   if (hay_solucion) {
     Digrafo digrafo_comp_f_conexas;
     conectar_componentes_fuertemente_conexas(digrafo_comp_f_conexas, digrafo, vertices_por_componente);
+
+    // Para cada vertice del vector vertices_por_componente
+    // agarras el elemento de la posicion i
+    // pedis el contrario
+    // te fijas en que cfc esta
+    // preguntas
+    // al nodo en el que estoy parado o su contradiccion ya le asigne un valor de verdad?
+    // si ya le asigne un valro de verdad, me aseguro de no contradecirlo
+    // si no le asigne un valor de verdad le pongo false
+
+
+
   //aca viene el orden topologico y coloreo del grafo
   
   } 
