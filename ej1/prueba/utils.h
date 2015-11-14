@@ -6,7 +6,7 @@
 #include <queue>
 // FUNCIONES UTILITARIAS
 
-
+// Imprimir lista
 template <typename T>
 void printl(const list<T>& pepina)
 {
@@ -17,6 +17,8 @@ void printl(const list<T>& pepina)
 		cout << endl;
 	}	
 }
+// FIN Imprimir lista
+
 
 // Imprimir vector
 template <typename T>
@@ -26,7 +28,7 @@ void printv(const std::vector<T>& v)
 		cout << i << " / " ;
 	cout << endl;
 }
-// FIN Imprimir vectos
+// FIN Imprimir vector
 
 
 // Imprimir stack

@@ -1,4 +1,6 @@
 #include "grafo.h"
+#include "digrafo.h"
+#include "utils.h"
 
 Grafo::Grafo() {
   return;
@@ -92,28 +94,86 @@ std::set<int> Grafo::dame_vecinos(int vertice) {
   return vecinos;
 }
 
-void Grafo::dfs(int inicial, std::stack<int>& vertices_vistos) {
-  assert(existe_vertice(inicial));
+// void Grafo::dfs(int inicial, std::stack<int>& vertices_vistos) {
+//   assert(existe_vertice(inicial));
 
-  std::stack<int> vertices;
+//   std::stack<int> vertices;
 
-  vertices.push(inicial);
-  vertices_[inicial].visto = true;
+//   vertices.push(inicial);
+//   vertices_[inicial].visto = true;
 
-  while (!vertices.empty()) {
+//   while (!vertices.empty()) {
 
-    int vertice = vertices.top();
-    vertices.pop();
+//     int vertice = vertices.top();
+//     vertices.pop();
 
-    int ultimo_visto = true;
-    for (int i : vecinos_[vertice]) {
-      if (!vertices_[i].visto) {
-        vertices_[i].visto = true;
-        vertices.push(i);
-        ultimo_visto = false;
-      }
+//     int ultimo_visto = true;
+//     for (int i : vecinos_[vertice]) {
+//       if (!vertices_[i].visto) {
+//         vertices_[i].visto = true;
+//         vertices.push(i);
+//         ultimo_visto = false;
+//       }
+//     }
+//     if (ultimo_visto)
+//       vertices_vistos.push(vertice);
+//   }
+// }
+
+
+
+
+vector<bool> Grafo::colorear(list<list<int>> cfc, Digrafo digrafo)
+{
+  // cout << "Hola2: " << endl;
+  // printl(cfc);
+  vector<bool> vooleanos(cfc.size());
+  fill(vooleanos.begin(), vooleanos.end(), false);
+  int count = 0;
+
+  for (list<int>& l: cfc)
+  {
+    list<int>::iterator it = l.begin();
+
+    while (it != l.end() && vooleanos[count] != true)
+    {
+      vooleanos[count] = digrafo.dfs3(*it, vooleanos);
+      ++it;
     }
-    if (ultimo_visto)
-      vertices_vistos.push(vertice);
+    ++count; 
   }
+
+  return vooleanos;
+
+}
+
+list<int> Grafo::ListColoring()
+{
+  Digrafo digrafo(*this);
+  list<list<int>> cfc = digrafo.Kosaraju();
+  cout << "Componentes fuertemente conexas:" << endl;
+  printl(cfc);
+
+  vector<bool> colores = colorear(cfc, digrafo);
+  printv(colores);
+  cout << "Coloreo:" << endl;
+  int count = 0;
+  for (list<list<int>>::iterator it = cfc.begin(); it != cfc.end(); ++it)
+  {
+    for (int d: *it)
+    {
+      cout.setf(ios::boolalpha);
+      cout << "La componente del nodo " << d << " es " << colores[count] << ". Luego para el nodo " << d << " vale " << digrafo.vertices_[d].color << " " << !(digrafo.vertices_[d].valor_de_verdad ^ colores[count]);
+      cout << endl;
+    }
+    cout << endl;
+  }
+
+
+
+
+
+  list<int> l;
+  return l;
+
 }

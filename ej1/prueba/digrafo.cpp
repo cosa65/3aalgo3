@@ -211,70 +211,28 @@ list<list<int>> Digrafo::Kosaraju()
   return invertido.dfs2( visitados, finish_time );
 }
 
+bool Digrafo::dfs3( int init , vector<bool> vooleanos)
+{
+  vector<bool> visitados(vertices_.size());
+  fill(visitados.begin(), visitados.end(), false);
+  return recorrer3(init, init, visitados, vooleanos);
+}
 
+bool Digrafo::recorrer3(int init, int i, vector<bool>& visitados, vector<bool> vooleanos )
+{
+  visitados[i] = true;
+  for (int v: vecinos_[i])
+    if (!visitados[v]) 
+      recorrer3(init, v, visitados, vooleanos);
+
+  // A esta altura, todos los alcanzables desde i están visitados
+  return vertices_[init].num == vertices_[i].num &&
+         vertices_[init].color == vertices_[i].color &&
+         !(vertices_[init].valor_de_verdad) == vertices_[i].valor_de_verdad;
+}
 
 /////////////////////////////////////////////////////////////////////////
 
-
-// list<Digrafo> Digrafo::Kosaraju_poco_amistoso( int init )
-// {
-//   stack<int> finish_time;
-//   set<int> visitados; 
-
-//   visitados.insert(init);
-//   vertices_[init].visto = true;
-
-//   while ( visitados.size() < vertices_.size() )
-//   {
-//     for ( auto& noda: vertices_)
-//     {
-//       if ( !noda.visitado )
-//       {
-
-//         while (!visitados.empty())
-//         {
-
-//           int vertice = visitados.top();
-//           int ultimo_visto = true;
-
-//           for (auto nodo : vertices_[vecinos_[vertice]])
-//           {
-//             if (!nodo.visto)
-//             {
-//               nodo.visto = true;
-//               visitados.push(nodo);
-//               ultimo_visto = false;
-//             }
-//           }
-
-//           if (ultimo_visto)
-//           {
-//             finish_time.push(visitados.top());
-//             visitados.pop();
-//           }
-
-//         }
-        
-//       }
-//     }
-//   }
-
-//   Digrafo complemento = invertir_aristas();
-
-//   list<Digrafo> cfc = new list<Digrafo>;
-
-//   while (!finish_time.empty())
-//   {
-
-//     int vertice = finish_time.top();
-//     finish_time.pop();
-
-//     if (!vertices_[vertice].visto)
-//     {
-//       cfc.add( dfs(vertice) );
-//     }
-
-// }
 
 // Funciones privadas
 
@@ -400,3 +358,36 @@ int Digrafo::dame_posicion_vertice(int vertice, int color, bool valor_de_verdad)
 }
 
 
+// bool Digrafo::bfs( int init )
+// {
+//   nodo *s = &nodos[init];
+//   for (nodo& v: nodos)
+//   {
+//     v._col = blanco;
+//     v._dist = inf;
+//     v._padre = nullptr;
+//   }
+
+//   s->_col = negro;
+//   s->_dist = 0;
+//   s->_padre = nullptr;
+
+//   std::queue<nodo*> cola;
+//   cola.push(s);
+
+//   while (!cola.empty())
+//   {
+//     nodo* v = cola.front();
+//     cola.pop();
+
+//     for (nodo* w: lista[v->_num])
+//     {
+//       if (w->_col == blanco)
+//       {
+//         w->_col = negro;
+//         w->_dist = v->_dist + 1;
+//         cola.push(w);
+//       }
+//     }
+//   }
+// }
