@@ -78,7 +78,7 @@ double get_time() {
 
 ///////////////////////////////////////////AUXILIARES//////////////////////////////////////////////
 
-bool cardinal_menor_dos(Grafo &g, std::vector<Vertice> vertices, int i) {
+bool cardinal_menor_dos(Grafo &g, std::vector<Vertice> vertices, int i) { //O(n)
   bool res = true;
   for (int j = i; j < vertices.size() && res; ++j) { //itero sobre los vértices no coloreados
     if (g.dame_colores_posibles(j).size() > 2)  res = false; //si alguno tiene más de dos colores, retorno false
@@ -86,27 +86,27 @@ bool cardinal_menor_dos(Grafo &g, std::vector<Vertice> vertices, int i) {
   return res;
 }
 
-void eliminar_color_a_vecinos(Grafo &g, int i, int color) {
-  for (int j = i+1 ; j < g.cant_vertices() ; ++j) { //itero sobre los vecinos de i subsiguientes en el vector
-    if (g.existe_arista(i, j))  g.eliminar_color_de_vertice(j, color); //les elimino el color que le asigné a i
+void eliminar_color_a_vecinos(Grafo &g, int i, int color) { // O(n*c)
+  for (int j = i+1 ; j < g.cant_vertices() ; ++j) { //itero sobre los vecinos de i subsiguientes en el vector O(n)
+    if (g.existe_arista(i, j))  g.eliminar_color_de_vertice(j, color); //les elimino el color que le asigné a i O(c) 
   }
 }
 
-void agregar_color_a_vecinos(Grafo &g, int i, int color, std::vector<std::set<int > > colores_originales) {
+void agregar_color_a_vecinos(Grafo &g, int i, int color, std::vector<std::set<int > > colores_originales) { //O(n*c)
   std::set<int>::iterator it;
-  for (int j = i+1 ; j < g.cant_vertices() ; ++j) { //itero sobre los vecinos de i
+  for (int j = i+1 ; j < g.cant_vertices() ; ++j) { //itero sobre los vecinos de i O(n)
     if (g.existe_arista(i, j)) {
-      it = colores_originales[j].find(color); //chequeo si originalmente tenían ese color
+      it = colores_originales[j].find(color); //chequeo si originalmente tenían ese color O(c)
       if (it != colores_originales[j].end()) g.agregar_color_a_vertice(j, color); //si lo tenían, lo agrego
     }
   }
 }
-void borrar_todos_menos(Grafo &g, int i, int color) {
-  for (std::set<int>::iterator it = g.dame_colores_posibles(i).begin() ; it != g.dame_colores_posibles(i).end(); ++it) {
+void borrar_todos_menos(Grafo &g, int i, int color) { //O(C)
+  for (std::set<int>::iterator it = g.dame_colores_posibles(i).begin() ; it != g.dame_colores_posibles(i).end(); ++it) { 
     if (*it != color) g.dame_colores_posibles(i).erase(it);
   }
 }
-void agregar_todos(Grafo &g, int i, std::set<int> colores) {
+void agregar_todos(Grafo &g, int i, std::set<int> colores) { //O(C)
   for (int c : colores) 
     g.agregar_color_a_vertice(i, c);
 }
