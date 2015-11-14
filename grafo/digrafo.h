@@ -31,19 +31,18 @@ class Digrafo {
     std::set<int> dame_vecinos(int vertice);
     Vertice_digrafo dame_vertice(int vertice);
     int dame_contrario(int vertice);
-
-    std::list<Digrafo> Kosaraju(int init);
+    // bool dame_valor_de_verdad(int vertice);
 
     void imprimir();
     void imprimir_solo_vecinos();
-
-    void dfs(int inicial, std::stack<int>& vertices_vistos);
-    void dfs2(int inicial);
     
     bool existe_arista(int vertice1, int vertice2);
     bool existe_vertice(int vertice);
     
     bool son_contrarias(int id1, int id2);
+
+    std::list<std::list<int>> Kosaraju();
+
 
   private:
 
@@ -54,6 +53,13 @@ class Digrafo {
     void agregar_arista_2_colores(std::set<int> colores, int v1, int v2);
 
     int dame_posicion_vertice(int vertice, int color, bool valor_de_verdad);
+
+    
+    void dfs( std::vector<bool>& visitados, std::stack<int>& finish_time);
+    void recorrer(int i, std::vector<bool>& visitados, std::stack<int>& finish_time);
+    std::list<std::list<int>> dfs2( std::vector<bool>& visitados, std::stack<int>& finish_time);
+    std::list<int> recorrer2(int i, std::vector<bool>& visitados, std::list<int>& componente);
+
 
     std::vector<std::list<int> > vecinos_;
     std::vector<Vertice_digrafo> vertices_;

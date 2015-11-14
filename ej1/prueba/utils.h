@@ -6,6 +6,8 @@
 #include <queue>
 // FUNCIONES UTILITARIAS
 
+using namespace std;
+
 // Imprimir lista
 template <typename T>
 void printl(const list<T>& pepina)

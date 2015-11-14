@@ -1,0 +1,22 @@
+Formato de entrada:
+
+n(vertices) m(aristas) c(max cant colores disponibles)  (con n > 0, m ≥ 0 y c ≥ 1)
+
+t(cantidad de colores del vertice 0) c1 c2 ... ct
+t(cantidad de colores del vertice 1) c1 c2 ... ct
+...
+t(cantidad de colores del vertice n-1) c1 c2 ... ct
+
+u(extremo de la arista) v(extremo de la arista)
+
+
+
+Formato de salida:
+
+Para los casos en que existe solucion:
+
+c1(color del vertice 1) c2(color del vertice 2) ... cn(color del vertice n)
+
+Para los casos en que no existe solucion:
+
+X

@@ -176,6 +176,11 @@ int Digrafo::dame_contrario(int vertice) {
   return contrario;
 }
 
+// int dame_valor_de_verdad()
+// {
+  
+// }
+
 Digrafo Digrafo::invertir_aristas() {
   Digrafo invertido;
 
@@ -221,85 +226,35 @@ bool Digrafo::son_contrarias(int id1, int id2) {
 //      vertices_vistos.push(vertice);
 //  }
 //}
-//
-//void Digrafo::dfs2( int inicial )
-//{
-//  Digrafo dig = new Digrafo();
-//
-//  vertices_[inicial].visto = true;
-//
-//  dig.agregar_vertice(inicial);
-//
-//  for (nodo* v: dig.vecinos_[inicial])
-//  {
-//    if (!v.visto)
-//      dfs2(v);
-//  }
-//
-//  return dig;
-//}
-//
-//std::list<Digrafo> Digrafo::Kosaraju( int init )
-//{
-//  std::stack<int> finish_time;
-//  std::set<int> visitados; 
-//
-//  visitados.insert(init);
-//  vertices_[init].visto = true;
-//
-//  while ( visitados.size() < vertices_.size() )
-//  {
-//    for ( auto& noda: vertices_)
-//    {
-//      if ( !noda.visitado )
-//      {
-//
-//        while (!visitados.empty())
-//        {
-//
-//          int vertice = visitados.top();
-//          int ultimo_visto = true;
-//
-//          for (auto nodo : vertices_[vecinos_[vertice]])
-//          {
-//            if (!nodo.visto)
-//            {
-//              nodo.visto = true;
-//              visitados.push(nodo);
-//              ultimo_visto = false;
-//            }
-//          }
-//
-//          if (ultimo_visto)
-//          {
-//            finish_time.push(visitados.top());
-//            visitados.pop();
-//          }
-//
-//        }
-//        
-//      }
-//    }
-//  }
-//
-//  Digrafo complemento = invertir_aristas();
-//
-//  std::list<Digrafo> cfc = new std::list<Digrafo>;
-//
-//  while (!finish_time.empty())
-//  {
-//
-//    int vertice = finish_time.top();
-//    finish_time.pop();
-//
-//    if (!vertices_[vertice].visto)
-//    {
-//      cfc.add( dfs2(vertice) );
-//    }
-//
-//}
-//}
-//
+
+
+
+
+// Algoritmo de Kosaraju, para calcular componentes fuertemente conexas
+std::list<std::list<int>> Digrafo::Kosaraju()
+{
+  // Creo vector de visitados y lo inicializo. Al principio no hay visitados
+  std::vector<bool> visitados(vertices_.size());
+  fill(visitados.begin(), visitados.end(), false);
+  
+  // Primer DFS: me armo un stack de acuerdo al orden en que visito cada nodo
+  std::stack<int> finish_time;
+  dfs( visitados, finish_time );
+
+  // Busco el grafo Invertido
+  Digrafo invertido = invertir_aristas();
+
+  // Vuelvo a inicializar el vector para el segundo dfs
+  fill(visitados.begin(), visitados.end(), false);
+
+  // Segundo DFS: recorro el stack que me armé
+  return invertido.dfs2( visitados, finish_time );
+}
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////
 // Funciones privadas
 
 void Digrafo::expandir_vertice_1_color(std::set<int> colores, int vertice) {
@@ -431,3 +386,55 @@ int Digrafo::dame_posicion_vertice(int vertice, int color, bool valor_de_verdad)
   }
   return posicion_final;
 }
+
+
+
+void Digrafo::dfs( std::vector<bool>& visitados, std::stack<int>& finish_time) // El parámetro visitados es reemplazado por un putero al primer elemento del array ;). Para evitar el cambio implícito, usar una referencia. Lo cambié por un std::vector, el comentario queda anuado.
+{
+  for (int i = 0; i < vertices_.size(); ++i)
+    if (!visitados[i])
+      recorrer(i, visitados, finish_time);
+}
+
+void Digrafo::recorrer(int i, std::vector<bool>& visitados, std::stack<int>& finish_time)
+{
+  visitados[i] = true;
+  for (int v: vecinos_[i])
+    if (!visitados[v]) 
+      recorrer(v, visitados, finish_time);
+
+  // A esta altura, todos los alcanzables desde i están visitados
+  finish_time.push(i);
+}
+
+std::list<std::list<int>> Digrafo::dfs2( std::vector<bool>& visitados, std::stack<int>& finish_time)
+{
+  // Armo lista de componentes fuertemente conexas en orden topológico. De esto último no estoy seguro.
+  std::list<std::list<int>>* cfc = new std::list<std::list<int>>;
+
+  while (!finish_time.empty())
+  {
+    int i = finish_time.top();
+    finish_time.pop();
+
+    if (!visitados[i])
+    {
+      std::list<int>* componente = new std::list<int>;
+      cfc->push_back( recorrer2(i, visitados, *componente) );
+    }
+  }
+  return *cfc;
+}
+
+std::list<int> Digrafo::recorrer2(int i, std::vector<bool>& visitados, std::list<int>& componente)
+{
+  visitados[i] = true;
+  componente.push_back(i);
+
+  for (int v: vecinos_[i])
+    if (!visitados[v])
+      recorrer2(v, visitados, componente);
+
+  return componente;
+}
+

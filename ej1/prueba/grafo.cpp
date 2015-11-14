@@ -123,18 +123,19 @@ std::set<int> Grafo::dame_vecinos(int vertice) {
 
 
 
-vector<bool> Grafo::colorear(list<list<int>> cfc, Digrafo digrafo)
+vector<bool> Grafo::buscar_contradiccion(list<list<int>> cfc, Digrafo digrafo)
 {
-  // cout << "Hola2: " << endl;
-  // printl(cfc);
-  vector<bool> vooleanos(cfc.size());
-  fill(vooleanos.begin(), vooleanos.end(), false);
-  int count = 0;
+  // Vector que indica el valor de verdad de todos los nodos de cada cfc
+  // vector<bool> vooleanos(cfc.size());
+  // fill(vooleanos.begin(), vooleanos.end(), false);
+  // int count = 0;
 
+  // Itero sobre las componentes  
   for (list<int>& l: cfc)
   {
     list<int>::iterator it = l.begin();
 
+    // Itero sobre los nodos de cada componente. Freno si ya puse esa componente en true.
     while (it != l.end() && vooleanos[count] != true)
     {
       vooleanos[count] = digrafo.dfs3(*it, vooleanos);
@@ -149,13 +150,14 @@ vector<bool> Grafo::colorear(list<list<int>> cfc, Digrafo digrafo)
 
 list<int> Grafo::ListColoring()
 {
+  // Creo el digrafo expandido a 4 vértices por cada uno en el original
   Digrafo digrafo(*this);
+  // Busco componentes fuertemente conexas
   list<list<int>> cfc = digrafo.Kosaraju();
-  cout << "Componentes fuertemente conexas:" << endl;
-  printl(cfc);
 
-  vector<bool> colores = colorear(cfc, digrafo);
-  printv(colores);
+  // Chequeo si existe solución (si no existen contradicciones dentro de una misma cfc)
+  vector<bool> colores = buscar_contradiccion(cfc, digrafo);
+  
   cout << "Coloreo:" << endl;
   int count = 0;
   for (list<list<int>>::iterator it = cfc.begin(); it != cfc.end(); ++it)
@@ -168,9 +170,6 @@ list<int> Grafo::ListColoring()
     }
     cout << endl;
   }
-
-
-
 
 
   list<int> l;

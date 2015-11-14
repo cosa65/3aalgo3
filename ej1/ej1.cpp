@@ -10,6 +10,8 @@
 #include "../grafo/grafo.h"
 #include "../grafo/digrafo.h"
 
+#include "prueba/utils.h"
+
 /*
 timeval start, end;
 double acum = 0;
@@ -57,13 +59,66 @@ void conectar_componentes_fuertemente_conexas(Digrafo& digrafo_comp_f_conexas, D
   }
 }
 
+std::vector<bool> colorear(Digrafo& digrafo, std::list<std::list<int>> cfc, std::vector<int> vertices_por_componente)
+{
+  // Vector que indica si ya pinté el nodo i.
+  std::vector<bool> coloreados(vertices_por_componente.size());
+  std::fill(coloreados.begin(), coloreados.end(), false);
+  
+  // Vector que indica el valor de verdad del valor de verdad.
+  std::vector<bool> valor_de_verdad2(vertices_por_componente.size());
+  std::fill(valor_de_verdad2.begin(), valor_de_verdad2.end(), false);
+
+  for (std::list<int>& componente: cfc)
+  {
+   for (int i: componente)
+    {
+      // i es el vértice actual, j es su contrario
+      int j = digrafo.dame_contrario(i);
+
+      // Hay alguno de los dos coloreados?
+      if (coloreados[i] || coloreados[j])
+      {
+        // i coloreado, j no coloreado
+        if (!coloreados[j])
+        {
+          if (digrafo.dame_vertice(j).dame_valor_de_verdad() == !(valor_de_verdad2[i] ^ digrafo.dame_vertice(i).dame_valor_de_verdad()))
+            valor_de_verdad2[j] = true;
+          coloreados[j] = true;         
+        }
+
+        // j coloreado, i no coloreado
+        if (!coloreados[i])
+        {
+          if (digrafo.dame_vertice(i).dame_valor_de_verdad() == !(valor_de_verdad2[j] ^ digrafo.dame_vertice(j).dame_valor_de_verdad()))
+            valor_de_verdad2[i] = true;
+          coloreados[i] = true;         
+        }
+
+      }
+      // Ninguno de los dos está coloreado
+      else
+      {
+        // No hay ninguno de los dos coloreados, entonces le pongo false
+        valor_de_verdad2[i] = false;
+        // Lo marco como coloreado
+        coloreados[i] = true;
+      
+      }
+    }
+  }
+
+  return valor_de_verdad2;
+}
+
+
 bool dos_list_coloring(Grafo &g) {
   
   //convierto el grafo g en el digrafo
   Digrafo digrafo(g);
 
   //kosaraju bla bla
-  std::list<std::list<int>> cfc = digrafo.kosaraju();
+  std::list<std::list<int>> cfc = digrafo.Kosaraju();
 
   std::vector<int> vertices_por_componente(g.cant_vertices());
   std::fill(vertices_por_componente.begin(), vertices_por_componente.end(), -1);
@@ -73,6 +128,9 @@ bool dos_list_coloring(Grafo &g) {
     Digrafo digrafo_comp_f_conexas;
     conectar_componentes_fuertemente_conexas(digrafo_comp_f_conexas, digrafo, vertices_por_componente);
 
+  std::vector<bool> coloreo = colorear(digrafo, cfc, vertices_por_componente);
+
+  printv(coloreo);
     // Para cada vertice del vector vertices_por_componente
     // agarras el elemento de la posicion i
     // pedis el contrario
@@ -147,7 +205,9 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, std::stri
     }
 
 
-    grafo.imprimir();
+    // grafo.imprimir();
+
+    dos_list_coloring(grafo);
 
     //double prom = acum/100;
     //FileWrite << "Test numero: " << i << " cantidad de pisos: " << cant_pisos << std::endl;

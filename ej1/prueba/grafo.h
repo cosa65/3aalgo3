@@ -36,7 +36,7 @@ class Grafo {
     bool existe_vertice(int vertice);
 
     list<int> ListColoring();
-    vector<bool> colorear(list<list<int>> cfc, Digrafo digrafo);
+    vector<bool> buscar_contradiccion(list<list<int>> cfc, Digrafo digrafo);
 
   private:
 
