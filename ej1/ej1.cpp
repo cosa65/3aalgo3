@@ -112,7 +112,7 @@ std::vector<bool> colorear(Digrafo& digrafo, std::list<std::list<int>> cfc, std:
 }
 
 
-bool dos_list_coloring(Grafo &g) {
+bool dos_list_coloring(Grafo& g) {
   
   //convierto el grafo g en el digrafo
   Digrafo digrafo(g);
@@ -120,7 +120,7 @@ bool dos_list_coloring(Grafo &g) {
   //kosaraju bla bla
   std::list<std::list<int>> cfc = digrafo.Kosaraju();
 
-  std::vector<int> vertices_por_componente(g.cant_vertices());
+  std::vector<int> vertices_por_componente(digrafo.cant_vertices());
   std::fill(vertices_por_componente.begin(), vertices_por_componente.end(), -1);
 
   bool hay_solucion = hay_contradiccion(digrafo, cfc, vertices_por_componente);
@@ -130,22 +130,17 @@ bool dos_list_coloring(Grafo &g) {
 
   std::vector<bool> coloreo = colorear(digrafo, cfc, vertices_por_componente);
 
-  printv(coloreo);
-    // Para cada vertice del vector vertices_por_componente
-    // agarras el elemento de la posicion i
-    // pedis el contrario
-    // te fijas en que cfc esta
-    // preguntas
-    // al nodo en el que estoy parado o su contradiccion ya le asigne un valor de verdad?
-    // si ya le asigne un valro de verdad, me aseguro de no contradecirlo
-    // si no le asigne un valor de verdad le pongo false
-
-
-
-  //aca viene el orden topologico y coloreo del grafo
+  for (int i = 0; i < coloreo.size(); ++i)
+  {
+    
+    if (coloreo[i] && digrafo.dame_vertice(i).dame_valor_de_verdad())
+    {
+      g.pintar(digrafo.dame_vertice(i).dame_nombre(), digrafo.dame_vertice(i).dame_color());
+    }
   
   } 
 
+}
   return hay_solucion;
 }
 
@@ -205,9 +200,10 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, std::stri
     }
 
 
-    // grafo.imprimir();
 
     dos_list_coloring(grafo);
+    
+    grafo.imprimir();
 
     //double prom = acum/100;
     //FileWrite << "Test numero: " << i << " cantidad de pisos: " << cant_pisos << std::endl;

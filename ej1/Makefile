@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -std=c++11 -o
+CFLAGS = -std=c++11 -ggdb -o
 EFLAGS = -g
 
 BINARIES = ej1 
