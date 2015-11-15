@@ -9,6 +9,7 @@
 #include <algorithm>
 
 #include "../grafo/grafo.h"
+#include "../grafo/digrafo.h"
 
 /*
 timeval start, end;
@@ -26,62 +27,133 @@ double get_time() {
 //Funciones y datos utilizados para la toma de tiempos
 
 
-//NO LO BORREN AÚN POR LAS DUDISSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS!!!!!!!!!!!!
+//ESTO HABRIA QUE PONERLO EN OTRO LUGAR, NO DA COPIARLO DOS VECES
+//////////////////////////////////////DOS_LIST_COLORING/////////////////////////////////////////////////
 
-//bool list_coloring_recursivo(Grafo &g, std::vector<Vertice> vertices, int i) {
-//  bool pude_pintar = false; // ! ver que este bien esta inicializacion
-//  //caso base
-//  if (i == (g.cant_vertices() - 1)) { //estoy pintando al ultimo nodo
-//    std::set<int> colores = g.dame_colores_posibles(i); //colores posibles para ese vertice
-//    std::set<int> colores_vecinos = g.conjunto_colores_vecinos(i); //colores de los vecinos (aquellos que ya estan definidos)
-//    borrar_subconjunto(colores, colores_vecinos); //elimino los colores de mis vecinos, ya que no puedo utilizarlos
-//    if (!colores.empty()) { //si me queda algun color disponible
-//      std::set<int>::iterator it = colores.begin();
-//      g.pintar(i, *it); //elijo un color arbitrariamente y pinto
-//      pude_pintar = true;
-//    } else { //si no quedan colores disponibles, retorno false
-//      g.pintar(i, -1);
-//      pude_pintar = false; //voy a volver a la rama anterior de la recursion
-//    }
-//      
-//  } else {
-//    //paso recursivo
-//    //if (cardinal_menor_dos(g, vertices, i)) {
-//    //  aca armo el grafo para pasarle a 2-list-coloring
-//    //} else { //hago la recursion comun
-//        std::set<int> colores = g.dame_colores_posibles(i); //colores posibles para ese vertice
-//        std::set<int> colores_vecinos = g.conjunto_colores_vecinos(i); //colores de los vecinos (aquellos que ya estan definidos)
-//        borrar_subconjunto(colores, colores_vecinos); //elimino los colores de mis vecinos, ya que no puedo utilizarlos
-//
-//        for (std::set<int>::iterator it_c = colores.begin(); it_c != colores.end() && !pude_pintar; ++it_c) { //mientras tenga colores no utilizados, y no hay podido pintar el grafo  
-//          g.pintar(i, *it_c); //pinto actual de un color determinado
-//          pude_pintar = list_coloring_recursivo(g, vertices, ++i);
-//          if (!pude_pintar) {
-//            g.pintar(i, -1); //pinto actual de un color determinado
-//            --i;
-//          }
-//        }
-//      //}
-//  }
-//  return pude_pintar;
-//}
-//
-//void borrar_subconjunto(std::set<int> &c1, std::set<int> &c2) {
-//  std::set<int>::iterator it;
-//  for (int i : c2) {
-//    it = c1.find(i);
-//    if (it != c1.end())
-//      c1.erase(it);
-//  }  
-//}
+bool hay_contradiccion(Digrafo &digrafo, std::list<std::list<int>>& comp_conexas, std::vector<int>& vertices_por_componente) {
 
+  bool res = true;
+  int indice_componente = 0;
+
+  for (std::list<int>& componentes : comp_conexas) {
+    for (int vertice : componentes) {
+      vertices_por_componente[vertice] = indice_componente;
+      int contrario = digrafo.dame_contrario(vertice);
+      if (vertices_por_componente[contrario] == indice_componente)
+        res = false;
+    }
+    indice_componente++;
+  }
+  return res;
+}
+
+void conectar_componentes_fuertemente_conexas(Digrafo& digrafo_comp_f_conexas, Digrafo& digrafo, std::vector<int> vertices_por_componentes) {
+  int cant_vertices = digrafo.cant_vertices();
+  for (int i = 0 ; i < cant_vertices ; ++i) {
+    digrafo.agregar_vertice(-1, i, false);
+  }
+
+  for (int i = 0 ; i < cant_vertices ; ++i) {
+    std::set<int> vecinos = digrafo.dame_vecinos(i);
+    for (int v : vecinos) {
+      if (vertices_por_componentes[i] != vertices_por_componentes[v])
+        digrafo.agregar_arista(vertices_por_componentes[i], vertices_por_componentes[v]);
+    }
+  }
+}
+
+std::vector<bool> colorear(Digrafo& digrafo, std::list<std::list<int>> cfc, std::vector<int> vertices_por_componente)
+{
+  // Vector que indica si ya pinté el nodo i.
+  std::vector<bool> coloreados(vertices_por_componente.size());
+  std::fill(coloreados.begin(), coloreados.end(), false);
+  
+  // Vector que indica el valor de verdad del valor de verdad.
+  std::vector<bool> valor_de_verdad2(vertices_por_componente.size());
+  std::fill(valor_de_verdad2.begin(), valor_de_verdad2.end(), false);
+
+  for (std::list<int>& componente: cfc)
+  {
+   for (int i: componente)
+    {
+      // i es el vértice actual, j es su contrario
+      int j = digrafo.dame_contrario(i);
+
+      // Hay alguno de los dos coloreados?
+      if (coloreados[i] || coloreados[j])
+      {
+        // i coloreado, j no coloreado
+        if (!coloreados[j])
+        {
+          if (digrafo.dame_vertice(j).dame_valor_de_verdad() == !(valor_de_verdad2[i] ^ digrafo.dame_vertice(i).dame_valor_de_verdad()))
+            valor_de_verdad2[j] = true;
+          coloreados[j] = true;         
+        }
+
+        // j coloreado, i no coloreado
+        if (!coloreados[i])
+        {
+          if (digrafo.dame_vertice(i).dame_valor_de_verdad() == !(valor_de_verdad2[j] ^ digrafo.dame_vertice(j).dame_valor_de_verdad()))
+            valor_de_verdad2[i] = true;
+          coloreados[i] = true;         
+        }
+
+      }
+      // Ninguno de los dos está coloreado
+      else
+      {
+        // No hay ninguno de los dos coloreados, entonces le pongo false
+        valor_de_verdad2[i] = false;
+        // Lo marco como coloreado
+        coloreados[i] = true;
+      
+      }
+    }
+  }
+
+  return valor_de_verdad2;
+}
+
+
+bool dos_list_coloring(Grafo& g) {
+  
+  //convierto el grafo g en el digrafo
+  Digrafo digrafo(g);
+
+  //kosaraju bla bla
+  std::list<std::list<int>> cfc = digrafo.Kosaraju();
+
+  std::vector<int> vertices_por_componente(digrafo.cant_vertices());
+  std::fill(vertices_por_componente.begin(), vertices_por_componente.end(), -1);
+
+  bool hay_solucion = hay_contradiccion(digrafo, cfc, vertices_por_componente);
+  if (hay_solucion) {
+    Digrafo digrafo_comp_f_conexas;
+    conectar_componentes_fuertemente_conexas(digrafo_comp_f_conexas, digrafo, vertices_por_componente);
+
+  std::vector<bool> coloreo = colorear(digrafo, cfc, vertices_por_componente);
+
+  for (int i = 0; i < coloreo.size(); ++i)
+  {
+    
+    if (coloreo[i] && digrafo.dame_vertice(i).dame_valor_de_verdad())
+    {
+      g.pintar(digrafo.dame_vertice(i).dame_nombre(), digrafo.dame_vertice(i).dame_color());
+    }
+  
+  } 
+
+}
+  return hay_solucion;
+}
 
 ///////////////////////////////////////////AUXILIARES//////////////////////////////////////////////
 
+//para checkear que puedo usar dos_list_coloring
 bool cardinal_menor_dos(Grafo &g, std::vector<Vertice> vertices, int i) { //O(n)
   bool res = true;
   for (int j = i; j < vertices.size() && res; ++j) { //itero sobre los vértices no coloreados
-    if (g.dame_colores_posibles(j).size() > 2)  res = false; //si alguno tiene más de dos colores, retorno false
+    if (g.dame_colores_posibles(j).size() > 2 || g.dame_colores_posibles(j).size() < 1 )  res = false; //si alguno tiene más de dos colores o si no tiene ningun color posible, retorno false
   }
   return res;
 }
@@ -101,11 +173,16 @@ void agregar_color_a_vecinos(Grafo &g, int i, int color, std::vector<std::set<in
     }
   }
 }
+
 void borrar_todos_menos(Grafo &g, int i, int color) { //O(C)
-  for (std::set<int>::iterator it = g.dame_colores_posibles(i).begin() ; it != g.dame_colores_posibles(i).end(); ++it) { 
-    if (*it != color) g.dame_colores_posibles(i).erase(it);
-  }
+  std::set<int> colores = g.dame_colores_posibles(i);
+  for (int c : colores) {
+    if (c != color) { 
+      g.eliminar_color_de_vertice(i, c);
+    }
+  }  
 }
+
 void agregar_todos(Grafo &g, int i, std::set<int> colores) { //O(C)
   for (int c : colores) 
     g.agregar_color_a_vertice(i, c);
@@ -113,41 +190,7 @@ void agregar_todos(Grafo &g, int i, std::set<int> colores) { //O(C)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-//CREO QUE ESTE ANDA
 //LIST_COLORING_RECURSIVO SIN LLAMAR A 2-LIST-COLORING
-bool list_coloring_recursivo(Grafo &g, std::vector<Vertice> &vertices, std::vector<std::set <int> > colores_originales, int i) {
-  bool pude_pintar = false; 
-  std::set<int> colores = g.dame_colores_posibles(i);
-  //caso base
-  if (i == (g.cant_vertices() - 1)) { //estoy pintando al ultimo nodo
-    if (!colores.empty()) { //si me queda algun color disponible
-      std::set<int>::iterator it = colores.begin();
-      g.pintar(i, *it); //elijo un color arbitrariamente y pinto
-      pude_pintar = true;
-    } else { //si no quedan colores disponibles, retorno false
-      g.pintar(i, -1);
-      pude_pintar = false; //voy a volver a la rama anterior de la recursion
-    }
-      
-  } else {
-    //paso recursivo
-    for (std::set<int>::iterator it_c = colores.begin(); it_c != colores.end() && !pude_pintar; ++it_c) { //mientras tenga colores no utilizados, y no hay podido pintar el grafo  
-      g.pintar(i, *it_c); //pinto actual de un color determinado
-      eliminar_color_a_vecinos(g, i, *it_c); //le borro el color elegido a los vecinos de i
-      pude_pintar = list_coloring_recursivo(g, vertices, colores_originales, ++i);
-      if (!pude_pintar) {
-        g.pintar(i, -1); //pinto actual de -1
-        --i;
-        agregar_color_a_vecinos(g, i, *it_c, colores_originales); //agrego el color elegido a los vecinos de i
-      }
-    }
-  }
-  return pude_pintar;
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////
-
-//LIST_COLORING_RECURSIVO LLAMANDO A 2-LIST-COLORING
 //bool list_coloring_recursivo(Grafo &g, std::vector<Vertice> &vertices, std::vector<std::set <int> > colores_originales, int i) {
 //  bool pude_pintar = false; 
 //  std::set<int> colores = g.dame_colores_posibles(i);
@@ -164,45 +207,78 @@ bool list_coloring_recursivo(Grafo &g, std::vector<Vertice> &vertices, std::vect
 //      
 //  } else {
 //    //paso recursivo
-//    if (cardinal_menor_dos(g, vertices, i)) { //chequeo si todos los vértices tienen menos de 2 colores
-//      std::vector<std::set<int> > colores_parciales;
-//      for (int j = 0 ; j < i ; ++j) { //armo grafo para pasarle a dos_list_coloring
-//        colores_parciales.push_back(g.dame_colores_posibles(j)); //guardo los colores posibles hasta el momento
-//        borrar_todos_menos(g, j, g.dame_color(j));
-//      }
-//
-//      pude_pintar = dos_list_coloring(g);
-//
-//      if (!pude_pintar) { //restauro el estado de la rama de recursión
-//        for (int j = 0 ; j < i ; ++j) {
-//          agregar_todos(g, j, colores_parciales[j]);
-//        }
-//      }
-//
-//    } else { //hago la recursion comun
-//
-//      for (std::set<int>::iterator it_c = colores.begin(); it_c != colores.end() && !pude_pintar; ++it_c) { //mientras tenga colores no utilizados, y no hay podido pintar el grafo  
-//        g.pintar(i, *it_c); //pinto actual de un color determinado
-//        eliminar_color_a_vecinos(g, i, *it_c);
-//        pude_pintar = list_coloring_recursivo(g, vertices, colores_originales, ++i);
-//        if (!pude_pintar) {
-//          g.pintar(i, -1); //pinto actual de un color determinado
-//          --i;
-//          agregar_color_a_vecinos(g, i, *it_c, colores_originales);
-//        }
+//    for (std::set<int>::iterator it_c = colores.begin(); it_c != colores.end() && !pude_pintar; ++it_c) { //mientras tenga colores no utilizados, y no hay podido pintar el grafo  
+//      g.pintar(i, *it_c); //pinto actual de un color determinado
+//      eliminar_color_a_vecinos(g, i, *it_c); //le borro el color elegido a los vecinos de i
+//      pude_pintar = list_coloring_recursivo(g, vertices, colores_originales, ++i);
+//      if (!pude_pintar) {
+//        g.pintar(i, -1); //pinto actual de -1
+//        --i;
+//        agregar_color_a_vecinos(g, i, *it_c, colores_originales); //agrego el color elegido a los vecinos de i
 //      }
 //    }
 //  }
 //  return pude_pintar;
 //}
-//
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
+//LIST_COLORING_RECURSIVO LLAMANDO A 2-LIST-COLORING
+bool list_coloring_recursivo(Grafo &g, std::vector<Vertice> &vertices, std::vector<std::set <int> > colores_originales, int i) {
+  bool pude_pintar = false; 
+  std::set<int> colores = g.dame_colores_posibles(i);
+  //caso base
+  if (i == (g.cant_vertices() - 1)) { //estoy pintando al ultimo nodo
+    if (!colores.empty()) { //si me queda algun color disponible
+      std::set<int>::iterator it = colores.begin();
+      g.pintar(i, *it); //elijo un color arbitrariamente y pinto
+      pude_pintar = true;
+    } else { //si no quedan colores disponibles, retorno false
+      g.pintar(i, -1);
+      pude_pintar = false; //voy a volver a la rama anterior de la recursion
+    }
+      
+  } else {
+    //paso recursivo
+    if (cardinal_menor_dos(g, vertices, i)) { //chequeo si todos los vértices tienen menos de 2 colores
+      std::vector<std::set<int> > colores_parciales;
+      for (int j = 0 ; j < i ; ++j) { //armo grafo para pasarle a dos_list_coloring
+        colores_parciales.push_back(g.dame_colores_posibles(j)); //guardo los colores posibles hasta el momento
+        borrar_todos_menos(g, j, g.dame_color(j)); //le dejo al grafo un solo posible color, que es el que le asignó antes de hacer la llamada recursiva
+      }
+
+      pude_pintar = dos_list_coloring(g);
+
+      if (!pude_pintar) { //restauro el estado de la rama de recursión
+        for (int j = 0 ; j < i ; ++j) {
+          agregar_todos(g, j, colores_parciales[j]);
+        }
+      }
+
+    } else { //hago la recursión común
+
+      for (std::set<int>::iterator it_c = colores.begin(); it_c != colores.end() && !pude_pintar; ++it_c) { //mientras tenga colores no utilizados, y no hay podido pintar el grafo  
+        g.pintar(i, *it_c); //pinto actual de un color determinado
+        eliminar_color_a_vecinos(g, i, *it_c);
+        pude_pintar = list_coloring_recursivo(g, vertices, colores_originales, ++i);
+        if (!pude_pintar) {
+          g.pintar(i, -1); //pinto actual de un color determinado
+          --i;
+          agregar_color_a_vecinos(g, i, *it_c, colores_originales);
+        }
+      }
+    }
+  }
+  return pude_pintar;
+}
+
 bool list_coloring_backtracking(Grafo &g){
   
   std::vector<Vertice> vertices;
   for (int i = 0 ; i < g.cant_vertices() ; ++i) {
     vertices.push_back(g.dame_vertice(i));
   }
-  //std::sort(vertices.begin(), vertices.end()); //INTENTAR HACERLO CON SORT DESPUES !
+  //std::sort(vertices.begin(), vertices.end()); 
   
   std::vector<std::set<int> > colores_originales;
   for (int j = 0 ; j < g.cant_vertices() ; ++j) {
@@ -213,10 +289,10 @@ bool list_coloring_backtracking(Grafo &g){
 }
 
 
-int evaluarTests(std::string fileTestData/*, std::string fileTestResult, std::string fileTestWrite*/) {
+int evaluarTests(std::string fileTestData, std::string fileTestResult/*, std::string fileTestWrite*/) {
   std::string line;
   std::ifstream fileData (fileTestData.c_str());
-//  std::ofstream fileResult (fileTestResult.c_str());
+  std::ofstream fileResult (fileTestResult.c_str());
 //  std::ofstream fileWrite (fileTestWrite.c_str());
   std::string s;
   std::string res;
@@ -273,82 +349,32 @@ int evaluarTests(std::string fileTestData/*, std::string fileTestResult, std::st
 
     grafo.imprimir();
 
-//    if (hay_solucion) { //imprimo coloreo del grafo
-//
-//      for (int i = 0; i < grafo.cant_vertices(); ++i) { 
-//        fileResult << grafo.dame_color(i); 
-//        fileResult << " "; 
-//      }
-//
-//    } else { //devuelvo X
-//      fileResult << "X"; 
-//    }
-//    fileResult << std::endl;
+    if (hay_solucion) { //imprimo coloreo del grafo
+
+      for (int i = 0; i < grafo.cant_vertices(); ++i) { 
+        fileResult << grafo.dame_color(i); 
+        fileResult << " "; 
+      }
+
+    } else { //devuelvo X
+      fileResult << "X"; 
+    }
+    fileResult << std::endl;
   }
   return 0;
 }
 
-void test_c3_coloreable() {
-  Grafo g;
-  std::set<int> color_v1{1, 2};
-  g.agregar_vertice(color_v1);
-  std::set<int> color_v2{1};
-  g.agregar_vertice(color_v2);
-  std::set<int> color_v3{3, 1};
-  g.agregar_vertice(color_v3);
-  g.agregar_arista(0, 1);
-  g.agregar_arista(0, 2);
-  g.agregar_arista(1, 2);
-  bool res = list_coloring_backtracking(g);
-  std::cout << "Se pudo colorear " << res << std::endl;
-  g.imprimir();
-}
-
-void test_barriletes_unidos_no_coloreable() {
-  Grafo g;
-  std::set<int> color_1{1, 2, 3};
-  g.agregar_vertice(color_1); //v0
-  g.agregar_vertice(color_1); //v1
-  g.agregar_vertice(color_1); //v2
-  g.agregar_vertice(color_1); //v3
-  g.agregar_vertice(color_1); //v4
-  g.agregar_vertice(color_1); //v5
-  g.agregar_vertice(color_1); //v5
-  g.agregar_arista(0, 1);
-  g.agregar_arista(0, 2);
-  g.agregar_arista(0, 6);
-  g.agregar_arista(1, 2);
-  g.agregar_arista(1, 3);
-  g.agregar_arista(2, 3);
-  g.agregar_arista(3, 4);
-  g.agregar_arista(3, 5);
-  g.agregar_arista(4, 5);
-  g.agregar_arista(4, 6);
-  g.agregar_arista(5, 6);
-  bool res = list_coloring_backtracking(g);
-  std::cout << "Se pudo colorear " << res << std::endl;
-  g.imprimir();
-}
 
 int main(int argc, char** argv) {
   std::string fileTestData(argv[1]);
-//  std::string fileTestResult(argv[2]);
+  std::string fileTestResult(argv[2]);
   //std::string fileTestWrite(argv[3]);
   // Recibo por parametro tres archivos
   // El primero del cual leo los datos a evaluar
   // El segundo en el cual evaluo si los resultados fueron correctos
   // El tercero donde puedo escribir datos (tiempos)
 
-  //test_k33_coloreable();
- //test_barriletes_unidos_no_coloreable(); 
-  //test_barriletes_unidos_coloreable();
-  //test_k6_no_coloreable(); 
-  //test_k6_coloreable(); 
-  //test_k4_coloreable(); 
-  //test_c3_no_coloreable(); 
-  //test_c3_coloreable();
-
-  evaluarTests(fileTestData/*, fileTestResult, fileTestWrite*/);
+  evaluarTests(fileTestData, fileTestResult/*, fileTestWrite*/);
   
   return 0;
 }
