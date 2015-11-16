@@ -11,7 +11,7 @@
 #include "../grafo/grafo.h"
 #include "../grafo/digrafo.h"
 
-/*
+
 timeval start, end;
 double acum = 0;
 
@@ -23,7 +23,7 @@ double get_time() {
   gettimeofday(&end, NULL);
   return (1000000*(end.tv_sec-start.tv_sec) + (end.tv_usec-start.tv_usec))/1000000.0;
 }
-*/
+
 //Funciones y datos utilizados para la toma de tiempos
 
 
@@ -224,7 +224,7 @@ void agregar_todos(Grafo &g, int i, std::set<int> colores) { //O(C)
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 //LIST_COLORING_RECURSIVO LLAMANDO A 2-LIST-COLORING
-bool list_coloring_recursivo(Grafo &g, std::vector<Vertice> &vertices, std::vector<std::set <int> > colores_originales, int i) {
+bool list_coloring_recursivo(Grafo &g, std::vector<Vertice> &vertices, std::vector<std::set <int> >& colores_originales, int i) {
   bool pude_pintar = false; 
   std::set<int> colores = g.dame_colores_posibles(i);
   //caso base
@@ -273,6 +273,7 @@ bool list_coloring_recursivo(Grafo &g, std::vector<Vertice> &vertices, std::vect
 }
 
 bool list_coloring_backtracking(Grafo &g){
+  init_time();
   
   std::vector<Vertice> vertices;
   for (int i = 0 ; i < g.cant_vertices() ; ++i) {
@@ -285,7 +286,9 @@ bool list_coloring_backtracking(Grafo &g){
     colores_originales.push_back(g.dame_colores_posibles(j));
   }
 
+    std::cout << "entre2" << std::endl;
   return list_coloring_recursivo(g, vertices, colores_originales, 0);
+    std::cout << "sali2" << std::endl;
 }
 
 
@@ -343,23 +346,27 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult/*, std::st
       grafo.agregar_arista(v1, v2);
     }
 
+    std::cout << "entre" << std::endl;
     bool hay_solucion = list_coloring_backtracking(grafo);
+  acum = get_time(); 
+    std::cout << "sali" << std::endl;
+    std::cout << std::fixed << acum  << std::endl;
      
-    std::cout << "Hay solución: " << hay_solucion << std::endl;
+    //std::cout << "Hay solución: " << hay_solucion << std::endl;
 
-    grafo.imprimir();
+    //grafo.imprimir();
 
-    if (hay_solucion) { //imprimo coloreo del grafo
+    //if (hay_solucion) { //imprimo coloreo del grafo
 
-      for (int i = 0; i < grafo.cant_vertices(); ++i) { 
-        fileResult << grafo.dame_color(i); 
-        fileResult << " "; 
-      }
+    //  for (int i = 0; i < grafo.cant_vertices(); ++i) { 
+    //    fileResult << grafo.dame_color(i); 
+    //    fileResult << " "; 
+    //  }
 
-    } else { //devuelvo X
-      fileResult << "X"; 
-    }
-    fileResult << std::endl;
+    //} else { //devuelvo X
+    //  fileResult << "X"; 
+    //}
+    //fileResult << std::endl;
   }
   return 0;
 }
