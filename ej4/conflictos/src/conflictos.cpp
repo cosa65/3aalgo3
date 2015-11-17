@@ -81,7 +81,7 @@ int main(int argc, char **argv){
 			for(int v2 : G2){
 				if(rand()%2 == 1){
 					save << v1 << " " << v2 << std::endl;
-					++M;
+					M++;
 				}
 			}
 		}

@@ -1,63 +1,76 @@
-i=1
-for i in 1 .. 10
+make clean
+make clear
+make build
+j=0
+for ((i = 1; i <= 50; i++));
 do
-	./random 500 0 30 time.in
-	./ej4Time time.in test.txt resultados/time.out individual
-	./ej4Time time.in test.txt resultados/time.out intercambiar
+	./random 1000 0 30 resultados/confs.in
+	./ej4Time resultados/confs.in test.txt resultados/confs.out vecinos
+	./ej4Time resultados/confs.in test.txt resultados/confs.out individual
 done
-i=1
-for i in 1 .. 10
+for ((i = 1; i <= 50; i++));
 do
-	./random 450 0 30 time.in
-	./ej4Time time.in test.txt resultados/time.out individual
-	./ej4Time time.in test.txt resultados/time.out intercambiar
+	./random 900 0 30 resultados/confs.in 
+	./ej4Time resultados/confs.in test.txt resultados/confs.out vecinos
+	./ej4Time resultados/confs.in test.txt resultados/confs.out individual
 done
-i=1
-for i in 1 .. 10
+
+for ((i = 1; i <= 50; i++));
 do
-	./random 400 0 30 time.in
-	./ej4Time time.in test.txt resultados/time.out individual
-	./ej4Time time.in test.txt resultados/time.out intercambiar
+	./random 800 0 30 resultados/confs.in 
+	./ej4Time resultados/confs.in test.txt resultados/confs.out vecinos
+	./ej4Time resultados/confs.in test.txt resultados/confs.out individual
 done
-i=1
-for i in 1 .. 10
+
+for ((i = 1; i <= 50; i++));
 do
-	./random 350 0 30 time.in
-	./ej4Time time.in test.txt resultados/time.out individual
-	./ej4Time time.in test.txt resultados/time.out intercambiar
+	./random 700 0 30 resultados/confs.in 
+	./ej4Time resultados/confs.in test.txt resultados/confs.out vecinos
+	./ej4Time resultados/confs.in test.txt resultados/confs.out individual
 done
-i=1
-for i in 1 .. 10
+
+for ((i = 1; i <= 50; i++));
 do
-	./random 300 0 30 time.in
-	./ej4Time time.in test.txt resultados/time.out individual
-	./ej4Time time.in test.txt resultados/time.out intercambiar
+	./random 600 0 30 resultados/confs.in 
+	./ej4Time resultados/confs.in test.txt resultados/confs.out vecinos
+	./ej4Time resultados/confs.in test.txt resultados/confs.out individual
 done
-i=1
-for i in 1 .. 10
+
+for ((i = 1; i <= 50; i++));
 do
-	./random 250 0 30 time.in
-	./ej4Time time.in test.txt resultados/time.out individual
-	./ej4Time time.in test.txt resultados/time.out intercambiar
+	./random 500 0 30 resultados/confs.in 
+	./ej4Time resultados/confs.in test.txt resultados/confs.out vecinos
+	./ej4Time resultados/confs.in test.txt resultados/confs.out individual
 done
-i=1
-for i in 1 .. 10
+
+for ((i = 1; i <= 50; i++));
 do
-	./random 200 0 30 time.in
-	./ej4Time time.in test.txt resultados/time.out individual
-	./ej4Time time.in test.txt resultados/time.out intercambiar
+	./random 400 0 30 resultados/confs.in 
+	./ej4Time resultados/confs.in test.txt resultados/confs.out vecinos
+	./ej4Time resultados/confs.in test.txt resultados/confs.out individual
 done
-i=1
-for i in 1 .. 10
+
+for ((i = 1; i <= 50; i++));
 do
-	./random 150 0 30 time.in
-	./ej4Time time.in test.txt resultados/time.out individual
-	./ej4Time time.in test.txt resultados/time.out intercambiar
+	./random 300 0 30 resultados/confs.in 
+	./ej4Time resultados/confs.in test.txt resultados/confs.out vecinos
+	./ej4Time resultados/confs.in test.txt resultados/confs.out individual
 done
-i=1
-for i in 1 .. 10
+
+for ((i = 1; i <= 50; i++));
 do
-	./random 100 0 30 time.in
-	./ej4Time time.in test.txt resultados/time.out individual
-	./ej4Time time.in test.txt resultados/time.out intercambiar
+	./random 200 0 30 resultados/confs.in 
+	./ej4Time resultados/confs.in test.txt resultados/confs.out vecinos
+	./ej4Time resultados/confs.in test.txt resultados/confs.out individual
 done
+
+for ((i = 1; i <= 50; i++));
+do
+	./random 100 0 30 resultados/confs.in 
+	./ej4Time resultados/confs.in test.txt resultados/confs.out vecinos
+	./ej4Time resultados/confs.in test.txt resultados/confs.out individual
+done
+
+g++ miniscript.cpp -o mini
+./resultados/mini 10
+rm mini
