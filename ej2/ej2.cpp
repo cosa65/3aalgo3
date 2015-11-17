@@ -346,16 +346,20 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, std::stri
       grafo.agregar_arista(v1, v2);
     }
 
-    for (int k = 0 ; k < 50 ; ++k) {
+    for (int k = 0 ; k < 5 ; ++k) {
       bool hay_solucion = list_coloring_backtracking(grafo);
-      acum = get_time(); 
+      if (k == 0) {
+        acum = 0;  
+      } else {
+        acum += get_time(); 
+      }
     }
     fileWrite << std::fixed << acum  << std::endl;
-     
+    std::cout <<  "iteracion" << x << std::endl;
+    ++x;
     //std::cout << "Hay solución: " << hay_solucion << std::endl;
 
-    std::cout << "iteracion: " << x << std::endl;
-    ++x;
+    acum = 0;
     //grafo.imprimir();
 
     //if (hay_solucion) { //imprimo coloreo del grafo
