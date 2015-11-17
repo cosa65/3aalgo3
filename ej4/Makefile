@@ -20,11 +20,11 @@ run:
 
 runclean:
 	rm -f tests/testEj4.out
-	./ej4 tests/testEj4.in tests/testEj4.txt tests/testEj4.out $(arg1)
+	./ej4 tests/test tests/testEj4.txt tests/testEj4.out $(arg1)
 
 test:
 	$(CC) ej4.cpp ../grafo/grafo.cpp ../grafo/vertice.cpp $(EFLAGS) $(CFLAGS) ej4
-	gdb --args ej4 tests/testEj4.in tests/testEj4.txt tests/testEj4.out $(arg1)
+	gdb --args ej4 tests/test tests/testEj4.txt tests/testEj4.out $(arg1)
 
 exp:
 	./random $(N) $(M) $(C) $(nombre)
