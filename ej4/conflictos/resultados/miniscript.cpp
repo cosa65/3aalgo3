@@ -1,17 +1,18 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <stdlib.h>
 
 int main(int argc, char **argv){
 
-        std::ifstream fileread("confs.out");
-        std::ofstream filewrite("confs.proms");
+        std::ifstream fileread("resultados/confs.out");
+        std::ofstream filewrite("resultados/confs.proms");
 
         std::string line;
 
         std::string indiv;
         std::string indiv1;
-        int how_many=argv[1];
+        int how_many = atoi(argv[1]);
         double Nodos[50],Colores[50],Tiempo[50],Conflictos[50],ConflictosAntes[50];
         double Nodos1[50],Colores1[50],Tiempo1[50],Conflictos1[50],ConflictosAntes1[50];
         std::string devnull;

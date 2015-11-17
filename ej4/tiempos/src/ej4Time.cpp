@@ -37,6 +37,8 @@ bool paso_busqueda_local_vecinos(Grafo& in){             //Devuelve true si cons
     }
   }
 
+  if(maxConfs == 0) return false;
+
   confs=0;
   int colMejor = in.dame_color(mejorPasov1);
   
@@ -71,7 +73,6 @@ bool paso_busqueda_local_individual(Grafo& in) {
   int verts = in.cant_vertices();
   int maxConfs = 0;
   int mejorPasov1,mejorPasoCol, confs;
-  Vertice vAct;
 
   for(int i=0; i<verts; i++) {
   confs = in.conflictos(i);
@@ -81,6 +82,8 @@ bool paso_busqueda_local_individual(Grafo& in) {
       maxConfs = confs;
     }
   }
+
+  if(maxConfs == 0) return false;
 
   int actual;
   int conflictos=0;
@@ -118,8 +121,8 @@ long busqueda_local_individual(Grafo& in){
   return get_time();
 }
 
-void pintarRandom(Grafo& in){
-  srand(time(NULL));
+void pintarRandom(Grafo& in,int seed){
+  srand(seed);
   std::set<int> posibles;
 
   for(int i=0; i<in.cant_vertices(); i++){
@@ -132,7 +135,7 @@ void pintarRandom(Grafo& in){
   }
 }
 
-int evaluarTests(std::string fileTestData, std::string fileTestResult, std::string fileTestWrite, std::string type) {
+int evaluarTests(std::string fileTestData, std::string fileTestResult, std::string fileTestWrite, std::string type, int seed) {
   std::string line;
   std::ifstream fileData (fileTestData.c_str());
   //std::ifstream fileResult (fileTestResult.c_str());
@@ -192,7 +195,7 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, std::stri
     //grafo.impimir_color(fileTestWrite);
     //grafo.imprimir();
 
-    pintarRandom(grafo);  
+    pintarRandom(grafo,seed);  
 
     long int conflictosAntes = grafo.conflictos_totales();
 
@@ -222,8 +225,9 @@ int main(int argc, char** argv) {
   std::string fileTestResult(argv[2]);
   std::string fileTestWrite(argv[3]);
   std::string type(argv[4]);
+  int seed = atoi(argv[5]);
 
-  evaluarTests(fileTestData, fileTestResult, fileTestWrite,type);
+  evaluarTests(fileTestData, fileTestResult, fileTestWrite,type,seed);
   
   return 0;
 }

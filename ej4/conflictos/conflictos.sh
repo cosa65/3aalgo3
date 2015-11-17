@@ -71,6 +71,5 @@ do
 	./ej4Conf resultados/confs.in test.txt resultados/confs.out individual
 done
 
-g++ miniscript.cpp -o mini
-./resultados/mini 10
-rm mini
+g++ resultados/miniscript.cpp -o mini
+./mini 10
