@@ -11,9 +11,10 @@
 #include "../grafo/grafo.h"
 #include "../grafo/digrafo.h"
 
-/*
+
 timeval start, end;
 double acum = 0;
+int x = 0;
 
 void init_time() {
   gettimeofday(&start, NULL);
@@ -23,7 +24,7 @@ double get_time() {
   gettimeofday(&end, NULL);
   return (1000000*(end.tv_sec-start.tv_sec) + (end.tv_usec-start.tv_usec))/1000000.0;
 }
-*/
+
 //Funciones y datos utilizados para la toma de tiempos
 
 
@@ -38,6 +39,7 @@ bool hay_contradiccion(Digrafo &digrafo, std::list<std::list<int>>& comp_conexas
   for (std::list<int>& componentes : comp_conexas) {
     for (int vertice : componentes) {
       vertices_por_componente[vertice] = indice_componente;
+
       int contrario = digrafo.dame_contrario(vertice);
       if (vertices_por_componente[contrario] == indice_componente)
         res = false;
@@ -224,7 +226,7 @@ void agregar_todos(Grafo &g, int i, std::set<int> colores) { //O(C)
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 //LIST_COLORING_RECURSIVO LLAMANDO A 2-LIST-COLORING
-bool list_coloring_recursivo(Grafo &g, std::vector<Vertice> &vertices, std::vector<std::set <int> > colores_originales, int i) {
+bool list_coloring_recursivo(Grafo &g, std::vector<Vertice> &vertices, std::vector<std::set <int> >& colores_originales, int i) {
   bool pude_pintar = false; 
   std::set<int> colores = g.dame_colores_posibles(i);
   //caso base
@@ -273,6 +275,7 @@ bool list_coloring_recursivo(Grafo &g, std::vector<Vertice> &vertices, std::vect
 }
 
 bool list_coloring_backtracking(Grafo &g){
+  init_time();
   
   std::vector<Vertice> vertices;
   for (int i = 0 ; i < g.cant_vertices() ; ++i) {
@@ -289,11 +292,11 @@ bool list_coloring_backtracking(Grafo &g){
 }
 
 
-int evaluarTests(std::string fileTestData, std::string fileTestResult/*, std::string fileTestWrite*/) {
+int evaluarTests(std::string fileTestData, std::string fileTestResult, std::string fileTestWrite) {
   std::string line;
   std::ifstream fileData (fileTestData.c_str());
   std::ofstream fileResult (fileTestResult.c_str());
-//  std::ofstream fileWrite (fileTestWrite.c_str());
+  std::ofstream fileWrite (fileTestWrite.c_str());
   std::string s;
   std::string res;
   // Abri los archivos de datos y resultados
@@ -343,23 +346,33 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult/*, std::st
       grafo.agregar_arista(v1, v2);
     }
 
-    bool hay_solucion = list_coloring_backtracking(grafo);
-     
-    std::cout << "Hay solución: " << hay_solucion << std::endl;
-
-    grafo.imprimir();
-
-    if (hay_solucion) { //imprimo coloreo del grafo
-
-      for (int i = 0; i < grafo.cant_vertices(); ++i) { 
-        fileResult << grafo.dame_color(i); 
-        fileResult << " "; 
+    for (int k = 0 ; k < 5 ; ++k) {
+      bool hay_solucion = list_coloring_backtracking(grafo);
+      if (k == 0) {
+        acum = 0;  
+      } else {
+        acum += get_time(); 
       }
-
-    } else { //devuelvo X
-      fileResult << "X"; 
     }
-    fileResult << std::endl;
+    fileWrite << std::fixed << acum  << std::endl;
+    std::cout <<  "iteracion" << x << std::endl;
+    ++x;
+    //std::cout << "Hay solución: " << hay_solucion << std::endl;
+
+    acum = 0;
+    //grafo.imprimir();
+
+    //if (hay_solucion) { //imprimo coloreo del grafo
+
+    //  for (int i = 0; i < grafo.cant_vertices(); ++i) { 
+    //    fileResult << grafo.dame_color(i); 
+    //    fileResult << " "; 
+    //  }
+
+    //} else { //devuelvo X
+    //  fileResult << "X"; 
+    //}
+    //fileResult << std::endl;
   }
   return 0;
 }
@@ -368,13 +381,13 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult/*, std::st
 int main(int argc, char** argv) {
   std::string fileTestData(argv[1]);
   std::string fileTestResult(argv[2]);
-  //std::string fileTestWrite(argv[3]);
+  std::string fileTestWrite(argv[3]);
   // Recibo por parametro tres archivos
   // El primero del cual leo los datos a evaluar
   // El segundo en el cual evaluo si los resultados fueron correctos
   // El tercero donde puedo escribir datos (tiempos)
 
-  evaluarTests(fileTestData, fileTestResult/*, fileTestWrite*/);
+  evaluarTests(fileTestData, fileTestResult, fileTestWrite);
   
   return 0;
 }
