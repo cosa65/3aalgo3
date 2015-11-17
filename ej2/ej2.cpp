@@ -230,20 +230,20 @@ bool list_coloring_recursivo(Grafo &g, std::vector<Vertice> &vertices, std::vect
   bool pude_pintar = false; 
   std::set<int> colores = g.dame_colores_posibles(i);
   //caso base
-  if (i == (g.cant_vertices() - 1)) { //estoy pintando al ultimo nodo
+  if (i == (g.cant_vertices() - 1)) { //estoy pintando al último nodo
     if (!colores.empty()) { //si me queda algun color disponible
       std::set<int>::iterator it = colores.begin();
       g.pintar(i, *it); //elijo un color arbitrariamente y pinto
       pude_pintar = true;
     } else { //si no quedan colores disponibles, retorno false
       g.pintar(i, -1);
-      pude_pintar = false; //voy a volver a la rama anterior de la recursion
+      pude_pintar = false; //voy a volver a la rama anterior de la recursión
     }
       
   } else {
     //paso recursivo
-    if (cardinal_menor_dos(g, vertices, i)) { //chequeo si todos los vértices tienen menos de 2 colores
-      std::vector<std::set<int> > colores_parciales;
+    if (cardinal_menor_dos(g, vertices, i)) { //chequeo si todos los vértices tienen menos de 2 colores y más que 0
+      std::vector<std::set<int> > colores_parciales; //vector en el cual almacenar colores posibles actuales
       for (int j = 0 ; j < i ; ++j) { //armo grafo para pasarle a dos_list_coloring
         colores_parciales.push_back(g.dame_colores_posibles(j)); //guardo los colores posibles hasta el momento
         borrar_todos_menos(g, j, g.dame_color(j)); //le dejo al grafo un solo posible color, que es el que le asignó antes de hacer la llamada recursiva
@@ -251,22 +251,22 @@ bool list_coloring_recursivo(Grafo &g, std::vector<Vertice> &vertices, std::vect
 
       pude_pintar = dos_list_coloring(g);
 
-      if (!pude_pintar) { //restauro el estado de la rama de recursión
-        for (int j = 0 ; j < i ; ++j) {
+      if (!pude_pintar) { //si no pude pintar
+        for (int j = 0 ; j < i ; ++j) { //restauro el estado de la rama de recursión
           agregar_todos(g, j, colores_parciales[j]);
         }
       }
 
-    } else { //hago la recursión común
+    } else { //hago la recursión común (no puedo usar dos_list_coloring)
 
-      for (std::set<int>::iterator it_c = colores.begin(); it_c != colores.end() && !pude_pintar; ++it_c) { //mientras tenga colores no utilizados, y no hay podido pintar el grafo  
+      for (std::set<int>::iterator it_c = colores.begin(); it_c != colores.end() && !pude_pintar; ++it_c) { //mientras tenga colores no utilizados, y no haya podido pintar el grafo  
         g.pintar(i, *it_c); //pinto actual de un color determinado
-        eliminar_color_a_vecinos(g, i, *it_c);
+        eliminar_color_a_vecinos(g, i, *it_c); //podo las ramas en las cuales habría conflicto por tener dos adyacentes del mismo color
         pude_pintar = list_coloring_recursivo(g, vertices, colores_originales, ++i);
-        if (!pude_pintar) {
-          g.pintar(i, -1); //pinto actual de un color determinado
+        if (!pude_pintar) { //si no pude pintar
+          g.pintar(i, -1); //pinto actual de -1 (no tiene color asignado aún)
           --i;
-          agregar_color_a_vecinos(g, i, *it_c, colores_originales);
+          agregar_color_a_vecinos(g, i, *it_c, colores_originales); //le agrego el color que le había puesto a i a todos sus vecinos (dado que esa rama entra en conflicto)
         }
       }
     }
@@ -377,7 +377,7 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, std::stri
   return 0;
 }
 
-
+//recibe 3 parámetro : input ; output ; output (donde escribe los tiempos)
 int main(int argc, char** argv) {
   std::string fileTestData(argv[1]);
   std::string fileTestResult(argv[2]);
