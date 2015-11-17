@@ -14,6 +14,7 @@
 
 timeval start, end;
 double acum = 0;
+int x = 0;
 
 void init_time() {
   gettimeofday(&start, NULL);
@@ -38,6 +39,7 @@ bool hay_contradiccion(Digrafo &digrafo, std::list<std::list<int>>& comp_conexas
   for (std::list<int>& componentes : comp_conexas) {
     for (int vertice : componentes) {
       vertices_por_componente[vertice] = indice_componente;
+
       int contrario = digrafo.dame_contrario(vertice);
       if (vertices_por_componente[contrario] == indice_componente)
         res = false;
@@ -286,17 +288,15 @@ bool list_coloring_backtracking(Grafo &g){
     colores_originales.push_back(g.dame_colores_posibles(j));
   }
 
-    std::cout << "entre2" << std::endl;
   return list_coloring_recursivo(g, vertices, colores_originales, 0);
-    std::cout << "sali2" << std::endl;
 }
 
 
-int evaluarTests(std::string fileTestData, std::string fileTestResult/*, std::string fileTestWrite*/) {
+int evaluarTests(std::string fileTestData, std::string fileTestResult, std::string fileTestWrite) {
   std::string line;
   std::ifstream fileData (fileTestData.c_str());
   std::ofstream fileResult (fileTestResult.c_str());
-//  std::ofstream fileWrite (fileTestWrite.c_str());
+  std::ofstream fileWrite (fileTestWrite.c_str());
   std::string s;
   std::string res;
   // Abri los archivos de datos y resultados
@@ -346,14 +346,20 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult/*, std::st
       grafo.agregar_arista(v1, v2);
     }
 
-    std::cout << "entre" << std::endl;
-    bool hay_solucion = list_coloring_backtracking(grafo);
-  acum = get_time(); 
-    std::cout << "sali" << std::endl;
-    std::cout << std::fixed << acum  << std::endl;
-     
+    for (int k = 0 ; k < 5 ; ++k) {
+      bool hay_solucion = list_coloring_backtracking(grafo);
+      if (k == 0) {
+        acum = 0;  
+      } else {
+        acum += get_time(); 
+      }
+    }
+    fileWrite << std::fixed << acum  << std::endl;
+    std::cout <<  "iteracion" << x << std::endl;
+    ++x;
     //std::cout << "Hay solución: " << hay_solucion << std::endl;
 
+    acum = 0;
     //grafo.imprimir();
 
     //if (hay_solucion) { //imprimo coloreo del grafo
@@ -375,13 +381,13 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult/*, std::st
 int main(int argc, char** argv) {
   std::string fileTestData(argv[1]);
   std::string fileTestResult(argv[2]);
-  //std::string fileTestWrite(argv[3]);
+  std::string fileTestWrite(argv[3]);
   // Recibo por parametro tres archivos
   // El primero del cual leo los datos a evaluar
   // El segundo en el cual evaluo si los resultados fueron correctos
   // El tercero donde puedo escribir datos (tiempos)
 
-  evaluarTests(fileTestData, fileTestResult/*, fileTestWrite*/);
+  evaluarTests(fileTestData, fileTestResult, fileTestWrite);
   
   return 0;
 }
