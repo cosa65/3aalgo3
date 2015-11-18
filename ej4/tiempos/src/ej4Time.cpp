@@ -6,7 +6,7 @@
 #include <sys/time.h>
 
 #include "../../../grafo/grafo.h"
-#include "goloso.cpp"
+//#include "goloso.cpp"
 
 timeval start, end;
 double acum = 0;
@@ -22,46 +22,76 @@ double get_time() {
 
 //Funciones y datos utilizados para la toma de tiempos
 
-bool paso_busqueda_local_intercambiar(Grafo& in){             //Devuelve true si consiguió dar un paso que mejorara el estado anterior
-  int verts = in.cant_vertices();
-  int conflictos = 0;
-  int mejorPasov1, mejorPasov2;
-  std::set<int> posibles; 
+bool paso_busqueda_local_vecinos(Grafo& in){             //Devuelve true si consiguió dar un paso que mejorara el estado anterior
 
-  for(int i=0; i<verts; i++){
-    for(int j=i; j<verts; j++){
-      if(in.son_colores_intercambiables(i,j)){
-        int actual = in.valor_de_intercambio(i,j);
-        if(actual > conflictos){
-          conflictos = actual;
-          mejorPasov1 = i;
-          mejorPasov2 = j;
-        } 
-      }
+  int verts = in.cant_vertices();
+  int maxConfs = 0;
+  int mejorPasov1,mejorPasoCol, confs;
+
+  for(int i=0; i<verts; i++) {
+  confs = in.conflictos(i);
+
+    if((confs > maxConfs)) {
+      mejorPasov1 = i;
+      maxConfs = confs;
     }
   }
-  if(conflictos == 0){
-    return false;
 
-  } else {
-    in.intercambiar_color(mejorPasov1,mejorPasov2);
-    return true;
-  } 
-}
+  if(maxConfs == 0) return false;
 
-bool paso_busqueda_local_individual(Grafo& in){
-  int verts = in.cant_vertices();
-  int conflictos = 0;
-  int mejorPasov1, mejorPasoCol;
+  confs=0;
+  int colMejor = in.dame_color(mejorPasov1);
+  
+  for(int vecino : in.dame_vecinos(mejorPasov1)){
+    
+    int mejorColor=in.dame_color(vecino);
 
-  for(int i=0; i<verts; i++){
-    for(int col : in.dame_vertice(i).dame_colores_posibles()){
-      int actual = in.valor_de_pintar(i,col);
+    if(mejorColor == colMejor){       //Si este vecino crea conflictos con mi nodo
+    int actual;
+    int conflictos=0;
+    for(int col : in.dame_colores_posibles(vecino)){
+      actual = in.valor_de_pintar(vecino, col);
       if(actual > conflictos){
         conflictos = actual;
-        mejorPasov1 = i;
-        mejorPasoCol = col;
+        mejorColor = col;
       }
+    }
+    confs += conflictos;
+    in.pintar(vecino,mejorColor);
+    }
+
+  }
+
+  if(confs == 0){
+    return false;
+  } else {
+    return true;
+  }
+}
+
+bool paso_busqueda_local_individual(Grafo& in) {
+  int verts = in.cant_vertices();
+  int maxConfs = 0;
+  int mejorPasov1,mejorPasoCol, confs;
+
+  for(int i=0; i<verts; i++) {
+  confs = in.conflictos(i);
+
+    if((confs > maxConfs)) {
+      mejorPasov1 = i;
+      maxConfs = confs;
+    }
+  }
+
+  if(maxConfs == 0) return false;
+
+  int actual;
+  int conflictos=0;
+  for(int col : in.dame_colores_posibles(mejorPasov1)){
+    actual = in.valor_de_pintar(mejorPasov1, col);
+    if(actual > conflictos){
+      conflictos = actual;
+        mejorPasoCol = col;
     }
   }
 
@@ -73,41 +103,39 @@ bool paso_busqueda_local_individual(Grafo& in){
   } 
 }
 
-double busqueda_local_intercambiar(Grafo& in){
+long busqueda_local_vecinos(Grafo& in){
   init_time();
   bool mejoro = true;
   while(mejoro){
-    mejoro = paso_busqueda_local_intercambiar(in);
+    mejoro = paso_busqueda_local_vecinos(in);
   }
-  double result = get_time();
-  return result;
+  return get_time();
 }
 
-double busqueda_local_individual(Grafo& in){
+long busqueda_local_individual(Grafo& in){
   init_time();
   bool mejoro = true;
   while(mejoro){
     mejoro = paso_busqueda_local_individual(in);
-	}
-  double result = get_time();
-  return result;
+  }
+  return get_time();
 }
 
-void pintarRandom(Grafo& in){
-  srand(200);
+void pintarRandom(Grafo& in,int seed){
+  srand(seed);
   std::set<int> posibles;
 
   for(int i=0; i<in.cant_vertices(); i++){
     posibles = in.dame_colores_posibles(i);
     std::set<int>::iterator it = posibles.begin();
-    for(int random = rand()%(posibles.size());random>=0;random--) {
+    for(int random = rand()%(posibles.size());random>0;random--) {
       it++;
     }
     in.pintar(i,*it);
   }
 }
 
-int evaluarTests(std::string fileTestData, std::string fileTestResult, std::string fileTestWrite, std::string type) {
+int evaluarTests(std::string fileTestData, std::string fileTestResult, std::string fileTestWrite, std::string type, int seed) {
   std::string line;
   std::ifstream fileData (fileTestData.c_str());
   //std::ifstream fileResult (fileTestResult.c_str());
@@ -139,6 +167,7 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, std::stri
       std::set<int> colores; 
       for (int j = 0 ; j < cantidad_colores ; ++j) {
         int color;
+
         iss >> color;
         colores.insert(color);
       }
@@ -162,18 +191,18 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, std::stri
 
     
     
-	  //goloso_por_grado_vertice(grafo);
-	  //grafo.impimir_color(fileTestWrite);
-	  //grafo.imprimir();
+    //goloso_por_grado_vertice(grafo);
+    //grafo.impimir_color(fileTestWrite);
+    //grafo.imprimir();
 
-    pintarRandom(grafo);  
+    pintarRandom(grafo,seed);  
 
-    int conflictosAntes = grafo.conflictos_totales();
+    long int conflictosAntes = grafo.conflictos_totales();
 
     double tiempo;
 
-    if(type.compare("intercambiar")==0){      //Por default hace busqueda local individual.
-      tiempo = busqueda_local_intercambiar(grafo);
+    if(type.compare("vecinos")==0){      //Por default hace busqueda local individual.
+      tiempo = busqueda_local_vecinos(grafo);
     } else {
       tiempo = busqueda_local_individual(grafo);
     }
@@ -182,7 +211,7 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, std::stri
 
     grafo.desvisitar_vertices();
 
-    fileTime << type << " " << "Nodos: " << std::fixed << n << " Colores: " << c << " Tiempo: " << tiempo << " Conflictos: " << grafo.conflictos_totales() << " Conflictos Antes: " << conflictosAntes << std::endl;
+    fileTime << type << " " << "Nodos: " << std::fixed << n << " Colores: " << c << " Tiempo: " << tiempo << " Conflictos: " << grafo.conflictos_totales() << " ConflictosAntes: " << conflictosAntes << std::endl;
 
     //grafo.impimir_color(fileTestWrite);
     ++z;
@@ -196,8 +225,9 @@ int main(int argc, char** argv) {
   std::string fileTestResult(argv[2]);
   std::string fileTestWrite(argv[3]);
   std::string type(argv[4]);
+  int seed = atoi(argv[5]);
 
-  evaluarTests(fileTestData, fileTestResult, fileTestWrite,type);
+  evaluarTests(fileTestData, fileTestResult, fileTestWrite,type,seed);
   
   return 0;
 }

@@ -8,6 +8,7 @@ int main(int argc, char **argv){
 	M = atoi(argv[2]);
 	C = atoi(argv[3]);
 	std::string filename(argv[4]);
+	//int seed = atoi(argv[5]);
 
 	srand(time(NULL));	
 

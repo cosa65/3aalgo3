@@ -47,7 +47,7 @@ int main(int argc, char **argv){
 
 		file << N-1 + N-1 << " " << C << std::endl << save.str();
 
-	} else if(familia.compare("bipartito")==0) {
+	} else if(familia.compare("estrella")==0) {
 
 		for(int i=0; i<N; i++){
 			std::ostringstream saveOne;
@@ -66,27 +66,97 @@ int main(int argc, char **argv){
 			save << colsTot << " " << saveOne.str() << std::endl;
 		}
 
-		std::set<int> G1;
-		std::set<int> G2;
+		for(int i=1; i<N; i++){
+			save << 0 << " " << i << std::endl;
+		}
+
+		file << N-1 << " " << C << std::endl << save.str();
+	
+	} else if(familia.compare("ciclo")==0) {
 
 		for(int i=0; i<N; i++){
-			if(rand()%2 == 1){
-				G1.insert(i);
-			} else {
-				G2.insert(i);
-			}
-		}
-
-		for(int v1 : G1){
-			for(int v2 : G2){
-				if(rand()%2 == 1){
-					save << v1 << " " << v2 << std::endl;
-					++M;
+			std::ostringstream saveOne;
+			colsTot = 0;
+			for(int j=0; j<C; j++){
+				if(rand()%2	== 1) {
+					saveOne << j << " ";
+					colsTot++;
 				}
 			}
+			if(colsTot==0) {
+				saveOne << rand()%C;
+				colsTot++;
+			}
+
+			save << colsTot << " " << saveOne.str() << std::endl;
 		}
 
-		file << M << " " << C << std::endl << save.str();
+		for(int i=0; i<N-1; i++) {
+			save << i << " " << i+1 << std::endl;
+		}
+		save << N-1 << " " << 0 << std::endl;
+
+		file << N << " " << C << std::endl << save.str();
+
+	} else if(familia.compare("segmento")==0) {
+
+		for(int i=0; i<N; i++){
+			std::ostringstream saveOne;
+			colsTot = 0;
+			for(int j=0; j<C; j++){
+				if(rand()%2	== 1) {
+					saveOne << j << " ";
+					colsTot++;
+				}
+			}
+			if(colsTot==0) {
+				saveOne << rand()%C;
+				colsTot++;
+			}
+
+			save << colsTot << " " << saveOne.str() << std::endl;
+		}
+
+		for(int i=0; i<N-1; i++) {
+			save << i << " " << i+1 << std::endl;
+		}
+		file << N-1 << " " << C << std::endl << save.str();
+
+	} else if(familia.compare("ruedaCheat")==0){
+
+		save << C << " ";
+		for(int k=0; k<C; k++){
+			save << k << " ";
+		}
+		save << std::endl;
+
+		for(int i=1; i<N; i++){
+
+
+			std::ostringstream saveOne;
+			colsTot = 0;
+			for(int j=0; j<C; j++){
+				if(rand()%2	== 1) {
+					saveOne << j << " ";
+					colsTot++;
+				}
+			}
+			if(colsTot==0) {
+				saveOne << rand()%C;
+				colsTot++;
+			}
+
+			save << colsTot << " " << saveOne.str() << std::endl;
+		}
+
+		for(int i=1; i<N; i++){
+			save << 0 << " " << i << std::endl;
+		}
+		for(int i=1; i<N-1; i++){
+			save << i << " " << i+1 << std::endl;
+		}
+
+		file << N-1 + N-1 << " " << C << std::endl << save.str();
 
 	}
 

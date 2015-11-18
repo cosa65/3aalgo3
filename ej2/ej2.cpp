@@ -197,14 +197,14 @@ bool list_coloring_recursivo(Grafo &g, std::vector<Vertice> &vertices, std::vect
   bool pude_pintar = false; 
   std::set<int> colores = g.dame_colores_posibles(i);
   //caso base
-  if (i == (g.cant_vertices() - 1)) { //estoy pintando al ultimo nodo
+  if (i == (g.cant_vertices() - 1)) { //estoy pintando al último nodo
     if (!colores.empty()) { //si me queda algun color disponible
       std::set<int>::iterator it = colores.begin();
       g.pintar(i, *it); //elijo un color arbitrariamente y pinto
       pude_pintar = true;
     } else { //si no quedan colores disponibles, retorno false
       g.pintar(i, -1);
-      pude_pintar = false; //voy a volver a la rama anterior de la recursion
+      pude_pintar = false; //voy a volver a la rama anterior de la recursión
     }
       
   } else {
@@ -377,7 +377,7 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, std::stri
   return 0;
 }
 
-
+//recibe 3 parámetro : input ; output ; output (donde escribe los tiempos)
 int main(int argc, char** argv) {
   std::string fileTestData(argv[1]);
   std::string fileTestResult(argv[2]);
