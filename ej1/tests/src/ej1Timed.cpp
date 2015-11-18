@@ -7,25 +7,23 @@
 #include <vector>
 #include <sys/time.h>
 
-#include "../grafo/grafo.h"
-#include "../grafo/digrafo.h"
+#include "grafo/grafo.h"
+#include "grafo/digrafo.h"
 
 #include "utils.h"
 
-/*
-timeval start, end;
-double acum = 0;
 
-void init_time() {
-  gettimeofday(&start, NULL);
+timeval startt,endd;
+void init_time()
+{
+    gettimeofday(&startt,NULL);
 }
 
-double get_time() {
-  gettimeofday(&end, NULL);
-  return (1000000*(end.tv_sec-start.tv_sec) + (end.tv_usec-start.tv_usec))/1000000.0;
+double get_time()
+{
+    gettimeofday(&endd,NULL);
+    return (1000000*(endd.tv_sec-startt.tv_sec)+(endd.tv_usec-startt.tv_usec))/1000000.0;
 }
-*/
-//Funciones y datos utilizados para la toma de tiempos
 
 bool hay_contradiccion(Digrafo &digrafo, std::list<std::list<int>>& comp_conexas, std::vector<int>& vertices_por_componente) {
 
@@ -115,17 +113,22 @@ std::vector<bool> colorear(Digrafo& digrafo, std::list<std::list<int>> cfc, std:
 bool dos_list_coloring(Grafo& g) {
   
   // Creo el digrafo expandido a 4 vértices por cada uno en el original
+  // std::cout << "Crear digrafo" << std::endl;
   Digrafo digrafo(g);
   // Busco componentes fuertemente conexas
+  // std::cout << "Kosaraju" << std::endl;
   std::list<std::list<int>> cfc = digrafo.Kosaraju();
   // Inicializo vector que indica a qué componente pertenece cada vértice
+  // std::cout << "Vector" << std::endl;
   std::vector<int> vertices_por_componente(digrafo.cant_vertices());
   std::fill(vertices_por_componente.begin(), vertices_por_componente.end(), -1);
   // Chequeo si existe solución (si no existen contradicciones dentro de una misma cfc)
+  // std::cout << "Hay contradiccion" << std::endl;
   bool hay_solucion = hay_contradiccion(digrafo, cfc, vertices_por_componente);
 
   // Coloreo
   if (hay_solucion) {
+    // std::cout << "Coloreo" << std::endl;
     std::vector<bool> coloreo = colorear(digrafo, cfc, vertices_por_componente);
 
     for (int i = 0; i < coloreo.size(); ++i)
@@ -141,8 +144,8 @@ bool dos_list_coloring(Grafo& g) {
 int evaluarTests(std::string fileTestData, std::string fileTestResult, std::string fileTestWrite) {
   std::string line;
   std::ifstream fileData (fileTestData.c_str());
-  std::ifstream fileResult (fileTestResult.c_str());
-  // std::ofstream fileWrite (fileTestWrite.c_str());
+  // std::ifstream fileResult (fileTestResult.c_str());
+  std::ofstream fileWrite (fileTestWrite.c_str());
   std::string s;
   std::string res;
 
@@ -188,7 +191,22 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, std::stri
       grafo.agregar_arista(v1, v2);
     }
 
-    dos_list_coloring(grafo);
+    double prom = 0;
+    for(int r=0;r<10;r++) //Cantidad de mediciones
+    {
+      std::cout << chicus() << std::endl;
+      init_time();
+      dos_list_coloring(grafo);
+      double tiempo = get_time();
+      prom+=tiempo;
+    }
+    string g = chichus[0];
+    prom = prom/20;
+
+    fileWrite << "Archivo " << fileTestData << std::endl;
+    fileWrite << "Cantidad de Nodos: " << grafo.cant_vertices() << std::endl;
+    fileWrite << fixed << prom << endl;
+    fileWrite.close();
 
   }
   return 0;
