@@ -175,6 +175,8 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, std::stri
     std::istringstream iss(line);
 
     iss >> n;
+    //if (n==750)
+    //  break;
     iss >> m;
     iss >> c;
 
@@ -210,15 +212,17 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, std::stri
 
 
     //goloso_por_grado_vertice(grafo);
-    for (int k = 0 ; k < 100 ; k++) {
+    for (int k = 0 ; k < 3 ; k++) {
       goloso_por_colores_posibles_vertice(grafo);
+      if (k == 0) 
+        acum = 0;
     }
 
     //int cantidad_conflictos = grafo.conflictos_totales();
 
     //std::cout << "conflictos grafo " << cantidad_conflictos << std::endl;
 
-    double prom = acum / 100;
+    double prom = acum / 2;
     //FileWrite << "Test numero: " << i << " cantidad de pisos: " << cant_pisos << std::endl;
     //FileWrite << std::fixed << acum << std::endl;
     fileWrite << std::fixed << prom << std::endl;
