@@ -410,7 +410,8 @@ void Digrafo::recorrer(int i, std::vector<bool>& visitados, std::stack<int>& fin
 std::list<std::list<int>> Digrafo::dfs2( std::vector<bool>& visitados, std::stack<int>& finish_time)
 {
   // Armo lista de componentes fuertemente conexas en orden topológico. De esto último no estoy seguro.
-  std::list<std::list<int>>* cfc = new std::list<std::list<int>>;
+  // std::list<std::list<int>>* cfc = new std::list<std::list<int>>;
+  std::list<std::list<int>> cfc;
 
   while (!finish_time.empty())
   {
@@ -419,11 +420,11 @@ std::list<std::list<int>> Digrafo::dfs2( std::vector<bool>& visitados, std::stac
 
     if (!visitados[i])
     {
-      std::list<int>* componente = new std::list<int>;
-      cfc->push_back( recorrer2(i, visitados, *componente) );
+      std::list<int> componente;
+      cfc.push_back( recorrer2(i, visitados, componente) );
     }
   }
-  return *cfc;
+  return cfc;
 }
 
 std::list<int> Digrafo::recorrer2(int i, std::vector<bool>& visitados, std::list<int>& componente)
