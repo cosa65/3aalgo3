@@ -1,0 +1,30 @@
+rm mejor_caso_3_vertices.in &&
+rm mejor_caso_4_vertices.in &&
+rm mejor_caso_5_vertices.in &&
+rm mejor_caso_6_vertices.in &&
+rm mejor_caso_7_vertices.in &&
+rm mejor_caso_8_vertices.in &&
+rm mejor_caso_9_vertices.in &&
+rm mejor_caso_10_vertices.in &&
+rm mejor_caso_11_vertices.in &&
+rm mejor_caso_50_vertices.in &&
+rm mejor_caso_100_vertices.in &&
+rm mejor_caso_150_vertices.in &&
+rm mejor_caso_200_vertices.in &&
+rm mejor_caso_250_vertices.in &&
+rm mejor_caso_300_vertices.in &&
+rm mejor_caso_350_vertices.in &&
+rm mejor_caso_400_vertices.in &&
+rm mejor_caso_450_vertices.in &&
+rm mejor_caso_500_vertices.in &&
+rm mejor_caso_550_vertices.in &&
+rm mejor_caso_600_vertices.in &&
+rm mejor_caso_650_vertices.in &&
+rm mejor_caso_700_vertices.in &&
+rm mejor_caso_750_vertices.in &&
+rm mejor_caso_800_vertices.in &&
+rm mejor_caso_850_vertices.in &&
+rm mejor_caso_900_vertices.in &&
+rm mejor_caso_950_vertices.in &&
+rm mejor_caso_1000_vertices.in
+exit

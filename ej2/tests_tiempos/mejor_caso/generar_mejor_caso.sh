@@ -1,25 +1,29 @@
+./../generador 1 3 mejor_caso_3_vertices.in &&
+./../generador 1 4 mejor_caso_4_vertices.in &&
 ./../generador 1 5 mejor_caso_5_vertices.in &&
+./../generador 1 6 mejor_caso_6_vertices.in &&
 ./../generador 1 7 mejor_caso_7_vertices.in &&
+./../generador 1 8 mejor_caso_8_vertices.in &&
 ./../generador 1 9 mejor_caso_9_vertices.in &&
+./../generador 1 10 mejor_caso_10_vertices.in &&
 ./../generador 1 11 mejor_caso_11_vertices.in &&
-./../generador 1 13 mejor_caso_13_vertices.in &&
-./../generador 1 15 mejor_caso_15_vertices.in &&
-./../generador 1 17 mejor_caso_17_vertices.in &&
-./../generador 1 19 mejor_caso_19_vertices.in &&
-./../generador 1 21 mejor_caso_21_vertices.in
-./../generador 1 25 mejor_caso_25_vertices.in &&
 ./../generador 1 50 mejor_caso_50_vertices.in &&
-./../generador 1 75 mejor_caso_75_vertices.in &&
 ./../generador 1 100 mejor_caso_100_vertices.in &&
-./../generador 1 125 mejor_caso_125_vertices.in &&
 ./../generador 1 150 mejor_caso_150_vertices.in &&
-./../generador 1 175 mejor_caso_175_vertices.in &&
 ./../generador 1 200 mejor_caso_200_vertices.in &&
-./../generador 1 225 mejor_caso_225_vertices.in &&
-./../generador 1 250 mejor_caso_250_vertices.in
-./../generador 1 275 mejor_caso_275_vertices.in &&
+./../generador 1 250 mejor_caso_250_vertices.in &&
 ./../generador 1 300 mejor_caso_300_vertices.in &&
-./../generador 1 325 mejor_caso_325_vertices.in &&
 ./../generador 1 350 mejor_caso_350_vertices.in &&
-./../generador 1 375 mejor_caso_375_vertices.in
-./../generador 1 400 mejor_caso_400_vertices.in
+./../generador 1 400 mejor_caso_400_vertices.in &&
+./../generador 1 450 mejor_caso_450_vertices.in &&
+./../generador 1 500 mejor_caso_500_vertices.in &&
+./../generador 1 550 mejor_caso_550_vertices.in &&
+./../generador 1 600 mejor_caso_600_vertices.in &&
+./../generador 1 650 mejor_caso_650_vertices.in &&
+./../generador 1 700 mejor_caso_700_vertices.in &&
+./../generador 1 750 mejor_caso_750_vertices.in &&
+./../generador 1 800 mejor_caso_800_vertices.in &&
+./../generador 1 850 mejor_caso_850_vertices.in &&
+./../generador 1 900 mejor_caso_900_vertices.in &&
+./../generador 1 950 mejor_caso_950_vertices.in &&
+./../generador 1 1000 mejor_caso_1000_vertices.in

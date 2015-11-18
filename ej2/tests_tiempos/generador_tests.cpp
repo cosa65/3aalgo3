@@ -5,6 +5,7 @@
 #include <fstream>
 #include <sstream>
 
+//completos con n colores posibles cada vértice
 int generar_mejor_caso(int vertices, std::string fileTestResult) {
   std::ofstream fileResult (fileTestResult.c_str());
 
@@ -26,10 +27,10 @@ int generar_mejor_caso(int vertices, std::string fileTestResult) {
     for (int j = i+1 ; j < vertices ; ++j) 
       fileResult << i << ' ' << j << std::endl;
   }
-
   return 0;
 }
 
+//completos con n-1 colores posibles cada vértice
 int generar_peor_caso(int vertices, std::string fileTestResult) {
   std::ofstream fileResult (fileTestResult.c_str());
 
@@ -51,10 +52,10 @@ int generar_peor_caso(int vertices, std::string fileTestResult) {
     for (int j = i+1 ; j < vertices ; ++j) 
       fileResult << i << ' ' << j << std::endl;
   }
-
   return 0;
 }
 
+//recibe 3 parámetros : 1/2 para mejor/peor caso ; #vértices ; archivo donde escribirá
 int main(int argc, char** argv) {
   int caso = atoi(argv[1]);
   int cant_vertices = atoi(argv[2]);

@@ -18,7 +18,10 @@ time:
 	./ej4Time time.in test.txt resultados/time.out intercambiar
 	rm -f random ej4Time
 
-clean: 
+clean:
+	rm -f random ej4Time
+
+clear: 
 	rm -f resultados/time.out
 
 build:
