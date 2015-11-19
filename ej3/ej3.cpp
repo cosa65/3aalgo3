@@ -212,22 +212,23 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, std::stri
 
 
     //goloso_por_grado_vertice(grafo);
-    for (int k = 0 ; k < 3 ; k++) {
+    //for (int k = 0 ; k < 3 ; k++) {
       goloso_por_colores_posibles_vertice(grafo);
-      if (k == 0) 
-        acum = 0;
-    }
+    //  if (k == 0) 
+    //    acum = 0;
+    //}
 
+    std::cout << "conflictos totales: " << grafo.conflictos_totales() << std::endl;
     //int cantidad_conflictos = grafo.conflictos_totales();
 
     //std::cout << "conflictos grafo " << cantidad_conflictos << std::endl;
 
-    double prom = acum / 2;
+    //double prom = acum / 2;
     //FileWrite << "Test numero: " << i << " cantidad de pisos: " << cant_pisos << std::endl;
     //FileWrite << std::fixed << acum << std::endl;
-    fileWrite << std::fixed << prom << std::endl;
-    std::cout << prom << std::endl;
-    acum = 0;
+    //fileWrite << std::fixed << prom << std::endl;
+    //std::cout << prom << std::endl;
+    //acum = 0;
 
 
     //getline (fileResult, line);
@@ -245,8 +246,8 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, std::stri
     //  std::cout << "Obtuve " << res << " deberia tener " << resTest << std::endl;
     //}
 
-    std::cout << z << std::endl;
-    ++z;
+    //std::cout << z << std::endl;
+    //++z;
 
   }
   return 0;
