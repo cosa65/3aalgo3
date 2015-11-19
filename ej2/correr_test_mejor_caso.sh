@@ -6,7 +6,6 @@
 ./ej2 tests_tiempos/mejor_caso/mejor_caso_8_vertices.in hare tests_tiempos/resultados_mejor_caso/res_8_vertices &&
 ./ej2 tests_tiempos/mejor_caso/mejor_caso_9_vertices.in hare tests_tiempos/resultados_mejor_caso/res_9_vertices &&
 ./ej2 tests_tiempos/mejor_caso/mejor_caso_10_vertices.in hare tests_tiempos/resultados_mejor_caso/res_10_vertices &&
-./ej2 tests_tiempos/mejor_caso/mejor_caso_11_vertices.in hare tests_tiempos/resultados_mejor_caso/res_11_vertices &&
 ./ej2 tests_tiempos/mejor_caso/mejor_caso_50_vertices.in hare tests_tiempos/resultados_mejor_caso/res_50_vertices &&
 ./ej2 tests_tiempos/mejor_caso/mejor_caso_100_vertices.in hare tests_tiempos/resultados_mejor_caso/res_100_vertices &&
 ./ej2 tests_tiempos/mejor_caso/mejor_caso_150_vertices.in hare tests_tiempos/resultados_mejor_caso/res_150_vertices &&
