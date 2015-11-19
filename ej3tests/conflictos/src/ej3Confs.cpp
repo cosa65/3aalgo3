@@ -10,11 +10,11 @@
 #include <queue>
 #include <map>
 
-#include "../grafo/grafo.h"
+#include "../../../grafo/grafo.h"
 
 
 timeval start, end;
-double acum = 0;
+double tiempo = 0;
 
 void init_time() {
   gettimeofday(&start, NULL);
@@ -140,7 +140,7 @@ void pintar_vertices(Grafo& g, std::priority_queue<Vertice> vertices) { //std::p
     //g.imprimir();
     vistos++;
   }
-  acum += get_time(); 
+  tiempo += get_time(); 
 }
 
 void goloso_por_colores_posibles_vertice(Grafo& g) {
@@ -156,8 +156,8 @@ void goloso_por_grado_vertice(Grafo& g) {
 int evaluarTests(std::string fileTestData, std::string fileTestResult, std::string fileTestWrite) {
   std::string line;
   std::ifstream fileData (fileTestData.c_str());
-  std::ifstream fileResult (fileTestResult.c_str());
-  std::ofstream fileWrite (fileTestWrite.c_str());
+  //std::ifstream fileResult (fileTestResult.c_str());
+  std::ofstream fileWrite (fileTestWrite.c_str(),std::ofstream::app);
   std::string s;
   std::string res;
   int z = 1;
@@ -212,23 +212,18 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, std::stri
 
 
     //goloso_por_grado_vertice(grafo);
-    for (int k = 0 ; k < 3 ; k++) {
-      goloso_por_colores_posibles_vertice(grafo);
-      if (k == 0) 
-        acum = 0;
-    }
+    goloso_por_colores_posibles_vertice(grafo);
 
     //int cantidad_conflictos = grafo.conflictos_totales();
 
     //std::cout << "conflictos grafo " << cantidad_conflictos << std::endl;
 
-    double prom = acum / 2;
     //FileWrite << "Test numero: " << i << " cantidad de pisos: " << cant_pisos << std::endl;
-    //FileWrite << std::fixed << acum << std::endl;
-    fileWrite << std::fixed << prom << std::endl;
-    std::cout << prom << std::endl;
-    acum = 0;
+    //FileWrite << std::fixed << tiempo << std::endl;
+    
+    tiempo = 0;
 
+    fileWrite << "goloso_por_colores_posibles_vertice" << " " << "Nodos: " << std::fixed << n << " Colores: " << c << " Tiempo: " << tiempo << " Conflictos: " << grafo.conflictos_totales() << std::endl;
 
     //getline (fileResult, line);
 
