@@ -1,74 +1,75 @@
 make clean
 make clear
-make build
+make ej3
 j=0
 for ((i = 1; i <= 100; i++));
 do
-	./conflictos 1000 resultados/confs.in $1
-	./ej4Conf resultados/confs.in test.txt resultados/confs.out vecinos $i
-	./ej4Conf resultados/confs.in test.txt resultados/confs.out individual $i
-done
-for ((i = 1; i <= 100; i++));
-do
-	./conflictos 900 resultados/confs.in $1
-	./ej4Conf resultados/confs.in test.txt resultados/confs.out vecinos $i
-	./ej4Conf resultados/confs.in test.txt resultados/confs.out individual $i
+	./conflictos 10000 resultados/confs.in $1 $i
+	./ej3Conf resultados/confs.in test.txt resultados/confs.out 
+	
 done
 
 for ((i = 1; i <= 100; i++));
 do
-	./conflictos 800 resultados/confs.in $1
-	./ej4Conf resultados/confs.in test.txt resultados/confs.out vecinos $i
-	./ej4Conf resultados/confs.in test.txt resultados/confs.out individual $i
+	./conflictos 9000 resultados/confs.in $1 $i
+	./ej3Conf resultados/confs.in test.txt resultados/confs.out 
+	
 done
 
 for ((i = 1; i <= 100; i++));
 do
-	./conflictos 700 resultados/confs.in $1
-	./ej4Conf resultados/confs.in test.txt resultados/confs.out vecinos $i
-	./ej4Conf resultados/confs.in test.txt resultados/confs.out individual $i
+	./conflictos 8000 resultados/confs.in $1 $i
+	./ej3Conf resultados/confs.in test.txt resultados/confs.out 
+	
 done
 
 for ((i = 1; i <= 100; i++));
 do
-	./conflictos 600 resultados/confs.in $1
-	./ej4Conf resultados/confs.in test.txt resultados/confs.out vecinos $i
-	./ej4Conf resultados/confs.in test.txt resultados/confs.out individual $i
+	./conflictos 7000 resultados/confs.in $1 $i
+	./ej3Conf resultados/confs.in test.txt resultados/confs.out 
+	
 done
 
 for ((i = 1; i <= 100; i++));
 do
-	./conflictos 500 resultados/confs.in $1
-	./ej4Conf resultados/confs.in test.txt resultados/confs.out vecinos $i
-	./ej4Conf resultados/confs.in test.txt resultados/confs.out individual $i
+	./conflictos 6000 resultados/confs.in $1 $i
+	./ej3Conf resultados/confs.in test.txt resultados/confs.out 
+	
 done
 
 for ((i = 1; i <= 100; i++));
 do
-	./conflictos 400 resultados/confs.in $1
-	./ej4Conf resultados/confs.in test.txt resultados/confs.out vecinos $i
-	./ej4Conf resultados/confs.in test.txt resultados/confs.out individual $i
+	./conflictos 5000 resultados/confs.in $1 $i
+	./ej3Conf resultados/confs.in test.txt resultados/confs.out 
+	
 done
 
 for ((i = 1; i <= 100; i++));
 do
-	./conflictos 300 resultados/confs.in $1
-	./ej4Conf resultados/confs.in test.txt resultados/confs.out vecinos $i
-	./ej4Conf resultados/confs.in test.txt resultados/confs.out individual $i
+	./conflictos 4000 resultados/confs.in $1 $i
+	./ej3Conf resultados/confs.in test.txt resultados/confs.out 
+	
 done
 
 for ((i = 1; i <= 100; i++));
 do
-	./conflictos 200 resultados/confs.in $1
-	./ej4Conf resultados/confs.in test.txt resultados/confs.out vecinos $i
-	./ej4Conf resultados/confs.in test.txt resultados/confs.out individual $i
+	./conflictos 3000 resultados/confs.in $1 $i
+	./ej3Conf resultados/confs.in test.txt resultados/confs.out 
+	
 done
 
 for ((i = 1; i <= 100; i++));
 do
-	./conflictos 100 resultados/confs.in $1
-	./ej4Conf resultados/confs.in test.txt resultados/confs.out vecinos $i
-	./ej4Conf resultados/confs.in test.txt resultados/confs.out individual $i
+	./conflictos 2000 resultados/confs.in $1 $i
+	./ej3Conf resultados/confs.in test.txt resultados/confs.out 
+	
+done
+
+for ((i = 1; i <= 100; i++));
+do
+	./conflictos 1000 resultados/confs.in $1 $i
+	./ej3Conf resultados/confs.in test.txt resultados/confs.out 
+	
 done
 
 g++ resultados/miniscript.cpp -o mini

@@ -8,11 +8,11 @@ int main(int argc, char **argv){
 	N = atoi(argv[1]);				//Cantidad de nodos del grafo a generar
 	std::string filename(argv[2]);
 	std::string familia(argv[3]);
+	int rands = atoi(argv[4]);
 	M=0;
-	srand(time(NULL));	
+	srand(rands);	
 
 	std::ofstream file(filename.c_str());
-	file << std::endl;
 	C = 3;				//Hay entre 1 y N colores disponibles
 	file << N << " ";
 	std::ostringstream save;

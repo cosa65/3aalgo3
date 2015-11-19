@@ -8,8 +8,12 @@ BINARIES = ej3
 
 all: $(BINARIES)
 
-ej3: ej3.cpp  
-	$(CC) ej3.cpp ../grafo/grafo.cpp ../grafo/vertice.cpp $(CFLAGS) ej3 
+ej3:
+	$(CC) src/conflictos.cpp $(CFLAGS) conflictos 
+	$(CC) src/ej3Confs.cpp ../../grafo/grafo.cpp ../../grafo/vertice.cpp $(EFLAGS) $(CFLAGS) ej3Conf 
 
 clean:
-	rm -f *.o ej3 
+	rm -f *.o ej3Conf conflictos mini
+
+clear:
+	rm -f resultados/confs.out resultados/confs.in
