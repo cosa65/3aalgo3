@@ -76,9 +76,9 @@ bool Vertice::coincide_color(Vertice otro){
 //}
 
 bool Vertice::operator <(Vertice v) const {
-  return colores_disponibles_.size() < v.dame_colores_posibles().size(); 
+  return colores_disponibles_.size() > v.dame_colores_posibles().size(); 
 }
 
 bool Vertice::operator >(Vertice v) const {
-  return colores_disponibles_.size() > v.dame_colores_posibles().size(); 
+  return colores_disponibles_.size() < v.dame_colores_posibles().size(); 
 }

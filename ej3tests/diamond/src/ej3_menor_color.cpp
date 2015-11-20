@@ -224,7 +224,6 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, std::stri
     int conflictos = grafo.conflictos_totales();
     std::cout << "conflictos totales: " << conflictos << std::endl;
     fileWrite << fileTestData << std::endl << "conflictos totales: " << conflictos << std::endl << "P = NP ?";
-    
 
     //int cantidad_conflictos = grafo.conflictos_totales();
 

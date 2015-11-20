@@ -18,4 +18,4 @@ do
 	src/ej3_mayor_vertice diamantes_in/$i basura diamantes_out_mayor_grado/$i
 done
 
-# rm basura
+rm basura
