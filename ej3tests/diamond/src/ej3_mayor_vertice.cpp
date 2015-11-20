@@ -10,7 +10,7 @@
 #include <queue>
 #include <map>
 
-#include "../grafo/grafo.h"
+#include "grafo_mayor_vertice.h"
 
 
 timeval start, end;
@@ -46,7 +46,8 @@ int dame_el_de_maxima_aparicion(std::map<int, int>& colores_usados) {
   return color;
 }
 
-void pintar_vertices(Grafo& g, std::priority_queue<Vertice> vertices) { //std::priority_queue<Vertice> vertices) {
+
+void pintar_vertices(Grafo& g,  std::priority_queue<Vertice, std::vector<Vertice>, std::greater<Vertice> >& vertices) { //std::priority_queue<Vertice> vertices) {
   init_time();
   int vistos = 0;
   int cant_vertices = g.cant_vertices();
@@ -61,7 +62,7 @@ void pintar_vertices(Grafo& g, std::priority_queue<Vertice> vertices) { //std::p
 
     // Hallar el vertice de mayor grado
     Vertice vertice = vertices.top();
-    //std::cout << "vertice: " << vertice.dame_nombre() << std::endl;
+    // std::cout << "vertice: " << vertice.dame_nombre() << std::endl;
     vertices.pop();
     std::set<int> colores_vertice = vertice.dame_colores_posibles(); 
 
@@ -131,8 +132,11 @@ void pintar_vertices(Grafo& g, std::priority_queue<Vertice> vertices) { //std::p
       int min = 999;
       for (std::pair<const int, int>& par : colores_posibles) {
         if (par.second < min) {
-          min = par.second;
-          color = par.first;
+          std::set<int>::iterator it = colores_vertice.find(par.first);
+          if (it != colores_vertice.end()) {
+            min = par.second;
+            color = par.first;
+          }
         }
       }
     }
@@ -144,13 +148,13 @@ void pintar_vertices(Grafo& g, std::priority_queue<Vertice> vertices) { //std::p
 }
 
 void goloso_por_colores_posibles_vertice(Grafo& g) {
-  std::priority_queue<Vertice> vertices;
-  pintar_vertices(g, vertices);
+  // std::priority_queue<Vertice> vertices;
+  // pintar_vertices(g, vertices);
 }
 
 void goloso_por_grado_vertice(Grafo& g) {
-//  std::priority_queue<Vertice, std::vector<Vertice>, std::greater<Vertice> > vertices;
-//  pintar_vertices(g, vertices);
+ std::priority_queue<Vertice, std::vector<Vertice>, std::greater<Vertice> > vertices;
+ pintar_vertices(g, vertices);
 }
 
 int evaluarTests(std::string fileTestData, std::string fileTestResult, std::string fileTestWrite) {
@@ -211,14 +215,18 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, std::stri
     }
 
 
-    //goloso_por_grado_vertice(grafo);
+    goloso_por_grado_vertice(grafo);
     //for (int k = 0 ; k < 3 ; k++) {
-      goloso_por_colores_posibles_vertice(grafo);
+      // goloso_por_colores_posibles_vertice(grafo);
     //  if (k == 0) 
     //    acum = 0;
     //}
 
-    std::cout << "conflictos totales: " << grafo.conflictos_totales() << std::endl;
+    int conflictos = grafo.conflictos_totales();
+    std::cout << "conflictos totales: " << conflictos << std::endl;
+    fileWrite << fileTestData << std::endl << "conflictos totales: " << conflictos << std::endl << "P = NP" ;
+    
+
     //int cantidad_conflictos = grafo.conflictos_totales();
 
     //std::cout << "conflictos grafo " << cantidad_conflictos << std::endl;

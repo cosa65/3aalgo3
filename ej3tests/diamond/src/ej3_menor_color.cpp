@@ -10,7 +10,7 @@
 #include <queue>
 #include <map>
 
-#include "../grafo/grafo.h"
+#include "grafo_menor_color.h"
 
 
 timeval start, end;
@@ -61,7 +61,7 @@ void pintar_vertices(Grafo& g, std::priority_queue<Vertice> vertices) { //std::p
 
     // Hallar el vertice de mayor grado
     Vertice vertice = vertices.top();
-    //std::cout << "vertice: " << vertice.dame_nombre() << std::endl;
+    // std::cout << "vertice: " << vertice.dame_nombre() << std::endl;
     vertices.pop();
     std::set<int> colores_vertice = vertice.dame_colores_posibles(); 
 
@@ -131,8 +131,11 @@ void pintar_vertices(Grafo& g, std::priority_queue<Vertice> vertices) { //std::p
       int min = 999;
       for (std::pair<const int, int>& par : colores_posibles) {
         if (par.second < min) {
-          min = par.second;
-          color = par.first;
+          std::set<int>::iterator it = colores_vertice.find(par.first);
+          if (it != colores_vertice.end()) {
+            min = par.second;
+            color = par.first;
+          }
         }
       }
     }
@@ -218,7 +221,10 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, std::stri
     //    acum = 0;
     //}
 
-    std::cout << "conflictos totales: " << grafo.conflictos_totales() << std::endl;
+    int conflictos = grafo.conflictos_totales();
+    std::cout << "conflictos totales: " << conflictos << std::endl;
+    fileWrite << fileTestData << std::endl << "conflictos totales: " << conflictos << std::endl << "P = NP ?";
+
     //int cantidad_conflictos = grafo.conflictos_totales();
 
     //std::cout << "conflictos grafo " << cantidad_conflictos << std::endl;

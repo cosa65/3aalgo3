@@ -43,6 +43,7 @@ int dame_el_de_maxima_aparicion(std::map<int, int>& colores_usados) {
   }
   if (max == 0) 
     color = -1;
+  std::cout << "El color es: " << color << std::endl;
   return color;
 }
 
@@ -61,7 +62,7 @@ void pintar_vertices(Grafo& g, std::priority_queue<Vertice> vertices) { //std::p
 
     // Hallar el vertice de mayor grado
     Vertice vertice = vertices.top();
-    //std::cout << "vertice: " << vertice.dame_nombre() << std::endl;
+    std::cout << "vertice: " << vertice.dame_nombre() << std::endl;
     vertices.pop();
     std::set<int> colores_vertice = vertice.dame_colores_posibles(); 
 
@@ -131,8 +132,11 @@ void pintar_vertices(Grafo& g, std::priority_queue<Vertice> vertices) { //std::p
       int min = 999;
       for (std::pair<const int, int>& par : colores_posibles) {
         if (par.second < min) {
-          min = par.second;
-          color = par.first;
+          std::set<int>::iterator it = colores_vertice.find(par.first);
+          if (it != colores_vertice.end()) {
+            min = par.second;
+            color = par.first;
+          }
         }
       }
     }
@@ -212,22 +216,24 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, std::stri
 
 
     //goloso_por_grado_vertice(grafo);
-    for (int k = 0 ; k < 3 ; k++) {
+    //for (int k = 0 ; k < 3 ; k++) {
       goloso_por_colores_posibles_vertice(grafo);
-      if (k == 0) 
-        acum = 0;
-    }
+    //  if (k == 0) 
+    //    acum = 0;
+    //}
 
+    std::cout << "conflictos totales: " << grafo.conflictos_totales() << std::endl;
+    grafo.imprimir();
     //int cantidad_conflictos = grafo.conflictos_totales();
 
     //std::cout << "conflictos grafo " << cantidad_conflictos << std::endl;
 
-    double prom = acum / 2;
+    //double prom = acum / 2;
     //FileWrite << "Test numero: " << i << " cantidad de pisos: " << cant_pisos << std::endl;
     //FileWrite << std::fixed << acum << std::endl;
-    fileWrite << std::fixed << prom << std::endl;
-    std::cout << prom << std::endl;
-    acum = 0;
+    //fileWrite << std::fixed << prom << std::endl;
+    //std::cout << prom << std::endl;
+    //acum = 0;
 
 
     //getline (fileResult, line);
@@ -245,8 +251,8 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, std::stri
     //  std::cout << "Obtuve " << res << " deberia tener " << resTest << std::endl;
     //}
 
-    std::cout << z << std::endl;
-    ++z;
+    //std::cout << z << std::endl;
+    //++z;
 
   }
   return 0;

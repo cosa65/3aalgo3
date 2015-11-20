@@ -10,7 +10,7 @@
 #include <queue>
 #include <map>
 
-#include "../grafo/grafo.h"
+#include "../../grafo/grafo.h"
 
 
 timeval start, end;
@@ -25,8 +25,7 @@ double get_time() {
   return (1000000*(end.tv_sec-start.tv_sec) + (end.tv_usec-start.tv_usec))/1000000.0;
 }
 
-//Funciones y datos utilizados para la toma de tiempos
-//
+//////////////////////////////////////////////////////////Goloso///////////////////////////////////////////////////////////
 
 int dame_el_de_maxima_aparicion(std::map<int, int>& colores_usados) {
   int max = 0;
@@ -46,7 +45,7 @@ int dame_el_de_maxima_aparicion(std::map<int, int>& colores_usados) {
   return color;
 }
 
-void pintar_vertices(Grafo& g, std::priority_queue<Vertice> vertices) { //std::priority_queue<Vertice> vertices) {
+double pintar_vertices(Grafo& g, 	std::priority_queue<Vertice, std::vector<Vertice>, std::greater<Vertice> > vertices) {
   init_time();
   int vistos = 0;
   int cant_vertices = g.cant_vertices();
@@ -131,8 +130,11 @@ void pintar_vertices(Grafo& g, std::priority_queue<Vertice> vertices) { //std::p
       int min = 999;
       for (std::pair<const int, int>& par : colores_posibles) {
         if (par.second < min) {
-          min = par.second;
-          color = par.first;
+          std::set<int>::iterator it = colores_vertice.find(par.first);
+          if (it != colores_vertice.end()) {
+            min = par.second;
+            color = par.first;
+          }
         }
       }
     }
@@ -140,24 +142,98 @@ void pintar_vertices(Grafo& g, std::priority_queue<Vertice> vertices) { //std::p
     //g.imprimir();
     vistos++;
   }
-  acum += get_time(); 
+  double res = get_time(); 
+  return res;
 }
 
-void goloso_por_colores_posibles_vertice(Grafo& g) {
-  std::priority_queue<Vertice> vertices;
-  pintar_vertices(g, vertices);
+double goloso_por_grado_vertice(Grafo& g) {
+	std::priority_queue<Vertice, std::vector<Vertice>, std::greater<Vertice> > vertices;
+	double res = pintar_vertices(g, vertices);
+	return res;
 }
 
-void goloso_por_grado_vertice(Grafo& g) {
-//  std::priority_queue<Vertice, std::vector<Vertice>, std::greater<Vertice> > vertices;
-//  pintar_vertices(g, vertices);
+///////////////////////////////////////////////////////Busqueda Local///////////////////////////////////////////////////////
+
+bool paso_busqueda_local_vecinos(Grafo& in){             //Devuelve true si consiguió dar un paso que mejorara el estado anterior
+
+  int verts = in.cant_vertices();
+  int maxConfs = 0;
+  int mejorPasov1,mejorPasoCol, confs;
+  bool encontreUno=false;
+
+  for(int i=0; i<verts; i++) {
+	confs = in.conflictos(i);
+
+  	if((confs > maxConfs)) {
+  		mejorPasov1 = i;
+  		maxConfs = confs;
+      encontreUno=true;
+  	} 
+  }
+
+  if(encontreUno==false){
+    return false;
+  }
+
+  confs=0;
+  int colMejor = in.dame_color(mejorPasov1);
+  
+  for(int vecino : in.dame_vecinos(mejorPasov1)){
+  	
+	  int mejorColor=in.dame_color(vecino);
+
+  	if(mejorColor == colMejor){				//Si este vecino crea conflictos con mi nodo
+	  int actual;
+	  int conflictos=0;
+	  for(int col : in.dame_colores_posibles(vecino)){
+	  	actual = in.valor_de_pintar(vecino, col);
+	  	if(actual > conflictos){
+	  		conflictos = actual;
+	      mejorColor = col;
+	  	}
+	  }
+	  confs += conflictos;
+	  in.pintar(vecino,mejorColor);
+  	}
+
+  }
+
+  if(confs == 0){
+    return false;
+  } else {
+    return true;
+  }
 }
 
-int evaluarTests(std::string fileTestData, std::string fileTestResult, std::string fileTestWrite) {
+double busqueda_local_vecinos(Grafo& in){
+	init_time();
+  bool mejoro = true;
+  while(mejoro){
+    mejoro = paso_busqueda_local_vecinos(in);
+  }
+  double res = get_time();
+  return res;
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void pintarRandom(Grafo& in, int randd){
+  srand(randd);
+  std::set<int> posibles;
+
+  for(int i=0; i<in.cant_vertices(); i++){
+    posibles = in.dame_colores_posibles(i);
+    std::set<int>::iterator it = posibles.begin();
+    for(int random = rand()%(posibles.size());random>0;random--) {
+      it++;
+    }
+    in.pintar(i,*it);
+  }
+}
+
+void evaluarTests(std::string fileTestData, std::string fileTestResult, std::string fileTestWrite, std::string type, int randd) {
   std::string line;
-  std::ifstream fileData (fileTestData.c_str());
-  std::ifstream fileResult (fileTestResult.c_str());
-  std::ofstream fileWrite (fileTestWrite.c_str());
+  std::ifstream fileData(fileTestData.c_str());
+  std::ofstream fileWrite(fileTestWrite.c_str(), std::ofstream::app);
+  //std::ifstream fileResult (fileTestResult.c_str());
   std::string s;
   std::string res;
   int z = 1;
@@ -171,12 +247,10 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, std::stri
     int n;
     int m;
     int c;
-
+    getline(fileData, line);
     std::istringstream iss(line);
 
     iss >> n;
-    //if (n==750)
-    //  break;
     iss >> m;
     iss >> c;
 
@@ -198,6 +272,7 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, std::stri
 
     }
 
+
     for (int i = 0 ; i < m ; ++i) {
       getline(fileData, line);
       std::istringstream iss(line);
@@ -210,59 +285,48 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, std::stri
       grafo.agregar_arista(v1, v2);
     }
 
+    
+    
+	  
+	  
+	  //grafo.impimir_color(fileTestWrite);
+	  //grafo.imprimir();
 
-    //goloso_por_grado_vertice(grafo);
-    //for (int k = 0 ; k < 3 ; k++) {
-      goloso_por_colores_posibles_vertice(grafo);
-    //  if (k == 0) 
-    //    acum = 0;
-    //}
+    int conflictosAntes,conflictosDespues;
+    double tiempoAntes, tiempoDespues;
 
-    std::cout << "conflictos totales: " << grafo.conflictos_totales() << std::endl;
-    //int cantidad_conflictos = grafo.conflictos_totales();
+	  if(type.compare("busq_local")==0){			//Por default hace busqueda local individual.
+	   	pintarRandom(grafo, randd);
+	   	busqueda_local_vecinos(grafo);
+		} else if(type.compare("goloso")==0) {
+			goloso_por_grado_vertice(grafo);
+		} else if(type.compare("ambos")==0) {
+			tiempoAntes = goloso_por_grado_vertice(grafo);
+			conflictosAntes = grafo.conflictos_totales();
+			tiempoDespues = busqueda_local_vecinos(grafo);
+			grafo.desvisitar_vertices();
+			conflictosDespues = grafo.conflictos_totales();
+		}
 
-    //std::cout << "conflictos grafo " << cantidad_conflictos << std::endl;
+		fileWrite << type << " " << "Nodos: " << std::fixed << n << " Colores: " << c << " TiempoGoloso: " << tiempoAntes << " TiempoBusq: " << tiempoDespues << " Conflictos: " << conflictosDespues << " ConflictosAntes: " << conflictosAntes << std::endl;
 
-    //double prom = acum / 2;
-    //FileWrite << "Test numero: " << i << " cantidad de pisos: " << cant_pisos << std::endl;
-    //FileWrite << std::fixed << acum << std::endl;
-    //fileWrite << std::fixed << prom << std::endl;
-    //std::cout << prom << std::endl;
-    //acum = 0;
-
-
-    //getline (fileResult, line);
-
-    //// Lei una linea del archivo de resultados
-    //// y pregunto si ya termine de evaluar todos los tests
-
-    //int resTest = atoi(line.c_str());
-    ////// convierto a int
-
-    //if (res == resTest) {
-    //  std::cout << "Paso el test " << i << ". Felicitaciones!" << std::endl;
-    //} else {
-    //  std::cout << "Fallo el test " << i << ". :(" << std::endl;
-    //  std::cout << "Obtuve " << res << " deberia tener " << resTest << std::endl;
-    //}
-
-    //std::cout << z << std::endl;
-    //++z;
+    ++z;
 
   }
-  return 0;
 }
 
 int main(int argc, char** argv) {
   std::string fileTestData(argv[1]);
   std::string fileTestResult(argv[2]);
   std::string fileTestWrite(argv[3]);
+  std::string type(argv[4]);
+  int randd = atoi(argv[5]);
   // Recibo por parametro tres archivos
   // El primero del cual leo los datos a evaluar
   // El segundo en el cual evaluo si los resultados fueron correctos
   // El tercero donde puedo escribir datos (tiempos)
 
-  evaluarTests(fileTestData, fileTestResult, fileTestWrite);
+  evaluarTests(fileTestData, fileTestResult, fileTestWrite,type,randd);
   
   return 0;
 }
